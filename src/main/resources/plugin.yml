@@ -1,0 +1,12 @@
+name: KasixMC
+version: '${project.version}'
+main: com.itedya.kasixmc.KasixMC
+api-version: 1.18
+authors: [ itedya ]
+website: itedya.com
+depend:
+  - WorldGuard
+  - FastAsyncWorldEdit
+permissions:
+  kasix-mc.islands.create-schematic:
+    description: Daje dostęp do tworzenia schematów.

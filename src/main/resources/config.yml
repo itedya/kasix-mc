@@ -1,0 +1,12 @@
+messages:
+  youHaveToBeInGame: "Musisz być w grze, aby użyć tej komendy."
+  provideCommandName: "&ePodaj nazwę komendy!"
+  commandNotFound: "&4Nie ma takiej komendy!"
+  youDontHavePermission: "&4Brak permisji!"
+  provideSchematicFileName: "&ePodaj nazwę pliku schematu!"
+  provideSchematicName: "&ePodaj nazwę schematu!"
+  schematicFileDoesntExist: "&4Plik schematu o takiej nazwie nie istnieje!"
+  youDontHaveAccessToAnySchematic: "&eNie masz dostępu do żadnego schematu, więc nie możesz stworzyć wyspy!"
+  islandSchematics: "&dSchematy wysp"
+  provideSchematicMaterial: "&ePodaj materiał schematu"
+  materialDoesNotExist: "&eTaki materiał nie istnieje!"
