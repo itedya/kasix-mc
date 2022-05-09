@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.itedya</groupId>
-    <artifactId>kasix-mc</artifactId>
+    <artifactId>skymaster</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>KasixMC</name>
+    <name>SkyMaster</name>
 
     <properties>
         <java.version>1.8</java.version>

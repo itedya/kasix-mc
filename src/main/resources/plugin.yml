@@ -1,6 +1,6 @@
-name: KasixMC
+name: SkyMaster
 version: '${project.version}'
-main: com.itedya.kasixmc.KasixMC
+main: com.itedya.skymaster.SkyMaster
 api-version: 1.18
 authors: [ itedya ]
 website: itedya.com
