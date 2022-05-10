@@ -3,63 +3,104 @@ package com.itedya.skymaster.daos;
 import com.google.gson.Gson;
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.exceptions.ServerError;
 
-import java.io.*;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 
 public class IslandSchematicDao {
     private static IslandSchematicDao instance;
 
-    public static IslandSchematicDao getInstance() throws IOException {
+    public static IslandSchematicDao getInstance() {
         if (instance == null) instance = new IslandSchematicDao();
         return instance;
     }
 
-    private List<IslandSchematicDto> data;
+    private IslandSchematicDao() {
+    }
 
-    private IslandSchematicDao() throws IOException {
+    public List<IslandSchematicDto> getAll() throws ServerError {
+        return getAll(false);
+    }
+
+    public List<IslandSchematicDto> getAll(Boolean withDeleted) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
 
-        String path = Paths.get(plugin.getDataFolder().getAbsolutePath(), "data", "schematics.json").toString();
+        String query = "SELECT * FROM `skymaster_schematics`";
 
-        Reader fileReader = new FileReader(path);
+        if (!withDeleted) query += " WHERE deletedAt != null";
 
-        Gson gson = new Gson();
-        data = new CopyOnWriteArrayList<>(gson.fromJson(fileReader, IslandSchematicDto[].class));
+        try (Connection connection = Database.getInstance().getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(query);
 
-        fileReader.close();
+            ResultSet rs = stmt.executeQuery();
+
+            List<IslandSchematicDto> result = new ArrayList<>();
+
+            connection.close();
+
+            while (rs.next()) {
+                IslandSchematicDto dto = new IslandSchematicDto(rs);
+                result.add(dto);
+            }
+
+            return result;
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Database error", e);
+            throw new ServerError();
+        }
     }
 
-    public List<IslandSchematicDto> getAll() {
-        return data;
+    public IslandSchematicDto getById(int id) throws ServerError {
+        return getById(id, false);
     }
 
-    public IslandSchematicDto getById(String id) {
-        return data.stream()
-                .filter(ele -> ele.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public void create(IslandSchematicDto islandSchematicDto) {
-        data.add(islandSchematicDto);
-    }
-
-    public void saveToFile() throws IOException {
-        Gson gson = new Gson();
-
+    public IslandSchematicDto getById(int id, Boolean withDeleted) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
-        String path = Paths.get(plugin.getDataFolder().getAbsolutePath(), "data", "schematics.json").toString();
+        String query = "SELECT * FROM `skymaster_schematics` WHERE id = ?";
+        if (!withDeleted) query += " AND deletedAt != null";
 
-        Writer fileWriter = new FileWriter(path);
+        try (Connection connection = Database.getInstance().getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
 
-        List<IslandSchematicDto> dataToSave = this.getAll();
+            ResultSet rs = stmt.executeQuery();
 
-        gson.toJson(dataToSave, fileWriter);
+            connection.close();
 
-        fileWriter.flush();
-        fileWriter.close();
+            if (rs.next()) {
+                return new IslandSchematicDto(rs);
+            }
+
+            return null;
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Database error", e);
+            throw new ServerError();
+        }
+    }
+
+    public void create(IslandSchematicDto islandSchematicDto) throws ServerError {
+        SkyMaster plugin = SkyMaster.getInstance();
+        String query = "INSERT INTO `skymaster_schematics` SET `name` = ?, `description` = ?, `filePath` = ?, `material` = ?";
+
+        try (Connection connection = Database.getInstance().getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, islandSchematicDto.getName());
+            stmt.setString(2, islandSchematicDto.getDescription());
+            stmt.setString(3, islandSchematicDto.getFilePath());
+            stmt.setString(4, islandSchematicDto.getMaterial().toString());
+
+            stmt.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Database error", e);
+            throw new ServerError();
+        }
     }
 }
