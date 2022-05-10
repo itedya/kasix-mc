@@ -1,14 +1,12 @@
 package com.itedya.skymaster;
 
 import com.itedya.skymaster.command.IslandCommand;
-import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.daos.IslandSchematicDao;
+import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.listeners.CreateIslandGUIHandler;
 import com.itedya.skymaster.listeners.IslandInfoGUIHandler;
 import com.itedya.skymaster.listeners.ListUserIslandsGUIHandler;
 import com.itedya.skymaster.utils.CommandUtil;
 import com.itedya.skymaster.utils.ConfigUtil;
-import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +30,7 @@ public final class SkyMaster extends JavaPlugin {
         logger = this.getLogger();
 
         this.saveDefaultConfig();
+        Database.getInstance().migrate();
 
         CommandUtil.registerCommand(new IslandCommand("wyspa"));
 
@@ -44,28 +43,5 @@ public final class SkyMaster extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CreateIslandGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ListUserIslandsGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new IslandInfoGUIHandler(), this);
-
-        ThreadUtil.asyncRepeat(() -> {
-            try {
-                IslandSchematicDao islandSchematicDao = IslandSchematicDao.getInstance();
-                IslandDao islandDao = IslandDao.getInstance();
-                islandSchematicDao.saveToFile();
-                islandDao.saveToFile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, 600);
-    }
-
-    @Override
-    public void onDisable() {
-        try {
-            IslandSchematicDao islandSchematicDao = IslandSchematicDao.getInstance();
-            IslandDao islandDao = IslandDao.getInstance();
-            islandSchematicDao.saveToFile();
-            islandDao.saveToFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
