@@ -21,11 +21,11 @@ public class IslandHomeDao {
     private IslandHomeDao() {
     }
 
-    public IslandHomeDto firstByIslandId() throws ServerError {
-        return firstByIslandId(false);
+    public IslandHomeDto firstByIslandId(int id) throws ServerError {
+        return firstByIslandId(id, false);
     }
 
-    public IslandHomeDto firstByIslandId(Boolean withDeleted) throws ServerError {
+    public IslandHomeDto firstByIslandId(int id, Boolean withDeleted) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
 
         String query = "SELECT * FROM `skymaster_homes` WHERE id = ?";
@@ -34,6 +34,8 @@ public class IslandHomeDao {
 
         try (Connection connection = Database.getInstance().getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
 

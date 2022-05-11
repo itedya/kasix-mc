@@ -10,6 +10,8 @@ import java.util.List;
 public class IslandDto {
     private int id;
 
+    private String name;
+
     private String ownerUuid;
 
     private int schematicId;
@@ -22,6 +24,7 @@ public class IslandDto {
 
     public IslandDto(ResultSet resultSet) throws SQLException {
         this.id = resultSet.getInt("id");
+        this.name = resultSet.getString("name");
         this.ownerUuid = resultSet.getString("ownerUuid");
         this.schematicId = resultSet.getInt("schematicId");
         this.createdAt = resultSet.getDate("createdAt");
@@ -31,6 +34,14 @@ public class IslandDto {
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getOwnerUuid() {

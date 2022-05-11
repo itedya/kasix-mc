@@ -91,13 +91,14 @@ public class IslandDao {
     public void create(IslandDto islandDto) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
 
-        String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?";
+        String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?";
 
         try (Connection connection = Database.getInstance().getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setString(1, islandDto.getOwnerUuid());
             stmt.setInt(2, islandDto.getSchematicId());
+            stmt.setString(3, islandDto.getName());
 
             stmt.executeUpdate();
 
@@ -138,14 +139,15 @@ public class IslandDao {
     public void update(IslandDto islandDto) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
 
-        String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ? WHERE id = ?";
+        String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ? WHERE id = ?";
 
         try (Connection connection = Database.getInstance().getConnection()) {
             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setString(1, islandDto.getOwnerUuid());
             stmt.setInt(2, islandDto.getSchematicId());
-            stmt.setInt(3, islandDto.getId());
+            stmt.setString(3, islandDto.getName());
+            stmt.setInt(4, islandDto.getId());
 
             ResultSet rs = stmt.executeQuery();
 
