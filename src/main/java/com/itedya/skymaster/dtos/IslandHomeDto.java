@@ -5,6 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class IslandHomeDto {
+
+    public IslandHomeDto() {
+    }
+
     public IslandHomeDto(ResultSet rs) throws SQLException {
         this.id = rs.getInt("id");
         this.x = rs.getInt("x");

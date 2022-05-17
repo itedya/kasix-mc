@@ -40,7 +40,11 @@ public class Database {
     }
 
     public Connection getConnection() throws SQLException {
-        return getDataSource().getConnection();
+        Connection connection = getDataSource().getConnection();
+
+        connection.setAutoCommit(false);
+
+        return connection;
     }
 
     public void migrate() {

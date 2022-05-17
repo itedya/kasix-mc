@@ -23,8 +23,8 @@ public class IslandUtil {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName("Wyspa " + i);
 
-            if (lastPlayer == null || lastPlayer.getUniqueId().toString() != ele.getOwnerUUID()) {
-                lastPlayer = Bukkit.getOfflinePlayer(UUID.fromString(ele.getOwnerUUID()));
+            if (lastPlayer == null || lastPlayer.getUniqueId().toString() != ele.getOwnerUuid()) {
+                lastPlayer = Bukkit.getOfflinePlayer(UUID.fromString(ele.getOwnerUuid()));
             }
 
             itemMeta.setLore(List.of(

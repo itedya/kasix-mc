@@ -13,14 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class IslandDao {
-    private static IslandDao instance;
+    private final Connection connection;
 
-    public static IslandDao getInstance() {
-        if (instance == null) instance = new IslandDao();
-        return instance;
-    }
-
-    private IslandDao() {
+    public IslandDao(Connection connection) {
+        this.connection = connection;
     }
 
     public List<IslandDto> getByOwnerUuid(String ownerUuid) throws ServerError {
@@ -33,7 +29,7 @@ public class IslandDao {
         String query = "SELECT * FROM `skymaster_islands` WHERE `ownerUuid` = ?";
         if (!withDeleted) query += " AND `deletedAt` = null";
 
-        try (Connection connection = Database.getInstance().getConnection()) {
+        try {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, ownerUuid);
 
@@ -46,7 +42,8 @@ public class IslandDao {
                 result.add(dto);
             }
 
-            connection.close();
+            resultSet.close();
+            stmt.close();
 
             return result;
         } catch (SQLException e) {
@@ -66,7 +63,7 @@ public class IslandDao {
 
         if (!withDeleted) query += " WHERE deletedAt != null";
 
-        try (Connection connection = Database.getInstance().getConnection()) {
+        try {
             PreparedStatement stmt = connection.prepareStatement(query);
 
             ResultSet rs = stmt.executeQuery();
@@ -75,11 +72,14 @@ public class IslandDao {
 
             if (rs.next()) {
                 result = rs.getInt("size");
+                rs.close();
+                stmt.close();
             } else {
                 throw new SQLException("No rows, something went wrong. IslandDao:77");
             }
 
-            connection.close();
+            rs.close();
+            stmt.close();
 
             return result;
         } catch (SQLException e) {
@@ -93,7 +93,7 @@ public class IslandDao {
 
         String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?";
 
-        try (Connection connection = Database.getInstance().getConnection()) {
+        try {
             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setString(1, islandDto.getOwnerUuid());
@@ -102,7 +102,7 @@ public class IslandDao {
 
             stmt.executeUpdate();
 
-            connection.close();
+            stmt.close();
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Database error", e);
             throw new ServerError();
@@ -120,14 +120,14 @@ public class IslandDao {
         if (! withDeleted) query += " AND deletedAt = null";
         query += " LIMIT 1";
 
-        try (Connection connection = Database.getInstance().getConnection()) {
+        try {
             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
 
-            connection.close();
+            stmt.close();
 
             return new IslandDto(rs);
         } catch (SQLException e) {
@@ -141,7 +141,7 @@ public class IslandDao {
 
         String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ? WHERE id = ?";
 
-        try (Connection connection = Database.getInstance().getConnection()) {
+        try {
             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setString(1, islandDto.getOwnerUuid());
@@ -151,9 +151,8 @@ public class IslandDao {
 
             ResultSet rs = stmt.executeQuery();
 
-            connection.close();
-
-            new IslandDto(rs);
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Database error", e);
             throw new ServerError();

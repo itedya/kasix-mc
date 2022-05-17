@@ -38,7 +38,7 @@ public class WorldGuardUtil {
     public static ProtectedRegion resetRegionMembers(ProtectedRegion protectedRegion, IslandDto islandDto) {
         DefaultDomain members = protectedRegion.getMembers();
         members.removeAll();
-        members.addPlayer(UUID.fromString(islandDto.getOwnerUUID()));
+        members.addPlayer(UUID.fromString(islandDto.getOwnerUuid()));
         protectedRegion.setMembers(members);
         return protectedRegion;
     }
@@ -69,7 +69,7 @@ public class WorldGuardUtil {
         return getAllRegions()
                 .values()
                 .stream()
-                .filter(ele -> ele.getId().equals("island_" + islandDto.getUuid()))
+                .filter(ele -> ele.getId().equals("island_" + islandDto.getId()))
                 .findFirst()
                 .orElse(null);
     }

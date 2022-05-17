@@ -1,6 +1,8 @@
 package com.itedya.skymaster.prompts.createislandschematic;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
@@ -16,9 +18,14 @@ public class ProvideIslandSchematicNamePrompt extends StringPrompt {
 
     @Override
     public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
+        Conversable conversable = context.getForWhom();
+
         if (input == null) {
-            context.getForWhom()
-                    .sendRawMessage(ChatColor.RED + "Nie wpisałeś nazwy! Jeżeli chcesz wyjdź, wpisz /wyjdz.");
+            conversable.sendRawMessage(new ComponentBuilder()
+                    .append("Nie wpisałeś nazwy! Jeżeli chcesz wyjdź, wpisz ").color(ChatColor.YELLOW)
+                    .append("wyjdz").color(ChatColor.RED)
+                    .append(".").color(ChatColor.YELLOW)
+                    .toString());
             return new ProvideIslandSchematicNamePrompt();
         }
 

@@ -1,7 +1,14 @@
 package com.itedya.skymaster.command.subcommands;
 
+import com.itedya.skymaster.SkyMaster;
+import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
+import com.itedya.skymaster.daos.IslandHomeDao;
 import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.exceptions.ServerError;
+import com.itedya.skymaster.runnables.SetIslandHomeRunnable;
+import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -13,7 +20,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
 
 public class SetIslandHomeSubCommand implements CommandExecutor {
 
@@ -31,38 +43,24 @@ public class SetIslandHomeSubCommand implements CommandExecutor {
             }
 
             Location playerLocation = player.getLocation();
-            BlockVector3 worldGuardPlayerLocation = BlockVector3.at(
-                    playerLocation.getBlockX(),
-                    playerLocation.getBlockY(),
-                    playerLocation.getBlockZ()
-            );
 
-            RegionManager regionManager = WorldGuardUtil.getRegionManager();
-            ProtectedRegion region = regionManager.getApplicableRegions(worldGuardPlayerLocation)
-                    .getRegions()
-                    .stream()
-                    .findFirst()
-                    .orElse(null);
+            ThreadUtil.async(new SetIslandHomeRunnable(player, playerLocation));
+        } catch (Exception e) {
+            e.printStackTrace();
+            sender.sendMessage(ChatColor.RED + "Server error.");
+        }
 
-            if (region == null || !region.getId().startsWith("island_")) {
-                player.sendMessage(ChatColor.YELLOW + "Nie znajdujesz się na żadnej wyspie!");
-                return true;
-            }
+        return true;
+    }
 
-            String islandUuid = region.getId().replace("island_", "");
-
-            IslandDao islandDao = IslandDao.getInstance();
-            IslandDto islandDto = islandDao.getByUuid(islandUuid);
-            if (islandDto == null) {
-                player.sendMessage(ChatColor.RED + "Wyspa nie istnieje lub jest usunięta!");
-            }
-
+    private void stepOne(Player player, Location playerLocation) {
+        try {
             String playerUuid = player.getUniqueId().toString();
 
-            if ((playerUuid.equals(islandDto.getOwnerUUID()) && !player.hasPermission("kasix-mc.islands.set-home")) &&
-                    (!playerUuid.equals(islandDto.getOwnerUUID()) && !player.hasPermission("kasix-mc.islands.set-home-someone"))) {
-                sender.sendMessage("Brak permisji!");
-                return true;
+            if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home")) &&
+                    (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home-someone"))) {
+                player.sendMessage(ChatColor.RED + "Brak permisji!");
+                return;
             }
 
             Location homeLocationNormalized = new Location(
@@ -72,18 +70,27 @@ public class SetIslandHomeSubCommand implements CommandExecutor {
                     playerLocation.getBlockZ()
             );
 
-            islandDto.setHome(homeLocationNormalized);
+            IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
+
+            IslandHomeDto islandHomeDto = new IslandHomeDto();
+            islandHomeDto.setWorldUuid(playerLocation.getWorld().getUID().toString());
+            islandHomeDto.setX(playerLocation.getBlockX());
+            islandHomeDto.setY(playerLocation.getBlockY());
+            islandHomeDto.setZ(playerLocation.getBlockZ());
+            islandHomeDto.set(playerLocation.getBlockZ());
+            islandHomeDao.updateByIslandId(islandHomeDto);
+
             player.sendMessage(ChatColor.GREEN + "Zaktualizowano dom wyspy na lokalizacje " +
                     "X:" + homeLocationNormalized.getBlockX() + " " +
                     "Y:" + homeLocationNormalized.getBlockY() + " " +
                     "Z:" + homeLocationNormalized.getBlockZ()
             );
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            sender.sendMessage(ChatColor.RED + "Server error.");
-            return true;
+        } catch (ServerError e) {
+            SkyMaster.getInstance().getLogger().log(Level.SEVERE, "Server error", e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
+        return true;
     }
 }
