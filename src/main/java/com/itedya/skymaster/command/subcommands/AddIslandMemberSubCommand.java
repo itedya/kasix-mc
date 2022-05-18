@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.SkyMaster;
+import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandInviteDao;
 import com.itedya.skymaster.dtos.IslandDto;
@@ -17,8 +18,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
 import java.util.List;
 
+// todo: optimize this file
 public class AddIslandMemberSubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -56,7 +59,9 @@ public class AddIslandMemberSubCommand implements CommandExecutor {
 
             Inventory inventory = Bukkit.createInventory(null, 9, "Wybierz wyspę do której chcesz zaprosić");
 
-            IslandDao islandDao = IslandDao.getInstance();
+            Connection connection = Database.getInstance().getConnection();
+
+            IslandDao islandDao = new IslandDao(connection);
             List<IslandDto> userIslands = islandDao.getByOwnerUuid(player.getUniqueId().toString());
 
             IslandUtil.convertIslandDtosToItemStacks(userIslands)
