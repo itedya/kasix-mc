@@ -17,7 +17,7 @@ import java.util.logging.Level;
 public class IslandSchematicDao {
     private final Connection connection;
 
-    private IslandSchematicDao(Connection connection) {
+    public IslandSchematicDao(Connection connection) {
         this.connection = connection;
     }
 
