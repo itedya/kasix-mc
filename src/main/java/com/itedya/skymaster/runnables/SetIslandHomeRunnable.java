@@ -1,12 +1,11 @@
 package com.itedya.skymaster.runnables;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandHomeDao;
 import com.itedya.skymaster.dtos.IslandDto;
 import com.itedya.skymaster.dtos.IslandHomeDto;
-import com.itedya.skymaster.exceptions.ServerError;
+import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -20,11 +19,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SetIslandHomeRunnable extends BukkitRunnable {
-    private BlockVector3 wgPlayerLocation;
-    private Player player;
+    private final BlockVector3 wgPlayerLocation;
+    private final Player player;
     private Connection connection;
-    private RegionManager regionManager;
-    private ProtectedRegion islandRegion;
     private IslandDto islandDto;
     private final Location playerLocation;
 
@@ -46,31 +43,51 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
             this.connection = Database.getInstance().getConnection();
 
             // get region manager
-            this.regionManager = WorldGuardUtil.getRegionManager();
+            RegionManager regionManager = WorldGuardUtil.getRegionManager();
 
             // get player region
-            this.islandRegion = regionManager.getApplicableRegions(this.wgPlayerLocation)
+            ProtectedRegion islandRegion = regionManager.getApplicableRegions(this.wgPlayerLocation)
                     .getRegions()
                     .stream()
                     .findFirst()
                     .orElse(null);
 
-            if (this.islandRegion == null || !this.islandRegion.getId().startsWith("island_")) {
+            // if region does not exist or region is not an island, exit with warning
+            if (islandRegion == null || !islandRegion.getId().startsWith("island_")) {
                 player.sendMessage(ChatColor.YELLOW + "Nie znajdujesz się na żadnej wyspie!");
                 this.shutdown();
                 return;
             }
 
+            // get island id
+            int islandId = Integer.parseInt(islandRegion.getId().replace("island_", ""));
 
+            // get island dto by id
+            IslandDao islandDao = new IslandDao(this.connection);
+            this.islandDto = islandDao.getById(islandId);
 
-            String playerUuid = player.getUniqueId().toString();
+            ThreadUtil.sync(this::checkPermissions);
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
+            this.shutdown();
+        }
+    }
 
-            if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home")) &&
-                    (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home-someone"))) {
-                player.sendMessage(ChatColor.RED + "Brak permisji!");
-                return;
-            }
+    public void checkPermissions() {
+        String playerUuid = player.getUniqueId().toString();
 
+        if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home")) &&
+                (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home-someone"))) {
+            player.sendMessage(ChatColor.RED + "Brak permisji!");
+            return;
+        }
+
+        ThreadUtil.async(this::saveData);
+    }
+
+    public void saveData() {
+        try {
             Location homeLocationNormalized = new Location(
                     playerLocation.getWorld(),
                     playerLocation.getBlockX(),
@@ -86,7 +103,7 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
             islandHomeDto.setY(playerLocation.getBlockY());
             islandHomeDto.setZ(playerLocation.getBlockZ());
             islandHomeDao.updateByIslandId(islandHomeDto.getId(), islandHomeDto);
-            
+
 
             player.sendMessage(ChatColor.GREEN + "Zaktualizowano dom wyspy na lokalizacje " +
                     "X:" + homeLocationNormalized.getBlockX() + " " +
@@ -95,16 +112,8 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
             );
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
-            this.shutdown();
+            player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera!");
         }
-    }
-
-    public IslandDto getIsland(ProtectedRegion region) throws ServerError {
-        int islandId = Integer.parseInt(region.getId().replace("island_", ""));
-
-        IslandDao islandDao = new IslandDao(this.connection);
-        this.islandDto = islandDao.getById(islandId);
     }
 
     public void shutdown() {
