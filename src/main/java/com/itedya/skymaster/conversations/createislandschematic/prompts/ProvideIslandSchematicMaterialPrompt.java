@@ -1,4 +1,4 @@
-package com.itedya.skymaster.prompts.createislandschematic;
+package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.IslandSchematicDao;
@@ -49,14 +49,7 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
         ThreadUtil.async(new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    IslandSchematicDao islandSchematicDao = IslandSchematicDao.getInstance();
-                    islandSchematicDao.create(dto);
-                    conversable.sendRawMessage(ChatColor.GREEN + "Pomyślnie zapisano schemat.");
-                } catch (ServerError e) {
-                    SkyMaster.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
-                    conversable.sendRawMessage(ChatColor.RED + "Wystąpił błąd serwera.");
-                }
+
             }
         });
 
@@ -64,6 +57,4 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
 
         return null;
     }
-
-
 }

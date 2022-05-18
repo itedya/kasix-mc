@@ -1,30 +1,30 @@
 package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
-import com.itedya.skymaster.conversations.ConversationPrompt;
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 
-public class ProvideIslandSchematicDescriptionPrompt implements ConversationPrompt {
+public class ProvideIslandSchematicDescriptionPrompt extends StringPrompt {
     @Override
-    public String getMessage(Player player) {
+    public @NotNull String getPromptText(@NotNull ConversationContext context) {
         return ChatColor.GRAY + "Podaj opis schematu";
     }
 
     @Override
-    public ConversationPrompt parse(Map session, Player player, String message) {
-        if (message == null) {
-            player.sendMessage(ChatColor.RED + "Nie podałeś opisu.");
+    public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
+        Conversable player = context.getForWhom();
+
+        if (input == null) {
+            player.sendRawMessage(ChatColor.RED + "Nie podałeś opisu.");
             return new ProvideIslandSchematicDescriptionPrompt();
         }
 
-        session.put("description", ChatColor.translateAlternateColorCodes('&', message));
+        context.setSessionData("description", ChatColor.translateAlternateColorCodes('&', input));
 
         return new ProvideIslandSchematicFileNamePrompt();
     }

@@ -1,4 +1,4 @@
-package com.itedya.skymaster.prompts.createislandschematic;
+package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
