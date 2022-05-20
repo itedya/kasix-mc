@@ -6,10 +6,11 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
+import java.util.List;
 
 public class Database {
     private static Database instance;
@@ -47,26 +48,68 @@ public class Database {
         return connection;
     }
 
-    public void migrate() {
-        SkyMaster plugin = SkyMaster.getInstance();
-
-        InputStream tablesFileStream = plugin.getResource("tables.sql");
-        if (tablesFileStream == null) {
-            plugin.getLogger().severe("Can't get tables.sql migration file! This is probably a bug this should not happen, please report it on github.");
-        }
+    public static String convertStreamToString(InputStream is, String ecoding) throws IOException {
+        StringBuilder sb = new StringBuilder(Math.max(16, is.available()));
+        char[] tmp = new char[4096];
 
         try {
-            String migrationQueries = tablesFileStream.readAllBytes().toString();
-
-            Connection connection = this.getConnection();
-
-            PreparedStatement stmt = connection.prepareStatement(migrationQueries);
-            stmt.executeUpdate();
-        } catch (IOException e) {
-            plugin.getLogger().severe("Can't read migration queries. This is probably a bug, please report it on github.");
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Can't connect to database! Check database configuration in config.yml", e);
+            InputStreamReader reader = new InputStreamReader(is, ecoding);
+            for (int cnt; (cnt = reader.read(tmp)) > 0; )
+                sb.append(tmp, 0, cnt);
+        } finally {
+            is.close();
         }
+        return sb.toString();
+    }
+
+    public void migrate() {
+        List<String> tables = List.of(
+                "tables/homes.sql",
+                "tables/schematics.sql",
+                "tables/islands.sql",
+                "tables/members.sql",
+                "tables/homes_relations.sql"
+        );
+
+        SkyMaster plugin = SkyMaster.getInstance();
+
+        Connection connection = null;
+        try {
+            connection = this.getConnection();
+
+            for (String table : tables) {
+                InputStream tablesFileStream = plugin.getResource(table);
+                if (tablesFileStream == null) {
+                    plugin.getLogger().severe("Can't get " + table + " migration file! This is probably a bug, this should not happen, please report it on github.");
+                    continue;
+                }
+
+                try {
+                    String migrationQueries = convertStreamToString(tablesFileStream, "UTF-8");
+
+                    PreparedStatement stmt = connection.prepareStatement(migrationQueries);
+                    stmt.executeUpdate();
+
+                    connection.commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    connection.rollback();
+                }
+            }
+
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+
     }
 
 }
