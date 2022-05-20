@@ -19,6 +19,40 @@ public class IslandDao {
         this.connection = connection;
     }
 
+    public int getSumByOwnerUuid(String ownerUuid) throws ServerError {
+        return getSumByOwnerUuid(ownerUuid, false);
+    }
+
+    public int getSumByOwnerUuid(String ownerUuid, Boolean withDeleted) throws ServerError {
+        SkyMaster plugin = SkyMaster.getInstance();
+
+        String query = "SELECT SUM(*) FROM `skymaster_islands` WHERE `ownerUuid` = ?";
+        if (!withDeleted) query += " AND `deletedAt` = null";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setString(1, ownerUuid);
+
+            ResultSet resultSet = stmt.executeQuery();
+
+            Integer result = null;
+            if (resultSet.next()) {
+                result = resultSet.getInt("SUM(*)");
+            } else {
+                throw new ServerError("Result set is empty IslandDao:42");
+            }
+
+            resultSet.close();
+            stmt.close();
+
+            return result;
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Database error", e);
+            throw new ServerError();
+        }
+    }
+
     public List<IslandDto> getByOwnerUuid(String ownerUuid) throws ServerError {
         return getByOwnerUuid(ownerUuid, false);
     }
@@ -117,7 +151,7 @@ public class IslandDao {
         SkyMaster plugin = SkyMaster.getInstance();
 
         String query = "SELECT * FROM `skymaster_islands` WHERE `id` = ?";
-        if (! withDeleted) query += " AND deletedAt = null";
+        if (!withDeleted) query += " AND deletedAt = null";
         query += " LIMIT 1";
 
         try {
@@ -152,6 +186,24 @@ public class IslandDao {
             ResultSet rs = stmt.executeQuery();
 
             rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Database error", e);
+            throw new ServerError();
+        }
+    }
+
+    public void removeById(Integer islandId) throws ServerError {
+        SkyMaster plugin = SkyMaster.getInstance();
+
+        String query = "UPDATE `skymaster_islands` SET deletedAt = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setInt(1, islandId);
+
+            stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Database error", e);
