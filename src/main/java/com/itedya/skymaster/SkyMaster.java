@@ -38,7 +38,8 @@ public final class SkyMaster extends JavaPlugin {
             WorldUtil.createVoidWorld("world_islands");
         }
 
-        ConfigUtil.createRequiredFiles();
+        this.saveDefaultConfig();
+
 
         getServer().getPluginManager().registerEvents(new CreateIslandGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ListUserIslandsGUIHandler(), this);
