@@ -22,6 +22,10 @@ public class IslandDto {
 
     private Date deletedAt;
 
+    public IslandDto() {
+
+    }
+
     public IslandDto(ResultSet resultSet) throws SQLException {
         this.id = resultSet.getInt("id");
         this.name = resultSet.getString("name");
