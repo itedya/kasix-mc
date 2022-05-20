@@ -18,7 +18,7 @@ public class SaveIslandSchematicRunnable extends BukkitRunnable {
     private final Conversable conversable;
     private final IslandSchematicDto dto;
 
-    SaveIslandSchematicRunnable(Conversable conversable, IslandSchematicDto dto) {
+    public SaveIslandSchematicRunnable(Conversable conversable, IslandSchematicDto dto) {
         this.conversable = conversable;
         this.dto = dto;
     }

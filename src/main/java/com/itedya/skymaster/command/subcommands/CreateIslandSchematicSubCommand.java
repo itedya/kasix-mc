@@ -23,13 +23,12 @@ public class CreateIslandSchematicSubCommand implements CommandExecutor {
         }
 
         Conversation conversation = new ConversationFactory(SkyMaster.getInstance())
-                .withConversationCanceller(new ExactMatchConversationCanceller("/wyjdz"))
+                .withConversationCanceller(new ExactMatchConversationCanceller("wyjdz"))
                 .withFirstPrompt(new ProvideIslandSchematicNamePrompt())
                 .withLocalEcho(false)
                 .buildConversation(player);
 
         conversation.begin();
-
 
         return true;
     }

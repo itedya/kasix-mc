@@ -1,9 +1,7 @@
 package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
-import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.daos.IslandSchematicDao;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
-import com.itedya.skymaster.exceptions.ServerError;
+import com.itedya.skymaster.runnables.SaveIslandSchematicRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,11 +9,8 @@ import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.logging.Level;
 
 public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
     @Override
@@ -32,7 +27,7 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
             return new ProvideIslandSchematicMaterialPrompt();
         }
 
-        Material material = null;
+        Material material;
         try {
             material = Material.valueOf(input);
         } catch (IllegalArgumentException e) {
@@ -46,12 +41,7 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
         dto.setFilePath((String) context.getSessionData("fileName"));
         dto.setMaterial(material);
 
-        ThreadUtil.async(new BukkitRunnable() {
-            @Override
-            public void run() {
-
-            }
-        });
+        ThreadUtil.async(new SaveIslandSchematicRunnable(conversable, dto));
 
         conversable.sendRawMessage(ChatColor.GREEN + "Przyjęto do realizacji, serwer za chwilę spróbuje zapisać schemat. Daj mu chwilkę ;)");
 
