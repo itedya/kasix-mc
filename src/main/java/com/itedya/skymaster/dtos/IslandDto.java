@@ -22,6 +22,9 @@ public class IslandDto {
 
     private Date deletedAt;
 
+    private IslandHomeDto home;
+    private IslandSchematicDto schematic;
+
     public IslandDto() {
 
     }
@@ -34,6 +37,10 @@ public class IslandDto {
         this.createdAt = resultSet.getDate("createdAt");
         this.updatedAt = resultSet.getDate("updatedAt");
         this.deletedAt = resultSet.getDate("deletedAt");
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -86,5 +93,21 @@ public class IslandDto {
 
     public Date getUpdatedAt() {
         return updatedAt;
+    }
+
+    public IslandHomeDto getHome() {
+        return home;
+    }
+
+    public void setHome(IslandHomeDto home) {
+        this.home = home;
+    }
+
+    public IslandSchematicDto getSchematic() {
+        return schematic;
+    }
+
+    public void setSchematic(IslandSchematicDto schematic) {
+        this.schematic = schematic;
     }
 }
