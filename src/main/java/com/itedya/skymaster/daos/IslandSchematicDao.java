@@ -1,11 +1,9 @@
 package com.itedya.skymaster.daos;
 
-import com.google.gson.Gson;
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
 import com.itedya.skymaster.exceptions.ServerError;
 
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,7 +63,7 @@ public class IslandSchematicDao {
 
         String query = "SELECT * FROM `skymaster_schematics`";
 
-        if (!withDeleted) query += " WHERE deletedAt != null";
+        if (!withDeleted) query += " WHERE deletedAt IS NULL";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -96,7 +94,7 @@ public class IslandSchematicDao {
     public IslandSchematicDto getById(int id, Boolean withDeleted) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
         String query = "SELECT * FROM `skymaster_schematics` WHERE id = ?";
-        if (!withDeleted) query += " AND deletedAt != null";
+        if (!withDeleted) query += " AND deletedAt IS NULL";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -104,15 +102,17 @@ public class IslandSchematicDao {
 
             ResultSet rs = stmt.executeQuery();
 
-            stmt.close();
+            IslandSchematicDto result = null;
+
 
             if (rs.next()) {
-                rs.close();
-                return new IslandSchematicDto(rs);
+                result = new IslandSchematicDto(rs);
             }
 
             rs.close();
-            return null;
+            stmt.close();
+
+            return result;
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Database error", e);
             throw new ServerError();
