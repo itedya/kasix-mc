@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class IslandHomeUtil {
-    private static Map<String, Location> lastPlayerLocationMap = new HashMap<>();
-    private static Map<String, Integer> playerTicks = new HashMap<>();
+    private static final Map<String, Location> lastPlayerLocationMap = new HashMap<>();
+    private static final Map<String, Integer> playerTicks = new HashMap<>();
 
     public static void addPlayerToQueue(Player player, IslandHomeDto home) {
         World world = Bukkit.getWorld(UUID.fromString(home.getWorldUuid()));
