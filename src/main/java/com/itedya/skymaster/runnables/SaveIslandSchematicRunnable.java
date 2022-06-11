@@ -1,17 +1,14 @@
 package com.itedya.skymaster.runnables;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandSchematicDao;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
-import com.itedya.skymaster.exceptions.ServerError;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
 
 public class SaveIslandSchematicRunnable extends BukkitRunnable {
     private Connection connection;
@@ -36,9 +33,19 @@ public class SaveIslandSchematicRunnable extends BukkitRunnable {
         try {
             IslandSchematicDao islandSchematicDao = new IslandSchematicDao(connection);
             islandSchematicDao.create(dto);
+
+            connection.commit();
+            connection.close();
+
             conversable.sendRawMessage(ChatColor.GREEN + "Pomyślnie zapisano schemat.");
-        } catch (ServerError e) {
-            SkyMaster.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             conversable.sendRawMessage(ChatColor.RED + "Wystąpił błąd serwera.");
         }
     }
