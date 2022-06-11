@@ -1,28 +1,34 @@
 package com.itedya.skymaster.listeners;
 
-import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.utils.IslandHomeUtil;
-import com.itedya.skymaster.utils.WorldGuardUtil;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.itedya.skymaster.runnables.RemoveIslandRunnable;
+import com.itedya.skymaster.runnables.ResetWorldGuardPermissionsRunnable;
+import com.itedya.skymaster.runnables.TeleportPlayerToIslandHomeRunnable;
+import com.itedya.skymaster.utils.PersistentDataContainerUtil;
+import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class IslandInfoGUIHandler implements Listener {
-    private String guiTitle = "Szczegóły wyspy";
+    public boolean react(InventoryClickEvent event) {
+        ItemStack firstItem = event.getInventory().getItem(0);
+        if (firstItem == null) return false;
+
+        ItemMeta itemMeta = firstItem.getItemMeta();
+        String identifier = PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "inventory-identifier");
+        if (identifier == null) return false;
+
+        return identifier.equals("island-info-gui");
+    }
 
     @EventHandler()
     public void onInvClick(InventoryClickEvent event) {
-        if (!event.getView().getTitle().startsWith(guiTitle)) return;
+        if (!react(event)) return;
 
         event.setCancelled(true);
 
@@ -32,27 +38,22 @@ public class IslandInfoGUIHandler implements Listener {
             }
 
             ItemStack itemStack = event.getCurrentItem();
-            Material material = itemStack.getType();
-            String islandUUID = itemStack.getItemMeta().getPersistentDataContainer().get(
-                    new NamespacedKey(SkyMaster.getInstance(), "island_uuid"),
-                    PersistentDataType.STRING
+            if (itemStack == null) return;
+
+            ItemMeta itemMeta = itemStack.getItemMeta();
+
+            Integer islandId = PersistentDataContainerUtil.getInt(
+                    itemMeta.getPersistentDataContainer(),
+                    "island-id"
             );
 
-            IslandDao islandDao = IslandDao.getInstance();
-            IslandDto islandDto = islandDao.getByUuid(islandUUID);
+            Material material = itemStack.getType();
 
             switch (material) {
-                case GRASS_BLOCK -> IslandHomeUtil.addPlayerToQueue(player, islandDto);
-                case BARRIER -> {
-                    WorldGuardUtil.removeRegionForDto(islandDto);
-                    islandDto.setDeleted(true);
-                    islandDao.update(islandDto);
-                    player.sendMessage(ChatColor.GREEN + "Usunięto wyspę.");
-                }
-                case REPEATING_COMMAND_BLOCK -> {
-                    resetWorldGuardPermissions(islandDto);
-                    player.sendMessage(ChatColor.GREEN + "Zresetowano ustawienia WorldGuard dla tej wyspy.");
-                }
+                case GRASS_BLOCK -> ThreadUtil.async(new TeleportPlayerToIslandHomeRunnable(player, islandId));
+                case BARRIER -> ThreadUtil.async(new RemoveIslandRunnable(player, islandId));
+                case REPEATING_COMMAND_BLOCK ->
+                        ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(player, islandId));
             }
 
             event.getWhoClicked().closeInventory();
@@ -63,10 +64,5 @@ public class IslandInfoGUIHandler implements Listener {
         }
     }
 
-    public void resetWorldGuardPermissions(IslandDto islandDto) {
-        ProtectedRegion protectedRegion = WorldGuardUtil.getRegionForDto(islandDto);
-        WorldGuardUtil.resetRegionFlags(protectedRegion);
-        WorldGuardUtil.resetRegionMembers(protectedRegion, islandDto);
-        WorldGuardUtil.resetPriority(protectedRegion);
-    }
+
 }
