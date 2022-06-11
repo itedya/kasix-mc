@@ -1,5 +1,6 @@
 package com.itedya.skymaster.runnables;
 
+import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandHomeDao;

@@ -52,45 +52,4 @@ public class SetIslandHomeSubCommand implements CommandExecutor {
 
         return true;
     }
-
-    private void stepOne(Player player, Location playerLocation) {
-        try {
-            String playerUuid = player.getUniqueId().toString();
-
-            if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home")) &&
-                    (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home-someone"))) {
-                player.sendMessage(ChatColor.RED + "Brak permisji!");
-                return;
-            }
-
-            Location homeLocationNormalized = new Location(
-                    playerLocation.getWorld(),
-                    playerLocation.getBlockX(),
-                    playerLocation.getBlockY(),
-                    playerLocation.getBlockZ()
-            );
-
-            IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
-
-            IslandHomeDto islandHomeDto = new IslandHomeDto();
-            islandHomeDto.setWorldUuid(playerLocation.getWorld().getUID().toString());
-            islandHomeDto.setX(playerLocation.getBlockX());
-            islandHomeDto.setY(playerLocation.getBlockY());
-            islandHomeDto.setZ(playerLocation.getBlockZ());
-            islandHomeDto.set(playerLocation.getBlockZ());
-            islandHomeDao.updateByIslandId(islandHomeDto);
-
-            player.sendMessage(ChatColor.GREEN + "Zaktualizowano dom wyspy na lokalizacje " +
-                    "X:" + homeLocationNormalized.getBlockX() + " " +
-                    "Y:" + homeLocationNormalized.getBlockY() + " " +
-                    "Z:" + homeLocationNormalized.getBlockZ()
-            );
-        } catch (ServerError e) {
-            SkyMaster.getInstance().getLogger().log(Level.SEVERE, "Server error", e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return true;
-    }
 }
