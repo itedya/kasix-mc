@@ -2,12 +2,12 @@ package com.itedya.skymaster.daos;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.IslandSchematicDto;
 import com.itedya.skymaster.exceptions.ServerError;
+import org.bukkit.Material;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ public class IslandDao {
     public int getSumByOwnerUuid(String ownerUuid, Boolean withDeleted) throws ServerError {
         SkyMaster plugin = SkyMaster.getInstance();
 
-        String query = "SELECT SUM(*) FROM `skymaster_islands` WHERE `ownerUuid` = ?";
+        String query = "SELECT count(*) FROM `skymaster_islands` WHERE `ownerUuid` = ?";
         if (!withDeleted) query += " AND `deletedAt` = null";
 
         try {
@@ -38,7 +38,7 @@ public class IslandDao {
 
             Integer result = null;
             if (resultSet.next()) {
-                result = resultSet.getInt("SUM(*)");
+                result = resultSet.getInt("count(*)");
             } else {
                 throw new ServerError("Result set is empty IslandDao:42");
             }
@@ -53,37 +53,30 @@ public class IslandDao {
         }
     }
 
-    public List<IslandDto> getByOwnerUuid(String ownerUuid) throws ServerError {
+    public List<IslandDto> getByOwnerUuid(String ownerUuid) throws SQLException {
         return getByOwnerUuid(ownerUuid, false);
     }
 
-    public List<IslandDto> getByOwnerUuid(String ownerUuid, Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public List<IslandDto> getByOwnerUuid(String ownerUuid, Boolean withDeleted) throws SQLException {
         String query = "SELECT * FROM `skymaster_islands` WHERE `ownerUuid` = ?";
-        if (!withDeleted) query += " AND `deletedAt` = null";
+        if (!withDeleted) query += " AND `deletedAt` IS NULL";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setString(1, ownerUuid);
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, ownerUuid);
 
-            ResultSet resultSet = stmt.executeQuery();
+        ResultSet resultSet = stmt.executeQuery();
 
-            List<IslandDto> result = new ArrayList<>();
+        List<IslandDto> result = new ArrayList<>();
 
-            while (resultSet.next()) {
-                IslandDto dto = new IslandDto(resultSet);
-                result.add(dto);
-            }
-
-            resultSet.close();
-            stmt.close();
-
-            return result;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
+        while (resultSet.next()) {
+            IslandDto dto = new IslandDto(resultSet);
+            result.add(dto);
         }
+
+        resultSet.close();
+        stmt.close();
+
+        return result;
     }
 
     public int getCount() throws ServerError {
@@ -95,7 +88,7 @@ public class IslandDao {
 
         String query = "SELECT COUNT(*) as `size` FROM skymaster_islands";
 
-        if (!withDeleted) query += " WHERE deletedAt != null";
+        if (!withDeleted) query += " WHERE deletedAt IS NULL";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -122,52 +115,50 @@ public class IslandDao {
         }
     }
 
-    public void create(IslandDto islandDto) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public void create(IslandDto islandDto) throws SQLException {
         String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setString(1, islandDto.getOwnerUuid());
-            stmt.setInt(2, islandDto.getSchematicId());
-            stmt.setString(3, islandDto.getName());
+        stmt.setString(1, islandDto.getOwnerUuid());
+        stmt.setInt(2, islandDto.getSchematicId());
+        stmt.setString(3, islandDto.getName());
 
-            stmt.executeUpdate();
+        stmt.executeUpdate();
 
-            stmt.close();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        int affectedRows = stmt.executeUpdate();
+        if (affectedRows == 0) throw new SQLException("No rows affected!");
+
+        ResultSet rs = stmt.getGeneratedKeys();
+
+        if (rs.next()) islandDto.setId(rs.getInt(1));
+        else throw new SQLException("No id generated for added island!");
+
+        rs.close();
+        stmt.close();
     }
 
-    public IslandDto getById(int id) throws ServerError {
+    public IslandDto getById(int id) throws SQLException {
         return getById(id, false);
     }
 
-    public IslandDto getById(int id, Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public IslandDto getById(int id, Boolean withDeleted) throws SQLException {
         String query = "SELECT * FROM `skymaster_islands` WHERE `id` = ?";
-        if (!withDeleted) query += " AND deletedAt = null";
+        if (!withDeleted) query += " AND deletedAt IS NULL";
         query += " LIMIT 1";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, id);
+        stmt.setInt(1, id);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            stmt.close();
+        IslandDto result = (rs.next()) ? new IslandDto(rs) : null;
 
-            return new IslandDto(rs);
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        rs.close();
+        stmt.close();
+
+        return result;
     }
 
     public void update(IslandDto islandDto) throws ServerError {
@@ -193,21 +184,74 @@ public class IslandDao {
         }
     }
 
-    public void removeById(Integer islandId) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public void removeById(Integer islandId) throws SQLException {
         String query = "UPDATE `skymaster_islands` SET deletedAt = CURRENT_TIMESTAMP WHERE id = ?";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setInt(1, islandId);
 
-            stmt.setInt(1, islandId);
+        stmt.executeUpdate();
+        stmt.close();
+    }
 
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
+    public List<IslandDto> getByOwnerUuidWithAllRelations(String ownerUuid) throws SQLException {
+        return getByOwnerUuidWithAllRelations(ownerUuid, false);
+    }
+
+    public List<IslandDto> getByOwnerUuidWithAllRelations(String ownerUuid, Boolean withDeleted) throws SQLException {
+        String query = "SELECT skymaster_islands.*, skymaster_homes.*, skymaster_schematics.* " +
+                "FROM `skymaster_islands` " +
+                "         JOIN skymaster_island_has_homes ON skymaster_islands.id = skymaster_island_has_homes.islandId " +
+                "         JOIN skymaster_homes ON skymaster_homes.id = skymaster_island_has_homes.homeId " +
+                "         JOIN skymaster_schematics ON skymaster_schematics.id = skymaster_islands.schematicId " +
+                "WHERE skymaster_islands.ownerUuid = ?";
+
+        if (!withDeleted) query += " AND skymaster_islands.deletedAt IS NULL";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, ownerUuid);
+        ResultSet rs = stmt.executeQuery();
+
+        List<IslandDto> result = new ArrayList<>();
+
+        while (rs.next()) {
+            IslandDto islandDto = new IslandDto();
+
+            islandDto.setId(rs.getInt("skymaster_islands.id"));
+            islandDto.setName(rs.getString("skymaster_islands.name"));
+            islandDto.setOwnerUuid(rs.getString("ownerUuid"));
+            islandDto.setSchematicId(rs.getInt("schematicId"));
+            islandDto.setUpdatedAt(rs.getDate("skymaster_islands.updatedAt"));
+            islandDto.setCreatedAt(rs.getDate("skymaster_islands.createdAt"));
+            islandDto.setDeletedAt(rs.getDate("skymaster_islands.deletedAt"));
+
+            IslandHomeDto islandHomeDto = new IslandHomeDto();
+            islandHomeDto.setId(rs.getInt("skymaster_homes.id"));
+            islandHomeDto.setX(rs.getInt("x"));
+            islandHomeDto.setY(rs.getInt("y"));
+            islandHomeDto.setZ(rs.getInt("z"));
+            islandHomeDto.setWorldUuid(rs.getString("worldUuid"));
+            islandHomeDto.setCreatedAt(rs.getDate("skymaster_homes.createdAt"));
+            islandHomeDto.setUpdatedAt(rs.getDate("skymaster_homes.updatedAt"));
+            islandHomeDto.setDeletedAt(rs.getDate("skymaster_homes.deletedAt"));
+            islandDto.setHome(islandHomeDto);
+
+            IslandSchematicDto schematicDto = new IslandSchematicDto();
+            schematicDto.setId(rs.getInt("skymaster_schematics.id"));
+            schematicDto.setName(rs.getString("skymaster_schematics.name"));
+            schematicDto.setDescription(rs.getString("description"));
+            schematicDto.setFilePath(rs.getString("filePath"));
+
+            Material material = Material.valueOf(rs.getString("material"));
+            schematicDto.setMaterial(material);
+            schematicDto.setCreatedAt(rs.getDate("skymaster_schematics.createdAt"));
+            schematicDto.setUpdatedAt(rs.getDate("skymaster_schematics.updatedAt"));
+            schematicDto.setDeletedAt(rs.getDate("skymaster_schematics.deletedAt"));
+            islandDto.setSchematic(schematicDto);
+
+            result.add(islandDto);
         }
+
+        return result;
     }
 }
