@@ -16,10 +16,10 @@ public class IslandInviteDao {
     private IslandInviteDao() {
     }
 
-    private final List<IslandInviteDto> invitesMap = new ArrayList<>();
+    private final List<IslandInviteDto> data = new ArrayList<>();
 
     public IslandInviteDto getByToPlayerUuid(String uuid) {
-        return invitesMap.stream()
+        return data.stream()
                 .filter(ele -> ele.getToPlayer().getUniqueId().toString().equals(uuid))
                 .findFirst()
                 .orElse(null);
@@ -27,5 +27,9 @@ public class IslandInviteDao {
 
     public boolean doesPlayerHaveInvite(String uuid) {
         return getByToPlayerUuid(uuid) != null;
+    }
+
+    public void addToQueue(IslandInviteDto inviteDto) {
+        data.add(inviteDto);
     }
 }
