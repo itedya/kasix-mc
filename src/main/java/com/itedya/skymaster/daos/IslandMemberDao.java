@@ -22,6 +22,7 @@ public class IslandMemberDao {
         if (!withDeleted) query += " AND deletedAt IS NULL";
 
         PreparedStatement statement = this.connection.prepareStatement(query);
+        statement.setInt(1, islandId);
 
         ResultSet rs = statement.executeQuery();
 
