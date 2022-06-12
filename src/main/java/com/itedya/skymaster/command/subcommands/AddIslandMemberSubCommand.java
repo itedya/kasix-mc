@@ -42,7 +42,7 @@ public class AddIslandMemberSubCommand implements CommandExecutor {
 
             IslandInviteDao islandInviteDao = IslandInviteDao.getInstance();
             if (islandInviteDao.doesPlayerHaveInvite(invitedPlayer.getUniqueId().toString())) {
-                player.sendMessage(ChatColor.YELLOW + "Gracz " + invitedPlayer.getName() + " ma już zaproszenie na wyspę, poczekaj do 30 sekund aż wygaśnie.");
+                player.sendMessage(ChatColor.YELLOW + "Gracz " + invitedPlayer.getName() + " ma już zaproszenie na wyspę, poczekaj do 60 sekund aż wygaśnie.");
                 return true;
             }
 

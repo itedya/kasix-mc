@@ -39,7 +39,7 @@ public class InvitePlayerToIslandRunnable implements Runnable {
             ThreadUtil.sync(() -> {
                 IslandInviteDao islandInviteDao = IslandInviteDao.getInstance();
 
-                if (islandInviteDao.doesPlayerHaveInvite(inviteToPlayer.getUniqueId().toString())) {
+                if (! islandInviteDao.doesPlayerHaveInvite(inviteToPlayer.getUniqueId().toString())) {
                     islandInviteDao.addToQueue(islandInviteDto);
                     player.sendMessage(ChatColor.GREEN + "Zaproszono gracza " + inviteToPlayer.getName() + " do wyspy " + islandDto.getName());
                     inviteToPlayer.sendMessage(ChatColor.GREEN + "Dostałeś zaproszenie do wyspy " +

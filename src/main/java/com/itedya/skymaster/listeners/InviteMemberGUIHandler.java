@@ -67,7 +67,7 @@ public class InviteMemberGUIHandler implements Listener {
                 return;
             }
 
-            ThreadUtil.async(() -> new InvitePlayerToIslandRunnable(islandId, player, inviteToPlayer));
+            ThreadUtil.async(new InvitePlayerToIslandRunnable(islandId, player, inviteToPlayer));
         } catch (Exception e) {
             e.printStackTrace();
             event.getInventory().close();
