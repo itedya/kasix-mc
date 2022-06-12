@@ -1,20 +1,26 @@
 package com.itedya.skymaster.utils;
 
-import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.IslandHomeDto;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class IslandHomeUtil {
-    private static Map<String, Location> lastPlayerLocationMap = new HashMap<>();
-    private static Map<String, Integer> playerTicks = new HashMap<>();
+    private static final Map<String, Location> lastPlayerLocationMap = new HashMap<>();
+    private static final Map<String, Integer> playerTicks = new HashMap<>();
 
-    public static void addPlayerToQueue(Player player, IslandDto islandDto) {
+    public static void addPlayerToQueue(Player player, IslandHomeDto home) {
+        World world = Bukkit.getWorld(UUID.fromString(home.getWorldUuid()));
+        Location location = new Location(world, home.getX(), home.getY(), home.getZ());
+
         if (player.hasPermission("kasix-mc.islands.teleport-instantly")) {
-            player.teleport(islandDto.getHome());
+            player.teleport(location);
             player.sendMessage(ChatColor.GREEN + "Teleportacja do domu wyspy!");
             return;
         }
@@ -26,10 +32,10 @@ public class IslandHomeUtil {
         lastPlayerLocationMap.put(uuid, player.getLocation());
         playerTicks.put(uuid, 0);
 
-        scheduleNextSync(player, islandDto);
+        scheduleNextSync(player, location);
     }
 
-    private static void scheduleNextSync(Player player, IslandDto islandDto) {
+    private static void scheduleNextSync(Player player, Location location) {
         ThreadUtil.syncDelay(() -> {
             String uuid = player.getUniqueId().toString();
 
@@ -48,7 +54,7 @@ public class IslandHomeUtil {
             Integer ticks = playerTicks.get(uuid);
 
             if (ticks == 100) {
-                player.teleport(islandDto.getHome());
+                player.teleport(location);
                 player.sendMessage(ChatColor.GREEN + "Teleportacja do domu wyspy!");
                 lastPlayerLocationMap.remove(uuid);
                 playerTicks.remove(uuid);
@@ -57,7 +63,7 @@ public class IslandHomeUtil {
 
             playerTicks.put(uuid, ticks + 10);
 
-            scheduleNextSync(player, islandDto);
+            scheduleNextSync(player, location);
         }, 10);
     }
 }

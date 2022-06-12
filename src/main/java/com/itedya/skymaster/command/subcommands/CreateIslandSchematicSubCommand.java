@@ -1,7 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.prompts.createislandschematic.ProvideIslandSchematicIdPrompt;
+import com.itedya.skymaster.conversations.createislandschematic.prompts.ProvideIslandSchematicNamePrompt;
 import com.itedya.skymaster.utils.ConfigUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,13 +23,12 @@ public class CreateIslandSchematicSubCommand implements CommandExecutor {
         }
 
         Conversation conversation = new ConversationFactory(SkyMaster.getInstance())
-                .withConversationCanceller(new ExactMatchConversationCanceller("/wyjdz"))
-                .withFirstPrompt(new ProvideIslandSchematicIdPrompt())
+                .withConversationCanceller(new ExactMatchConversationCanceller("wyjdz"))
+                .withFirstPrompt(new ProvideIslandSchematicNamePrompt())
                 .withLocalEcho(false)
                 .buildConversation(player);
 
         conversation.begin();
-
 
         return true;
     }

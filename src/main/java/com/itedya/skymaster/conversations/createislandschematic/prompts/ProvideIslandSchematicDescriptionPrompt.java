@@ -1,11 +1,13 @@
-package com.itedya.skymaster.prompts.createislandschematic;
+package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 public class ProvideIslandSchematicDescriptionPrompt extends StringPrompt {
     @Override
@@ -15,9 +17,10 @@ public class ProvideIslandSchematicDescriptionPrompt extends StringPrompt {
 
     @Override
     public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
+        Conversable player = context.getForWhom();
+
         if (input == null) {
-            context.getForWhom()
-                    .sendRawMessage(ChatColor.RED + "Nie podałeś opisu.");
+            player.sendRawMessage(ChatColor.RED + "Nie podałeś opisu.");
             return new ProvideIslandSchematicDescriptionPrompt();
         }
 

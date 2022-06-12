@@ -16,6 +16,9 @@ public class IslandSchematicDto {
     private Date createdAt;
     private Date deletedAt;
 
+    public IslandSchematicDto() {
+    }
+
     public IslandSchematicDto(ResultSet rs) throws SQLException {
         this.id = rs.getInt("id");
         this.name = rs.getString("name");

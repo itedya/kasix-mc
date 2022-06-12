@@ -1,16 +1,16 @@
-package com.itedya.skymaster.prompts.createislandschematic;
+package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
-import com.itedya.skymaster.daos.IslandSchematicDao;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.runnables.SaveIslandSchematicRunnable;
+import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
 
 public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
     @Override
@@ -20,39 +20,30 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
 
     @Override
     public @Nullable Prompt acceptInput(@NotNull ConversationContext context, @Nullable String input) {
+        Conversable conversable = context.getForWhom();
+
         if (input == null) {
-            context.getForWhom()
-                    .sendRawMessage(ChatColor.RED + "Nie podałeś materiału reprezentacyjnego.");
+            conversable.sendRawMessage(ChatColor.RED + "Nie podałeś materiału reprezentacyjnego.");
             return new ProvideIslandSchematicMaterialPrompt();
         }
 
-        Material material = null;
+        Material material;
         try {
             material = Material.valueOf(input);
         } catch (IllegalArgumentException e) {
-            context.getForWhom()
-                    .sendRawMessage(ChatColor.RED + "Materiał " + input + " nie istnieje!");
+            conversable.sendRawMessage(ChatColor.RED + "Materiał " + input + " nie istnieje!");
             return new ProvideIslandSchematicMaterialPrompt();
         }
 
         IslandSchematicDto dto = new IslandSchematicDto();
-        dto.setId((String) context.getSessionData("id"));
         dto.setName((String) context.getSessionData("name"));
         dto.setDescription((String) context.getSessionData("description"));
         dto.setFilePath((String) context.getSessionData("fileName"));
         dto.setMaterial(material);
 
-        try {
-            IslandSchematicDao islandSchematicDao = IslandSchematicDao.getInstance();
-            islandSchematicDao.create(dto);
-        } catch (IOException e) {
-            e.printStackTrace();
-            context.getForWhom()
-                    .sendRawMessage(ChatColor.RED + "Błąd serwera, akcja anulowana.");
-        }
+        ThreadUtil.async(new SaveIslandSchematicRunnable(conversable, dto));
 
-        context.getForWhom()
-                .sendRawMessage(ChatColor.GREEN + "Dodano schemat.");
+        conversable.sendRawMessage(ChatColor.GREEN + "Przyjęto do realizacji, serwer za chwilę spróbuje zapisać schemat. Daj mu chwilkę ;)");
 
         return null;
     }

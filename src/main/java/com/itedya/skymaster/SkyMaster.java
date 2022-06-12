@@ -3,10 +3,10 @@ package com.itedya.skymaster;
 import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.listeners.CreateIslandGUIHandler;
+import com.itedya.skymaster.listeners.InviteMemberGUIHandler;
 import com.itedya.skymaster.listeners.IslandInfoGUIHandler;
 import com.itedya.skymaster.listeners.ListUserIslandsGUIHandler;
 import com.itedya.skymaster.utils.CommandUtil;
-import com.itedya.skymaster.utils.ConfigUtil;
 import com.itedya.skymaster.utils.WorldUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,10 +38,12 @@ public final class SkyMaster extends JavaPlugin {
             WorldUtil.createVoidWorld("world_islands");
         }
 
-        ConfigUtil.createRequiredFiles();
+        this.saveDefaultConfig();
+
 
         getServer().getPluginManager().registerEvents(new CreateIslandGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ListUserIslandsGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new IslandInfoGUIHandler(), this);
+        getServer().getPluginManager().registerEvents(new InviteMemberGUIHandler(), this);
     }
 }
