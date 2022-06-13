@@ -38,4 +38,38 @@ public class IslandMemberDao {
         return result;
     }
 
+    public boolean isMember(String playerUuid, Integer islandId) throws SQLException {
+        String query = "SELECT * FROM `skymaster_island_has_members` WHERE playerUuid = ? AND islandId = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setString(1, playerUuid);
+        stmt.setInt(2, islandId);
+
+        stmt.executeQuery();
+
+        ResultSet rs = stmt.getResultSet();
+
+        boolean isMember = rs.next();
+
+        rs.close();
+        stmt.close();
+
+        return isMember;
+    }
+
+    public IslandMemberDto create(IslandMemberDto dto) throws SQLException {
+        String query = "INSERT INTO `skymaster_island_has_members` SET islandId = ?, playerUuid = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setInt(1, dto.getIslandId());
+        stmt.setString(2, dto.getPlayerUuid());
+
+        stmt.executeUpdate();
+        stmt.close();
+
+        return dto;
+    }
+
 }
