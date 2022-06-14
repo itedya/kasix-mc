@@ -230,4 +230,66 @@ public class IslandDao {
 
         return result;
     }
+
+    public List<IslandDto> getByMemberUuidWithAllRelations(String memberUuid) throws SQLException {
+        return getByMemberUuidWithAllRelations(memberUuid, false);
+    }
+
+    public List<IslandDto> getByMemberUuidWithAllRelations(String memberUuid, Boolean withDeleted) throws SQLException {
+        String query = "SELECT skymaster_islands.*, skymaster_homes.*, skymaster_schematics.* " +
+                "FROM `skymaster_island_has_members` " +
+                "         JOIN skymaster_island_has_homes ON skymaster_islands.id = skymaster_island_has_homes.islandId " +
+                "         JOIN skymaster_homes ON skymaster_homes.id = skymaster_island_has_homes.homeId " +
+                "         JOIN skymaster_schematics ON skymaster_schematics.id = skymaster_islands.schematicId " +
+                "         JOIN skymaster_islands ON skymaster_island_has_members.islandId = skymaster_islands.id " +
+                "WHERE skymaster_island_has_members.playerUuid = ?";
+
+        if (!withDeleted) query += " AND skymaster_islands.deletedAt IS NULL";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, memberUuid);
+        ResultSet rs = stmt.executeQuery();
+
+        List<IslandDto> result = new ArrayList<>();
+
+        while (rs.next()) {
+            IslandDto islandDto = new IslandDto();
+
+            islandDto.setId(rs.getInt("skymaster_islands.id"));
+            islandDto.setName(rs.getString("skymaster_islands.name"));
+            islandDto.setOwnerUuid(rs.getString("ownerUuid"));
+            islandDto.setSchematicId(rs.getInt("schematicId"));
+            islandDto.setUpdatedAt(rs.getDate("skymaster_islands.updatedAt"));
+            islandDto.setCreatedAt(rs.getDate("skymaster_islands.createdAt"));
+            islandDto.setDeletedAt(rs.getDate("skymaster_islands.deletedAt"));
+
+            IslandHomeDto islandHomeDto = new IslandHomeDto();
+            islandHomeDto.setId(rs.getInt("skymaster_homes.id"));
+            islandHomeDto.setX(rs.getInt("x"));
+            islandHomeDto.setY(rs.getInt("y"));
+            islandHomeDto.setZ(rs.getInt("z"));
+            islandHomeDto.setWorldUuid(rs.getString("worldUuid"));
+            islandHomeDto.setCreatedAt(rs.getDate("skymaster_homes.createdAt"));
+            islandHomeDto.setUpdatedAt(rs.getDate("skymaster_homes.updatedAt"));
+            islandHomeDto.setDeletedAt(rs.getDate("skymaster_homes.deletedAt"));
+            islandDto.setHome(islandHomeDto);
+
+            IslandSchematicDto schematicDto = new IslandSchematicDto();
+            schematicDto.setId(rs.getInt("skymaster_schematics.id"));
+            schematicDto.setName(rs.getString("skymaster_schematics.name"));
+            schematicDto.setDescription(rs.getString("description"));
+            schematicDto.setFilePath(rs.getString("filePath"));
+
+            Material material = Material.valueOf(rs.getString("material"));
+            schematicDto.setMaterial(material);
+            schematicDto.setCreatedAt(rs.getDate("skymaster_schematics.createdAt"));
+            schematicDto.setUpdatedAt(rs.getDate("skymaster_schematics.updatedAt"));
+            schematicDto.setDeletedAt(rs.getDate("skymaster_schematics.deletedAt"));
+            islandDto.setSchematic(schematicDto);
+
+            result.add(islandDto);
+        }
+
+        return result;
+    }
 }
