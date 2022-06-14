@@ -1,6 +1,6 @@
 package com.itedya.skymaster.conversations.createisland;
 
-import com.itedya.skymaster.runnables.CreateIslandRunnable;
+import com.itedya.skymaster.runnables.island.CreateIslandRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;

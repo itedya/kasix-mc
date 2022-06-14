@@ -1,7 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.daos.IslandInviteDao;
-import com.itedya.skymaster.runnables.AcceptInviteToIslandRunnable;
+import com.itedya.skymaster.runnables.invite.AcceptInviteToIslandRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

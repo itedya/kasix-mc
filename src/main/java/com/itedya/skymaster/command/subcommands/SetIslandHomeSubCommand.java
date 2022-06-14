@@ -1,6 +1,6 @@
 package com.itedya.skymaster.command.subcommands;
 
-import com.itedya.skymaster.runnables.SetIslandHomeRunnable;
+import com.itedya.skymaster.runnables.home.SetIslandHomeRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

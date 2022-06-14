@@ -1,6 +1,6 @@
 package com.itedya.skymaster.command.subcommands;
 
-import com.itedya.skymaster.runnables.ShowCreateIslandGuiRunnable;
+import com.itedya.skymaster.runnables.island.ShowCreateIslandGuiRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

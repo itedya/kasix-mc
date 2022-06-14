@@ -1,7 +1,7 @@
 package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
 import com.itedya.skymaster.dtos.IslandSchematicDto;
-import com.itedya.skymaster.runnables.SaveIslandSchematicRunnable;
+import com.itedya.skymaster.runnables.schematics.SaveIslandSchematicRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

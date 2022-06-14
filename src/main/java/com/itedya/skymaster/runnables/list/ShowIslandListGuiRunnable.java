@@ -1,4 +1,4 @@
-package com.itedya.skymaster.runnables;
+package com.itedya.skymaster.runnables.list;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;

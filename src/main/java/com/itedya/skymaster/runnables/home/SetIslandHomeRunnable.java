@@ -1,4 +1,4 @@
-package com.itedya.skymaster.runnables;
+package com.itedya.skymaster.runnables.home;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.Database;

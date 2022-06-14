@@ -1,7 +1,7 @@
 package com.itedya.skymaster.listeners;
 
 import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.runnables.ShowIslandGuiRunnable;
+import com.itedya.skymaster.runnables.island.ShowIslandGuiRunnable;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;

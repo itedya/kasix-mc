@@ -1,7 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.daos.IslandInviteDao;
-import com.itedya.skymaster.runnables.ShowIslandsForInvitesGuiRunnable;
+import com.itedya.skymaster.runnables.invite.ShowIslandsForInvitesGuiRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.*;
 import org.bukkit.command.Command;
