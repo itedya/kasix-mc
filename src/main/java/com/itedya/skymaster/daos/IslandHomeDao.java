@@ -1,11 +1,8 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.dtos.IslandHomeDto;
-import com.itedya.skymaster.exceptions.ServerError;
 
 import java.sql.*;
-import java.util.logging.Level;
 
 public class IslandHomeDao {
     private final Connection connection;
@@ -75,48 +72,34 @@ public class IslandHomeDao {
         return islandHomeDto;
     }
 
-    public void updateByIslandId(int islandId, IslandHomeDto islandHomeDto) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public void updateByIslandId(int islandId, IslandHomeDto islandHomeDto) throws SQLException {
         String query = "UPDATE `skymaster_homes` " +
                 "JOIN `skymaster_island_has_homes` ON `skymaster_homes`.`id` = `skymaster_island_has_homes`.`homeId` " +
                 "JOIN `skymaster_islands` ON `skymaster_island_has_homes`.`islandId` = `skymaster_islands`.`id` " +
                 "SET x = ?, y = ?, z = ?, worldUuid = ? WHERE `skymaster_islands`.`id` = ?";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, islandHomeDto.getX());
-            stmt.setInt(2, islandHomeDto.getY());
-            stmt.setInt(3, islandHomeDto.getZ());
-            stmt.setString(4, islandHomeDto.getWorldUuid());
-            stmt.setInt(5, islandId);
+        stmt.setInt(1, islandHomeDto.getX());
+        stmt.setInt(2, islandHomeDto.getY());
+        stmt.setInt(3, islandHomeDto.getZ());
+        stmt.setString(4, islandHomeDto.getWorldUuid());
+        stmt.setInt(5, islandId);
 
-            stmt.executeUpdate();
+        stmt.executeUpdate();
 
-            stmt.close();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        stmt.close();
     }
 
-    public void delete(int id) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public void delete(int id) throws SQLException {
         String query = "UPDATE `skymaster_homes` SET deletedAt = CURRENT_TIMESTAMP WHERE id = ?;";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, id);
+        stmt.setInt(1, id);
 
-            stmt.executeUpdate();
+        stmt.executeUpdate();
 
-            stmt.close();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        stmt.close();
     }
 }
