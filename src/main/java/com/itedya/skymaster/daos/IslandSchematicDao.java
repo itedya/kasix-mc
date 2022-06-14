@@ -1,8 +1,6 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
-import com.itedya.skymaster.exceptions.ServerError;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class IslandSchematicDao {
     private final Connection connection;
@@ -19,123 +16,91 @@ public class IslandSchematicDao {
         this.connection = connection;
     }
 
-    public IslandSchematicDto getByName(String data) throws ServerError {
+    public IslandSchematicDto getByName(String data) throws SQLException {
         return getByName(data, false);
     }
 
-    public IslandSchematicDto getByName(String data, Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public IslandSchematicDto getByName(String data, Boolean withDeleted) throws SQLException {
         String query = "SELECT * FROM `skymaster_schematics` WHERE name = ?";
 
         if (!withDeleted) query += " AND deletedAt != null";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setString(1, data);
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, data);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            connection.close();
+        IslandSchematicDto schematic = null;
+        if (rs.next()) schematic = new IslandSchematicDto(rs);
 
-            stmt.close();
+        rs.close();
+        stmt.close();
 
-            if (rs.next()) {
-                rs.close();
-                return new IslandSchematicDto(rs);
-            }
-
-            rs.close();
-
-            return null;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        return schematic;
     }
 
-    public List<IslandSchematicDto> getAll() throws ServerError {
+    public List<IslandSchematicDto> getAll() throws SQLException {
         return getAll(false);
     }
 
-    public List<IslandSchematicDto> getAll(Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public List<IslandSchematicDto> getAll(Boolean withDeleted) throws SQLException {
         String query = "SELECT * FROM `skymaster_schematics`";
 
         if (!withDeleted) query += " WHERE deletedAt IS NULL";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            List<IslandSchematicDto> result = new ArrayList<>();
+        List<IslandSchematicDto> result = new ArrayList<>();
 
-            while (rs.next()) {
-                IslandSchematicDto dto = new IslandSchematicDto(rs);
-                result.add(dto);
-            }
-
-            rs.close();
-            stmt.close();
-
-            return result;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
+        while (rs.next()) {
+            var dto = new IslandSchematicDto(rs);
+            result.add(dto);
         }
+
+        rs.close();
+        stmt.close();
+
+        return result;
     }
 
-    public IslandSchematicDto getById(int id) throws ServerError {
+    public IslandSchematicDto getById(int id) throws SQLException {
         return getById(id, false);
     }
 
-    public IslandSchematicDto getById(int id, Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
+    public IslandSchematicDto getById(int id, Boolean withDeleted) throws SQLException {
         String query = "SELECT * FROM `skymaster_schematics` WHERE id = ?";
         if (!withDeleted) query += " AND deletedAt IS NULL";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setInt(1, id);
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setInt(1, id);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            IslandSchematicDto result = null;
+        IslandSchematicDto result = null;
 
-
-            if (rs.next()) {
-                result = new IslandSchematicDto(rs);
-            }
-
-            rs.close();
-            stmt.close();
-
-            return result;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
+        if (rs.next()) {
+            result = new IslandSchematicDto(rs);
         }
+
+        rs.close();
+        stmt.close();
+
+        return result;
     }
 
-    public void create(IslandSchematicDto islandSchematicDto) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
+    public void create(IslandSchematicDto islandSchematicDto) throws SQLException {
         String query = "INSERT INTO `skymaster_schematics` SET `name` = ?, `description` = ?, `filePath` = ?, `material` = ?";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setString(1, islandSchematicDto.getName());
-            stmt.setString(2, islandSchematicDto.getDescription());
-            stmt.setString(3, islandSchematicDto.getFilePath());
-            stmt.setString(4, islandSchematicDto.getMaterial().toString());
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, islandSchematicDto.getName());
+        stmt.setString(2, islandSchematicDto.getDescription());
+        stmt.setString(3, islandSchematicDto.getFilePath());
+        stmt.setString(4, islandSchematicDto.getMaterial().toString());
 
-            stmt.executeUpdate();
+        stmt.executeUpdate();
 
-            stmt.close();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        stmt.close();
     }
 }
