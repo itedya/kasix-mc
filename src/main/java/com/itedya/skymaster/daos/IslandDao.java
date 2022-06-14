@@ -1,16 +1,13 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.dtos.IslandDto;
 import com.itedya.skymaster.dtos.IslandHomeDto;
 import com.itedya.skymaster.dtos.IslandSchematicDto;
-import com.itedya.skymaster.exceptions.ServerError;
 import org.bukkit.Material;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class IslandDao {
     private final Connection connection;
@@ -19,38 +16,31 @@ public class IslandDao {
         this.connection = connection;
     }
 
-    public int getSumByOwnerUuid(String ownerUuid) throws ServerError {
+    public int getSumByOwnerUuid(String ownerUuid) throws SQLException {
         return getSumByOwnerUuid(ownerUuid, false);
     }
 
-    public int getSumByOwnerUuid(String ownerUuid, Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public int getSumByOwnerUuid(String ownerUuid, Boolean withDeleted) throws SQLException {
         String query = "SELECT count(*) FROM `skymaster_islands` WHERE `ownerUuid` = ?";
         if (!withDeleted) query += " AND `deletedAt` = null";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setString(1, ownerUuid);
+        stmt.setString(1, ownerUuid);
 
-            ResultSet resultSet = stmt.executeQuery();
+        ResultSet resultSet = stmt.executeQuery();
 
-            Integer result = null;
-            if (resultSet.next()) {
-                result = resultSet.getInt("count(*)");
-            } else {
-                throw new ServerError("Result set is empty IslandDao:42");
-            }
-
-            resultSet.close();
-            stmt.close();
-
-            return result;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
+        Integer result = null;
+        if (resultSet.next()) {
+            result = resultSet.getInt("count(*)");
+        } else {
+            throw new SQLException("Result set is empty IslandDao:42");
         }
+
+        resultSet.close();
+        stmt.close();
+
+        return result;
     }
 
     public List<IslandDto> getByOwnerUuid(String ownerUuid) throws SQLException {
@@ -79,40 +69,33 @@ public class IslandDao {
         return result;
     }
 
-    public int getCount() throws ServerError {
+    public int getCount() throws SQLException {
         return getCount(false);
     }
 
-    public int getCount(Boolean withDeleted) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public int getCount(Boolean withDeleted) throws SQLException {
         String query = "SELECT COUNT(*) as `size` FROM skymaster_islands";
 
         if (!withDeleted) query += " WHERE deletedAt IS NULL";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            int result;
+        int result;
 
-            if (rs.next()) {
-                result = rs.getInt("size");
-                rs.close();
-                stmt.close();
-            } else {
-                throw new SQLException("No rows, something went wrong. IslandDao:77");
-            }
-
+        if (rs.next()) {
+            result = rs.getInt("size");
             rs.close();
             stmt.close();
-
-            return result;
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
+        } else {
+            throw new SQLException("No rows, something went wrong. IslandDao:77");
         }
+
+        rs.close();
+        stmt.close();
+
+        return result;
     }
 
     public void create(IslandDto islandDto) throws SQLException {
@@ -161,27 +144,20 @@ public class IslandDao {
         return result;
     }
 
-    public void update(IslandDto islandDto) throws ServerError {
-        SkyMaster plugin = SkyMaster.getInstance();
-
+    public void update(IslandDto islandDto) throws SQLException {
         String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ? WHERE id = ?";
 
-        try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setString(1, islandDto.getOwnerUuid());
-            stmt.setInt(2, islandDto.getSchematicId());
-            stmt.setString(3, islandDto.getName());
-            stmt.setInt(4, islandDto.getId());
+        stmt.setString(1, islandDto.getOwnerUuid());
+        stmt.setInt(2, islandDto.getSchematicId());
+        stmt.setString(3, islandDto.getName());
+        stmt.setInt(4, islandDto.getId());
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Database error", e);
-            throw new ServerError();
-        }
+        rs.close();
+        stmt.close();
     }
 
     public void removeById(Integer islandId) throws SQLException {
