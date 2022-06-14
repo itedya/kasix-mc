@@ -7,6 +7,3 @@ website: itedya.com
 depend:
   - WorldGuard
   - FastAsyncWorldEdit
-permissions:
-  kasix-mc.islands.create-schematic:
-    description: Daje dostęp do tworzenia schematów.

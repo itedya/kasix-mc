@@ -22,7 +22,7 @@ public class CreateIslandSubCommand implements CommandExecutor {
             }
 
             // check if user has permission
-            if (!player.hasPermission("kasix-mc.islands.create")) {
+            if (!player.hasPermission("skymaster.islands.create")) {
                 sender.sendMessage(ChatColor.RED + "Brak permisji!");
                 return true;
             }

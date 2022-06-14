@@ -19,7 +19,7 @@ public class AddIslandMemberSubCommand implements CommandExecutor {
                 return true;
             }
 
-            if (!player.hasPermission("kasix-mc.islands.invite")) {
+            if (!player.hasPermission("skymaster.islands.invite")) {
                 player.sendMessage(ChatColor.RED + "Brak permisji.");
                 return true;
             }

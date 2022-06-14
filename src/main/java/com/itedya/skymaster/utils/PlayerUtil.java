@@ -8,7 +8,7 @@ public class PlayerUtil {
     public static Integer getMaxAllowedIslands(Player player) {
         for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
             String permissionId = permission.getPermission();
-            if (permissionId.startsWith("kasix-mc.islands.max-amount.")) {
+            if (permissionId.startsWith("skymaster.islands.max-amount.")) {
                 String[] splittedPermissionId = permissionId.split("\\.");
 
                 try {
@@ -27,7 +27,7 @@ public class PlayerUtil {
     public static Integer getStartIslandRadius(Player player) {
         for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
             String permissionId = permission.getPermission();
-            if (permissionId.startsWith("kasix-mc.islands.start-radius.")) {
+            if (permissionId.startsWith("skymaster.islands.start-radius.")) {
                 String[] splittedPermissionId = permissionId.split("\\.");
 
                 try {
@@ -46,7 +46,7 @@ public class PlayerUtil {
     public static Integer getMaxAllowedIslandMembers(Player player) {
         for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
             String permissionId = permission.getPermission();
-            if (permissionId.startsWith("kasix-mc.islands.max-members.")) {
+            if (permissionId.startsWith("skymaster.islands.max-members.")) {
                 String[] splittedPermissionId = permissionId.split("\\.");
 
                 try {

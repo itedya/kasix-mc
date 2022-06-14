@@ -77,7 +77,7 @@ public class ShowCreateIslandGuiRunnable extends BukkitRunnable {
             this.schematics = new ArrayList<>();
 
             for (IslandSchematicDto schematic : dao.getAll()) {
-                boolean hasPermission = player.hasPermission("kasix-mc.islands.use-schematic." + schematic.getId());
+                boolean hasPermission = player.hasPermission("skymaster.islands.use-schematic." + schematic.getId());
 
                 if (hasPermission) {
                     this.schematics.add(schematic);

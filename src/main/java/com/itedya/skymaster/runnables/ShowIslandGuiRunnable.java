@@ -59,13 +59,13 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
 
         String playerUuid = player.getUniqueId().toString();
 
-        if ((playerUuid.equals(islandDto.getOwnerUuid()) && player.hasPermission("kasix-mc.islands.remove")) ||
-                !player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("kasix-mc.islands.remove-someone")) {
+        if ((playerUuid.equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.remove")) ||
+                !player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.remove-someone")) {
             inventory.addItem(getRemoveItem());
         }
 
-        if ((player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("kasix-mc.islands.reset-permissions")) ||
-                !player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("kasix-mc.islands.reset-permissions-someone")) {
+        if ((player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.reset-permissions")) ||
+                !player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.reset-permissions-someone")) {
             inventory.addItem(getResetWorldGuardItem());
         }
 

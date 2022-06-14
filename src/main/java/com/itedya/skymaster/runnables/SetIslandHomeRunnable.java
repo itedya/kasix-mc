@@ -78,8 +78,8 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
     public void checkPermissions() {
         String playerUuid = player.getUniqueId().toString();
 
-        if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home")) &&
-                (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("kasix-mc.islands.set-home-someone"))) {
+        if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("skymaster.islands.set-home")) &&
+                (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("skymaster.islands.set-home-someone"))) {
             player.sendMessage(ChatColor.RED + "Brak permisji!");
             return;
         }

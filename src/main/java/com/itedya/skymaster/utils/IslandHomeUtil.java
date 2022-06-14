@@ -19,7 +19,7 @@ public class IslandHomeUtil {
         World world = Bukkit.getWorld(UUID.fromString(home.getWorldUuid()));
         Location location = new Location(world, home.getX(), home.getY(), home.getZ());
 
-        if (player.hasPermission("kasix-mc.islands.teleport-instantly")) {
+        if (player.hasPermission("skymaster.islands.teleport-instantly")) {
             player.teleport(location);
             player.sendMessage(ChatColor.GREEN + "Teleportacja do domu wyspy!");
             return;

@@ -25,7 +25,7 @@ public class ListIslandsSubCommand implements CommandExecutor {
         // check if user is checking someone's islands
         if (args.length > 0) {
             // check if user has permission to list someone's islands
-            if (!player.hasPermission("kasix-mc.islands.list-someone")) {
+            if (!player.hasPermission("skymaster.islands.list-someone")) {
                 player.sendMessage(ChatColor.RED + "Brak permisji.");
                 return true;
             }
@@ -39,7 +39,7 @@ public class ListIslandsSubCommand implements CommandExecutor {
             }
         } else {
             // check if user has permission to list their islands
-            if (!player.hasPermission("kasix-mc.islands.list")) {
+            if (!player.hasPermission("skymaster.islands.list")) {
                 player.sendMessage(ChatColor.RED + "Brak permisji.");
                 return true;
             }
