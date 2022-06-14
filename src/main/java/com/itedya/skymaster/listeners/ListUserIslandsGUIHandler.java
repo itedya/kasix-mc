@@ -1,7 +1,6 @@
 package com.itedya.skymaster.listeners;
 
 import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.exceptions.ServerError;
 import com.itedya.skymaster.runnables.ShowIslandGuiRunnable;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import org.bukkit.*;
@@ -21,7 +20,7 @@ public class ListUserIslandsGUIHandler implements Listener {
         event.setCancelled(true);
 
         try {
-            if (!(event.getWhoClicked() instanceof Player player)) throw new ServerError();
+            Player player = (Player) event.getWhoClicked();
 
             String userUuid = this.getUserUuid(event);
             if (userUuid == null) {

@@ -2,7 +2,6 @@ package com.itedya.skymaster.listeners;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.conversations.createisland.ProvideIslandNamePrompt;
-import com.itedya.skymaster.exceptions.ServerError;
 import com.itedya.skymaster.utils.*;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationFactory;
@@ -44,7 +43,7 @@ public class CreateIslandGUIHandler implements Listener {
             ItemMeta itemMeta = item.getItemMeta();
             Integer schematicId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "schematic-id");
             if (schematicId == null) {
-                throw new ServerError("Schematic ID is null");
+                throw new Exception("Schematic ID is null");
             }
 
             new ConversationFactory(SkyMaster.getInstance())

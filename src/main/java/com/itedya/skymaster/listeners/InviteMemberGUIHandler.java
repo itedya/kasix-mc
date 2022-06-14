@@ -1,7 +1,6 @@
 package com.itedya.skymaster.listeners;
 
 import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.exceptions.ServerError;
 import com.itedya.skymaster.runnables.InvitePlayerToIslandRunnable;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -50,7 +49,7 @@ public class InviteMemberGUIHandler implements Listener {
             );
 
             if (islandId == null) {
-                throw new ServerError("Island id is null!");
+                throw new Exception("Island id is null!");
             }
 
             String inviteToPlayerUuid = itemMeta.getPersistentDataContainer().get(
