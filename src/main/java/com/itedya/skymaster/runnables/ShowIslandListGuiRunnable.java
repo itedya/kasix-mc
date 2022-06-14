@@ -3,16 +3,13 @@ package com.itedya.skymaster.runnables;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandHomeDto;
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.utils.InventoryUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -40,6 +37,7 @@ public class ShowIslandListGuiRunnable extends BukkitRunnable {
             IslandDao islandDao = new IslandDao(connection);
             String ownerUuid = playerToCheck.getUniqueId().toString();
             userIslands = islandDao.getByOwnerUuidWithAllRelations(ownerUuid);
+            userIslands.addAll(islandDao.getByMemberUuidWithAllRelations(ownerUuid));
 
             this.connection.close();
 
@@ -63,47 +61,15 @@ public class ShowIslandListGuiRunnable extends BukkitRunnable {
             Inventory inventory = Bukkit.createInventory(null, guiSize,
                     ChatColor.LIGHT_PURPLE + "Wyspy gracza " + playerToCheck.getName());
 
-            for (int i = 0; i < userIslands.size(); i++) {
-                IslandDto islandDto = userIslands.get(i);
+            for (var island : userIslands) inventory.addItem(InventoryUtil.createItemStack(island));
 
-                IslandSchematicDto schematic = islandDto.getSchematic();
-                IslandHomeDto home = islandDto.getHome();
+            var firstItem = inventory.getItem(0);
+            if (firstItem != null) {
+                var meta = firstItem.getItemMeta();
+                var container = meta.getPersistentDataContainer();
 
-                ItemStack itemStack = new ItemStack(schematic.getMaterial());
-                ItemMeta itemMeta = itemStack.getItemMeta();
-
-                if (i == 0) {
-                    PersistentDataContainerUtil.setString(
-                            itemMeta.getPersistentDataContainer(),
-                            "inventory-identifier",
-                            "user-islands-gui"
-                    );
-
-                    PersistentDataContainerUtil.setString(
-                            itemMeta.getPersistentDataContainer(),
-                            "user-uuid",
-                            playerToCheck.getUniqueId().toString()
-                    );
-                }
-
-                PersistentDataContainerUtil.setInt(
-                        itemMeta.getPersistentDataContainer(),
-                        "island-id",
-                        islandDto.getId()
-                );
-
-                itemMeta.setDisplayName("Wyspa " + islandDto.getName());
-
-                itemMeta.setLore(List.of(
-                        ChatColor.YELLOW + "X: " + home.getX(),
-                        ChatColor.YELLOW + "Z: " + home.getZ()
-                ));
-
-                PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.getId());
-
-                itemStack.setItemMeta(itemMeta);
-
-                inventory.addItem(itemStack);
+                PersistentDataContainerUtil.setString(container, "inventory-identifier", "user-islands-gui");
+                PersistentDataContainerUtil.setString(container, "user-uuid", playerToCheck.getUniqueId().toString());
             }
 
             player.openInventory(inventory);
