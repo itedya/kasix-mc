@@ -49,6 +49,15 @@ public class WorldGuardUtil {
         return protectedRegion;
     }
 
+    public static ProtectedRegion removeRegionMemberByUuid(ProtectedRegion protectedRegion, UUID uuid) {
+        DefaultDomain members = protectedRegion.getMembers();
+
+        members.removePlayer(uuid);
+
+        protectedRegion.setMembers(members);
+        return protectedRegion;
+    }
+
     public static ProtectedRegion resetPriority(ProtectedRegion protectedRegion) {
         protectedRegion.setPriority(5);
         return protectedRegion;

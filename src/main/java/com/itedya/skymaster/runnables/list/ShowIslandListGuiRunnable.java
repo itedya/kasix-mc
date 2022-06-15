@@ -70,6 +70,9 @@ public class ShowIslandListGuiRunnable extends BukkitRunnable {
 
                 PersistentDataContainerUtil.setString(container, "inventory-identifier", "user-islands-gui");
                 PersistentDataContainerUtil.setString(container, "user-uuid", playerToCheck.getUniqueId().toString());
+
+                firstItem.setItemMeta(meta);
+                inventory.setItem(0, firstItem);
             }
 
             player.openInventory(inventory);

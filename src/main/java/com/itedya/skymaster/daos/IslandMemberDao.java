@@ -38,8 +38,22 @@ public class IslandMemberDao {
         return result;
     }
 
+    public int remove(String playerUuid, Integer islandId) throws SQLException {
+        String query = "UPDATE `skymaster_island_has_members` SET deletedAt = CURRENT_TIMESTAMP WHERE playerUuid = ? AND islandId = ? AND deletedAt IS NULL";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setString(1, playerUuid);
+        stmt.setInt(2, islandId);
+
+        int result = stmt.executeUpdate();
+        stmt.close();
+
+        return result;
+    }
+
     public boolean isMember(String playerUuid, Integer islandId) throws SQLException {
-        String query = "SELECT * FROM `skymaster_island_has_members` WHERE playerUuid = ? AND islandId = ?";
+        String query = "SELECT * FROM `skymaster_island_has_members` WHERE playerUuid = ? AND islandId = ? AND deletedAt IS NULL";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 

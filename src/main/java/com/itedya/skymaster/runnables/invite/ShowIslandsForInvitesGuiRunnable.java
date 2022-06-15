@@ -64,6 +64,9 @@ public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
 
             PersistentDataContainerUtil.setString(container, "inventory-identifier", "choose-island-invite-member-gui");
             PersistentDataContainerUtil.setString(container, "invite-to-player-uuid", invitedPlayer.getUniqueId().toString());
+
+            firstItem.setItemMeta(meta);
+            inventory.setItem(0, firstItem);
         }
 
         player.openInventory(inventory);

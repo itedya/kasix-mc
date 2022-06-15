@@ -31,7 +31,8 @@ public class IslandCommand extends Command {
             "lista", new ListIslandsSubCommand(),
             "ustawdom", new SetIslandHomeSubCommand(),
             "zapros", new AddIslandMemberSubCommand(),
-            "akceptuj", new AcceptInviteToIslandSubCommand()
+            "akceptuj", new AcceptInviteToIslandSubCommand(),
+            "wyrzuc", new KickIslandMemberSubCommand()
     ));
 
     @Override

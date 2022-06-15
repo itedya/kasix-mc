@@ -24,6 +24,7 @@ public class IslandDto {
 
     private IslandHomeDto home;
     private IslandSchematicDto schematic;
+    private List<IslandMemberDto> members;
 
     public IslandDto() {
 
@@ -109,5 +110,13 @@ public class IslandDto {
 
     public void setSchematic(IslandSchematicDto schematic) {
         this.schematic = schematic;
+    }
+
+    public void setMembers(List<IslandMemberDto> members) {
+        this.members = members;
+    }
+
+    public List<IslandMemberDto> getMembers() {
+        return members;
     }
 }
