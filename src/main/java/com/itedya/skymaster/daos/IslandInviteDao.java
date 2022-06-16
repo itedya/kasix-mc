@@ -47,6 +47,10 @@ public class IslandInviteDao {
             var fromPlayer = inviteDto.getFromPlayer();
             var toPlayer = inviteDto.getToPlayer();
 
+            if (!doesPlayerHaveInvite(toPlayer.getUniqueId().toString())) {
+                return;
+            }
+
             fromPlayer.sendMessage(new ComponentBuilder()
                     .color(ChatColor.YELLOW)
                     .append("Zaproszenie do gracza ")

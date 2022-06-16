@@ -1,7 +1,7 @@
 package com.itedya.skymaster.command;
 
 import com.itedya.skymaster.command.subcommands.*;
-import com.itedya.skymaster.utils.ConfigUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,28 +25,27 @@ public class IslandCommand extends Command {
         return new ArrayList<>();
     }
 
-    private final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.of(
+    public final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.of(
             "stworzschemat", new CreateIslandSchematicSubCommand(),
             "stworz", new CreateIslandSubCommand(),
             "lista", new ListIslandsSubCommand(),
             "ustawdom", new SetIslandHomeSubCommand(),
-            "zapros", new AddIslandMemberSubCommand(),
+            "zapros", new InviteIslandMemberSubCommand(),
             "akceptuj", new AcceptInviteToIslandSubCommand(),
-            "wyrzuc", new KickIslandMemberSubCommand()
+            "wyrzuc", new KickIslandMemberSubCommand(),
+            "admin", new AdminCommand()
     ));
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ConfigUtil.getColouredString("messages.provideCommandName",
-                    "&ePodaj nazwę komendy"));
+            sender.sendMessage(ChatColor.RED + "Podaj nazwę komendy");
             return true;
         }
 
         CommandExecutor commandExecutor = executorMap.get(args[0]);
         if (commandExecutor == null) {
-            sender.sendMessage(ConfigUtil.getColouredString("messages.commandNotFound",
-                    "&eNie ma takiej komendy!"));
+            sender.sendMessage(ChatColor.RED + "Taka komenda nie istnieje!");
             return true;
         }
 

@@ -15,15 +15,26 @@ import java.sql.Connection;
 
 public class InvitePlayerToIslandRunnable implements Runnable {
     private final int islandId;
-    private final Player player;
+    private final Player executor;
+    private final Player islandOwner;
     private final Player inviteToPlayer;
     private Connection connection;
     private IslandDto islandDto;
     private IslandInviteDto inviteDto;
 
-    public InvitePlayerToIslandRunnable(int islandId, Player player, Player inviteToPlayer) {
+    /**
+     * Sends island member invite offer to player
+     * Run asynchronously!
+     *
+     * @param executor Executor of command
+     * @param islandOwner Owner of island that member is invited to
+     * @param inviteToPlayer Player that is invited to island
+     * @param islandId Island id
+     */
+    public InvitePlayerToIslandRunnable(Player executor, Player islandOwner, Player inviteToPlayer, int islandId) {
+        this.executor = executor;
         this.islandId = islandId;
-        this.player = player;
+        this.islandOwner = islandOwner;
         this.inviteToPlayer = inviteToPlayer;
     }
 
@@ -35,7 +46,7 @@ public class InvitePlayerToIslandRunnable implements Runnable {
             IslandMemberDao islandMemberDao = new IslandMemberDao(connection);
 
             if (islandMemberDao.isMember(inviteToPlayer.getUniqueId().toString(), islandId)) {
-                player.sendMessage(new ComponentBuilder()
+                executor.sendMessage(new ComponentBuilder()
                         .append("Ten gracz już jest członkiem tej wyspy.").color(ChatColor.YELLOW)
                         .create());
                 this.shutdown();
@@ -48,13 +59,13 @@ public class InvitePlayerToIslandRunnable implements Runnable {
 
             inviteDto = new IslandInviteDto();
             inviteDto.setIslandDto(islandDto);
-            inviteDto.setFromPlayer(player);
-            inviteDto.setToPlayer(inviteToPlayer);
+            inviteDto.setFromPlayer(this.islandOwner);
+            inviteDto.setToPlayer(this.inviteToPlayer);
 
-            ThreadUtil.async(this::finish);
+            ThreadUtil.sync(this::finish);
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
+            executor.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
             this.shutdown();
         }
 
@@ -66,7 +77,7 @@ public class InvitePlayerToIslandRunnable implements Runnable {
         if (!islandInviteDao.doesPlayerHaveInvite(inviteToPlayer.getUniqueId().toString())) {
             islandInviteDao.addToQueue(inviteDto);
 
-            player.sendMessage(new ComponentBuilder()
+            executor.sendMessage(new ComponentBuilder()
                     .color(net.md_5.bungee.api.ChatColor.GREEN)
                     .append("Zaproszono gracza ")
                     .append(inviteToPlayer.getName()).bold(true)
@@ -79,11 +90,11 @@ public class InvitePlayerToIslandRunnable implements Runnable {
                     .append("Dostałeś zaproszenie do wyspy ")
                     .append("\"" + islandDto.getName() + "\"").bold(true)
                     .append(" od gracza ").bold(false)
-                    .append(player.getName()).bold(true)
+                    .append(islandOwner.getName()).bold(true)
                     .create());
 
         } else {
-            player.sendMessage(ChatColor.YELLOW + "Ten gracz jest już zaproszony, poczekaj do 60 sekund.");
+            executor.sendMessage(ChatColor.YELLOW + "Ten gracz jest już zaproszony, poczekaj do 60 sekund.");
         }
     }
 

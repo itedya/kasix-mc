@@ -28,7 +28,7 @@ public class ShowMembersToKickRunnable extends BukkitRunnable {
     private final Player executor;
     private final int islandId;
 
-    public ShowMembersToKickRunnable(int islandId, Player executor) {
+    public ShowMembersToKickRunnable(Player executor, int islandId) {
         this.executor = executor;
         this.islandId = islandId;
     }

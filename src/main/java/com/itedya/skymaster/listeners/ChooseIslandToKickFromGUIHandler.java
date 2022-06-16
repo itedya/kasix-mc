@@ -42,7 +42,7 @@ public class ChooseIslandToKickFromGUIHandler implements Listener {
             var islandId = PersistentDataContainerUtil.getInt(meta.getPersistentDataContainer(), "island-id");
             assert islandId != null;
 
-            ThreadUtil.async(new ShowMembersToKickRunnable(islandId, player));
+            ThreadUtil.async(new ShowMembersToKickRunnable(player, islandId));
         } catch (Exception e) {
             e.printStackTrace();
             event.getWhoClicked().sendMessage(ChatUtil.getServerErrorMessage());

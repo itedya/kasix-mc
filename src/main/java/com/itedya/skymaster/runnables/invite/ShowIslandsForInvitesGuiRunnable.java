@@ -16,13 +16,25 @@ import java.util.List;
 
 public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
     private Connection connection;
-    private final Player player;
     private List<IslandDto> userIslands;
-    private final Player invitedPlayer;
+    private final Player executor;
+    private final OfflinePlayer invitedPlayer;
+    private final OfflinePlayer islandOwner;
+    private final Boolean withAccept;
 
-    public ShowIslandsForInvitesGuiRunnable(Player player, Player invitedPlayer) {
-        this.player = player;
+    /**
+     * Shows islands to which executor can add members
+     * Run asynchronously!
+     *
+     * @param executor       Executor of command
+     * @param islandOwner    Owner of islands to display in GUI
+     * @param invitedPlayer  Player that executor is inviting
+     */
+    public ShowIslandsForInvitesGuiRunnable(Player executor, OfflinePlayer islandOwner, OfflinePlayer invitedPlayer, Boolean withAccept) {
+        this.executor = executor;
+        this.islandOwner = islandOwner;
         this.invitedPlayer = invitedPlayer;
+        this.withAccept = withAccept;
     }
 
     @Override
@@ -31,8 +43,7 @@ public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
             this.connection = Database.getInstance().getConnection();
 
             IslandDao islandDao = new IslandDao(connection);
-
-            this.userIslands = islandDao.getByOwnerUuidWithAllRelations(player.getUniqueId().toString());
+            this.userIslands = islandDao.getByOwnerUuidWithAllRelations(islandOwner.getUniqueId().toString());
 
             ThreadUtil.sync(this::generateInventory);
 
@@ -46,7 +57,7 @@ public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
                 }
             }
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
+            executor.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
         }
     }
 
@@ -63,12 +74,14 @@ public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
             var container = meta.getPersistentDataContainer();
 
             PersistentDataContainerUtil.setString(container, "inventory-identifier", "choose-island-invite-member-gui");
+            PersistentDataContainerUtil.setString(container, "island-owner-uuid", islandOwner.getUniqueId().toString());
             PersistentDataContainerUtil.setString(container, "invite-to-player-uuid", invitedPlayer.getUniqueId().toString());
+            PersistentDataContainerUtil.setInt(container, "with-accept", this.withAccept ? 1 : 0);
 
             firstItem.setItemMeta(meta);
             inventory.setItem(0, firstItem);
         }
 
-        player.openInventory(inventory);
+        executor.openInventory(inventory);
     }
 }
