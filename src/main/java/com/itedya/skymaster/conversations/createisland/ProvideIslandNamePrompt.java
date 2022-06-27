@@ -29,7 +29,9 @@ public class ProvideIslandNamePrompt extends StringPrompt {
             return new ProvideIslandNamePrompt(schematicId);
         }
 
-        ThreadUtil.async(new CreateIslandRunnable((Player) context.getForWhom(), schematicId, input));
+        Player player = (Player) context.getForWhom();
+
+        ThreadUtil.async(new CreateIslandRunnable(player, player, schematicId, input));
 
         return null;
     }

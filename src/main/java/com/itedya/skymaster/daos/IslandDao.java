@@ -98,16 +98,15 @@ public class IslandDao {
         return result;
     }
 
-    public void create(IslandDto islandDto) throws SQLException {
-        String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?";
+    public IslandDto create(IslandDto islandDto) throws SQLException {
+        String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?, radius = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
         stmt.setString(1, islandDto.getOwnerUuid());
         stmt.setInt(2, islandDto.getSchematicId());
         stmt.setString(3, islandDto.getName());
-
-        stmt.executeUpdate();
+        stmt.setInt(4, islandDto.getRadius());
 
         int affectedRows = stmt.executeUpdate();
         if (affectedRows == 0) throw new SQLException("No rows affected!");
@@ -119,6 +118,8 @@ public class IslandDao {
 
         rs.close();
         stmt.close();
+
+        return islandDto;
     }
 
     public IslandDto getById(int id) throws SQLException {
@@ -145,18 +146,17 @@ public class IslandDao {
     }
 
     public void update(IslandDto islandDto) throws SQLException {
-        String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ? WHERE id = ?";
+        String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?, radius = ? WHERE id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
         stmt.setString(1, islandDto.getOwnerUuid());
         stmt.setInt(2, islandDto.getSchematicId());
         stmt.setString(3, islandDto.getName());
-        stmt.setInt(4, islandDto.getId());
+        stmt.setInt(4, islandDto.getRadius());
+        stmt.setInt(5, islandDto.getId());
 
-        ResultSet rs = stmt.executeQuery();
-
-        rs.close();
+        stmt.executeUpdate();
         stmt.close();
     }
 

@@ -16,6 +16,8 @@ public class IslandDto {
 
     private int schematicId;
 
+    private int radius;
+
     private Date updatedAt;
 
     private Date createdAt;
@@ -34,6 +36,7 @@ public class IslandDto {
         this.id = resultSet.getInt("id");
         this.name = resultSet.getString("name");
         this.ownerUuid = resultSet.getString("ownerUuid");
+        this.radius = resultSet.getInt("radius");
         this.schematicId = resultSet.getInt("schematicId");
         this.createdAt = resultSet.getDate("createdAt");
         this.updatedAt = resultSet.getDate("updatedAt");
@@ -70,6 +73,14 @@ public class IslandDto {
 
     public void setSchematicId(int schematicId) {
         this.schematicId = schematicId;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     public void setCreatedAt(Date createdAt) {

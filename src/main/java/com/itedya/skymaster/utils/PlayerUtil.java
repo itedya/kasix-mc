@@ -35,7 +35,7 @@ public class PlayerUtil {
                 } catch (Exception e) {
                     SkyMaster.getPluginLogger().severe("Wrong format in island start radius permission.");
                     e.printStackTrace();
-                    return null;
+                    return 50;
                 }
             }
         }
