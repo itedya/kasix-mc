@@ -27,7 +27,7 @@ public class AddIslandMemberAdminSubCommand implements CommandExecutor {
         }
 
         if (args.length != 2) {
-            sender.sendMessage(new ComponentBuilder()
+            player.sendMessage(new ComponentBuilder()
                     .color(ChatColor.YELLOW)
                     .append("Musisz podać dwa argumenty: ")
                     .append("nazwa członka do zaprosienia").color(ChatColor.GOLD)

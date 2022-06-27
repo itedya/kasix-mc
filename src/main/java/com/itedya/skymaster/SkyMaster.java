@@ -5,7 +5,9 @@ import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.listeners.*;
 import com.itedya.skymaster.utils.CommandUtil;
 import com.itedya.skymaster.utils.WorldUtil;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.milkbowl.vault.economy.Economy;
 
 import java.util.logging.Logger;
 
@@ -26,6 +28,10 @@ public final class SkyMaster extends JavaPlugin {
         instance = this;
         logger = this.getLogger();
 
+        if (!setupEconomy()) {
+            this.getLogger().severe("Couldn't set up VaultAPI! Plugin won't function normally.");
+        }
+
         this.saveDefaultConfig();
         Database.getInstance().migrate();
 
@@ -37,12 +43,29 @@ public final class SkyMaster extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-
         getServer().getPluginManager().registerEvents(new CreateIslandGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ListUserIslandsGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new IslandInfoGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseIslandInviteMemberGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseIslandToKickFromGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseMemberToKickGUIHandler(), this);
+    }
+
+    private static Economy econ = null;
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+
+    public static Economy getEconomy() {
+        return econ;
     }
 }

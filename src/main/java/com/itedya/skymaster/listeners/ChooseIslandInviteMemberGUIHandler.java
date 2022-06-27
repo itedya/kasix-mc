@@ -6,7 +6,6 @@ import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

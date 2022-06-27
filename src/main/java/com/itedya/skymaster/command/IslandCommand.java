@@ -33,6 +33,7 @@ public class IslandCommand extends Command {
             "zapros", new InviteIslandMemberSubCommand(),
             "akceptuj", new AcceptInviteToIslandSubCommand(),
             "wyrzuc", new KickIslandMemberSubCommand(),
+            "powieksz", new ExpandIslandSubCommand(),
             "admin", new AdminCommand()
     ));
 
