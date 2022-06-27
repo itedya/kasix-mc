@@ -119,13 +119,14 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
             ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(executor, dto.getId()));
 
             if (admin) {
+                owner = Bukkit.getOfflinePlayer(UUID.fromString(dto.getOwnerUuid()));
+
                 executor.sendRawMessage("%sPowiększyłeś wyspę %s\"%s\"%s gracza %s do %s kratek!".formatted(
                         ChatColor.GREEN, ChatColor.BOLD, dto.getName(), ChatColor.RESET + "" + ChatColor.GREEN,
                         ChatColor.BOLD + owner.getName() + ChatColor.RESET + "" + ChatColor.GREEN,
                         ChatColor.BOLD + "" + (dto.getRadius() * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
                 ));
             } else {
-
                 executor.sendRawMessage("%sPowiększyłeś wyspę %s\"%s\"%s do %s kratek!".formatted(
                         ChatColor.GREEN, ChatColor.BOLD, dto.getName(), ChatColor.RESET + "" + ChatColor.GREEN,
                         ChatColor.BOLD + "" + (dto.getRadius() * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
