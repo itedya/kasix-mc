@@ -50,6 +50,7 @@ public class InventoryUtil {
         lore.add(ChatColor.GRAY + "Właściciel: " + ChatColor.BOLD + player.getName());
         lore.add(ChatColor.GRAY + "X Domu: " + ChatColor.BOLD + home.getX());
         lore.add(ChatColor.GRAY + "Z Domu: " + ChatColor.BOLD + home.getZ());
+        lore.add(ChatColor.GRAY + "Wielkość wyspy: " + ChatColor.BOLD + (islandDto.getRadius() * 2));
         lore.add(ChatColor.GRAY + "Nazwa schematu: " + ChatColor.BOLD + schematic.getName());
 
         meta.setLore(lore);
