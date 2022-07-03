@@ -196,6 +196,7 @@ public class IslandDao {
             islandDto.setId(rs.getInt("skymaster_islands.id"));
             islandDto.setName(rs.getString("skymaster_islands.name"));
             islandDto.setOwnerUuid(rs.getString("ownerUuid"));
+            islandDto.setRadius(rs.getInt("radius"));
             islandDto.setSchematicId(rs.getInt("schematicId"));
             islandDto.setUpdatedAt(rs.getDate("skymaster_islands.updatedAt"));
             islandDto.setCreatedAt(rs.getDate("skymaster_islands.createdAt"));
@@ -258,6 +259,7 @@ public class IslandDao {
             islandDto.setId(rs.getInt("skymaster_islands.id"));
             islandDto.setName(rs.getString("skymaster_islands.name"));
             islandDto.setOwnerUuid(rs.getString("ownerUuid"));
+            islandDto.setRadius(rs.getInt("radius"));
             islandDto.setSchematicId(rs.getInt("schematicId"));
             islandDto.setUpdatedAt(rs.getDate("skymaster_islands.updatedAt"));
             islandDto.setCreatedAt(rs.getDate("skymaster_islands.createdAt"));
