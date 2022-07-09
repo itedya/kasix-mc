@@ -294,4 +294,36 @@ public class IslandDao {
 
         return result;
     }
+
+    public List<IslandDto> getFirstNTHByIslandSize(int nth) throws SQLException {
+        return getFirstNTHByIslandSize(false, nth);
+    }
+
+    public List<IslandDto> getFirstNTHByIslandSize(boolean withDeleted, int nth) throws SQLException {
+        String query = "SELECT * FROM `skymaster_islands`";
+        if (!withDeleted) query += " WHERE `deletedAt` IS NULL";
+        query += " ORDER BY radius DESC";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet resultSet = stmt.executeQuery();
+
+        List<IslandDto> result = new ArrayList<>();
+        List<String> existingUUIDs = new ArrayList<>();
+
+        while (resultSet.next()) {
+            IslandDto dto = new IslandDto(resultSet);
+
+            var found = existingUUIDs.stream().filter(uuid -> uuid.equals(dto.getOwnerUuid())).findFirst().orElse(null);
+
+            if (found == null) {
+                result.add(dto);
+                existingUUIDs.add(dto.getOwnerUuid());
+            }
+        }
+
+        resultSet.close();
+        stmt.close();
+
+        return result;
+    }
 }

@@ -34,6 +34,7 @@ public class IslandCommand extends Command {
             "akceptuj", new AcceptInviteToIslandSubCommand(),
             "wyrzuc", new KickIslandMemberSubCommand(),
             "powieksz", new ExpandIslandSubCommand(),
+            "odwiedz", new VisitIslandSubCommand(),
             "admin", new AdminCommand()
     ));
 

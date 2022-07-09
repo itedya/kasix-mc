@@ -7,3 +7,4 @@ website: itedya.com
 depend:
   - WorldGuard
   - FastAsyncWorldEdit
+  - PlaceholderAPI
