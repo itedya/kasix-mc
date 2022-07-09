@@ -2,6 +2,7 @@ package com.itedya.skymaster;
 
 import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
+import com.itedya.skymaster.guihandler.VisitIslandGUIHandler;
 import com.itedya.skymaster.listeners.*;
 import com.itedya.skymaster.rankings.IslandSizeRankingManager;
 import com.itedya.skymaster.utils.CommandUtil;
@@ -52,6 +53,7 @@ public final class SkyMaster extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChooseIslandInviteMemberGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseIslandToKickFromGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseMemberToKickGUIHandler(), this);
+        getServer().getPluginManager().registerEvents(new VisitIslandGUIHandler(), this);
 
         new SkyMasterPlaceholderExpansion().register();
     }

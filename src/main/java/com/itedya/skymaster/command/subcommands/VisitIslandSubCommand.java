@@ -1,6 +1,6 @@
 package com.itedya.skymaster.command.subcommands;
 
-import com.itedya.skymaster.runnables.view.ShowViewIslandGUIRunnable;
+import com.itedya.skymaster.runnables.view.ShowVisitIslandGUIRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,7 +37,7 @@ public class VisitIslandSubCommand implements CommandExecutor {
             return true;
         }
 
-        ThreadUtil.async(new ShowViewIslandGUIRunnable(player, owner));
+        ThreadUtil.async(new ShowVisitIslandGUIRunnable(player, owner));
 
         return true;
     }

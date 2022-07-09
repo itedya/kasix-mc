@@ -2,15 +2,18 @@ package com.itedya.skymaster.runnables.view;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.daos.ViewBlockDao;
+import com.itedya.skymaster.daos.VisitBlockDao;
 import com.itedya.skymaster.dtos.IslandDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.utils.InventoryUtil;
+import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +23,8 @@ import java.util.List;
  * <p>
  * Run asynchronously
  */
-public class ShowViewIslandGUIRunnable extends SkymasterRunnable {
-    public ShowViewIslandGUIRunnable(Player executor, OfflinePlayer owner) {
+public class ShowVisitIslandGUIRunnable extends SkymasterRunnable {
+    public ShowVisitIslandGUIRunnable(Player executor, OfflinePlayer owner) {
         super(executor, true);
 
         data.put("executor", executor);
@@ -40,7 +43,7 @@ public class ShowViewIslandGUIRunnable extends SkymasterRunnable {
             var islands = islandDao.getByOwnerUuidWithAllRelations(owner.getUniqueId().toString());
             var filteredIslands = new ArrayList<>();
 
-            ViewBlockDao blockDao = new ViewBlockDao(connection);
+            VisitBlockDao blockDao = new VisitBlockDao(connection);
 
             for (IslandDto island : islands) {
                 if (blockDao.get(island.getId(), executor.getUniqueId().toString()) == null) {
@@ -65,7 +68,11 @@ public class ShowViewIslandGUIRunnable extends SkymasterRunnable {
             Inventory inventory = Bukkit.createInventory(null, invSize, "Wybierz wyspę do odwiedzenia");
 
             for (IslandDto islandDto : islands) {
-                inventory.addItem(InventoryUtil.createItemStack(islandDto));
+                ItemStack itemStack = InventoryUtil.createItemStack(islandDto);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                PersistentDataContainerUtil.setString(itemMeta.getPersistentDataContainer(), "inventory-identifier", "visit-island-gui");
+                itemStack.setItemMeta(itemMeta);
+                inventory.addItem(itemStack);
             }
 
             Player executor = (Player) data.get("executor");

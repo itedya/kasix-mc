@@ -6,10 +6,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ViewBlockDao {
+public class VisitBlockDao {
     private final Connection connection;
 
-    public ViewBlockDao(Connection connection) {
+    public VisitBlockDao(Connection connection) {
         this.connection = connection;
     }
 
