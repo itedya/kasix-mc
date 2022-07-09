@@ -33,7 +33,7 @@ public class VisitBlockDao {
      * @return ViewBlockDto
      */
     public ViewBlockDto get(int islandId, String blockedPlayerUuid, Boolean withDeleted) throws SQLException {
-        String query = "SELECT * FROM skymaster_view_blocks WHERE islandId = ? AND blockedPlayerUuid = ?";
+        String query = "SELECT * FROM skymaster_visit_blocks WHERE islandId = ? AND blockedPlayerUuid = ?";
         if (!withDeleted) {
             query += " AND deletedAt IS NULL";
         }

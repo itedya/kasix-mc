@@ -69,7 +69,7 @@ public class Database {
                 "tables/islands.sql",
                 "tables/members.sql",
                 "tables/homes_relations.sql",
-                "tables/view-blocks.sql"
+                "tables/visit-blocks.sql"
         );
 
         SkyMaster plugin = SkyMaster.getInstance();

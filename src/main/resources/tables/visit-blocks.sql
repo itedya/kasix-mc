@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS skymaster_view_blocks
+CREATE TABLE IF NOT EXISTS skymaster_visit_blocks
 (
     id                INT PRIMARY KEY AUTO_INCREMENT,
     islandId          INT                                                            NOT NULL,
