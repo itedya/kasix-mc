@@ -3,6 +3,7 @@ package com.itedya.skymaster;
 import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.listeners.*;
+import com.itedya.skymaster.rankings.IslandSizeRankingManager;
 import com.itedya.skymaster.utils.CommandUtil;
 import com.itedya.skymaster.utils.WorldUtil;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -32,6 +33,8 @@ public final class SkyMaster extends JavaPlugin {
             this.getLogger().severe("Couldn't set up VaultAPI! Plugin won't function normally.");
         }
 
+        IslandSizeRankingManager.getInstance();
+
         this.saveDefaultConfig();
         Database.getInstance().migrate();
 
@@ -49,6 +52,8 @@ public final class SkyMaster extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChooseIslandInviteMemberGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseIslandToKickFromGUIHandler(), this);
         getServer().getPluginManager().registerEvents(new ChooseMemberToKickGUIHandler(), this);
+
+        new SkyMasterPlaceholderExpansion().register();
     }
 
     private static Economy econ = null;
