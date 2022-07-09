@@ -1,5 +1,6 @@
 package com.itedya.skymaster.runnables.view;
 
+import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.ViewBlockDao;
 import com.itedya.skymaster.dtos.IslandDto;
@@ -30,11 +31,13 @@ public class ShowViewIslandGUIRunnable extends SkymasterRunnable {
     @Override
     public void run() {
         try {
+            this.connection = Database.getInstance().getConnection();
+
             Player executor = (Player) data.get("executor");
             OfflinePlayer owner = (OfflinePlayer) data.get("owner");
 
             IslandDao islandDao = new IslandDao(connection);
-            var islands = islandDao.getByOwnerUuid(owner.getUniqueId().toString());
+            var islands = islandDao.getByOwnerUuidWithAllRelations(owner.getUniqueId().toString());
             var filteredIslands = new ArrayList<>();
 
             ViewBlockDao blockDao = new ViewBlockDao(connection);
@@ -54,18 +57,25 @@ public class ShowViewIslandGUIRunnable extends SkymasterRunnable {
     }
 
     public void createInventory() {
-        List<IslandDto> islands = (List<IslandDto>) data.get("islands");
+        try {
+            List<IslandDto> islands = (List<IslandDto>) data.get("islands");
 
-        int invSize = InventoryUtil.calculateInvSize(islands.size());
+            int invSize = InventoryUtil.calculateInvSize(islands.size());
 
-        Inventory inventory = Bukkit.createInventory(null, invSize, "Wybierz wyspę do odwiedzenia");
+            Inventory inventory = Bukkit.createInventory(null, invSize, "Wybierz wyspę do odwiedzenia");
 
-        for (IslandDto islandDto : islands) {
-            inventory.addItem(InventoryUtil.createItemStack(islandDto));
+            for (IslandDto islandDto : islands) {
+                inventory.addItem(InventoryUtil.createItemStack(islandDto));
+            }
+
+            Player executor = (Player) data.get("executor");
+
+            executor.openInventory(inventory);
+
+            this.closeDatabase();
+        } catch (Exception e) {
+            this.errorHandling(e);
         }
 
-        Player executor = (Player) data.get("executor");
-
-        executor.openInventory(inventory);
     }
 }
