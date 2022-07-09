@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ViewBlockDao {
     private final Connection connection;
 
-    ViewBlockDao(Connection connection) {
+    public ViewBlockDao(Connection connection) {
         this.connection = connection;
     }
 
