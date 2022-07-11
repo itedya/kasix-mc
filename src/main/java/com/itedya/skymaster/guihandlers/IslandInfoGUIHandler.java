@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.runnables.island.RemoveIslandRunnable;
 import com.itedya.skymaster.runnables.island.ResetWorldGuardPermissionsRunnable;
@@ -17,7 +17,7 @@ public class IslandInfoGUIHandler extends GUIHandler {
     }
 
     @Override()
-    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+    public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack itemStack = event.getCurrentItem();
         if (itemStack == null) return;
 

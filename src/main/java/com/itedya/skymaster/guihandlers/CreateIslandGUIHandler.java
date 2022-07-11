@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.conversations.createisland.ProvideIslandNamePrompt;
@@ -17,7 +17,7 @@ public class CreateIslandGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+    public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
 

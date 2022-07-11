@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.runnables.invite.AddPlayerToIslandRunnable;
 import com.itedya.skymaster.runnables.invite.InvitePlayerToIslandRunnable;
@@ -19,7 +19,7 @@ public class ChooseIslandInviteMemberGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+    public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
 

@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.runnables.view.VisitIslandRunnable;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
@@ -14,7 +14,7 @@ public class VisitIslandGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+    public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
 

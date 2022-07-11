@@ -2,7 +2,7 @@ package com.itedya.skymaster;
 
 import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
-import com.itedya.skymaster.guihandler.*;
+import com.itedya.skymaster.guihandlers.*;
 import com.itedya.skymaster.rankings.IslandSizeRankingManager;
 import com.itedya.skymaster.utils.CommandUtil;
 import com.itedya.skymaster.utils.WorldUtil;
@@ -68,7 +68,7 @@ public final class SkyMaster extends JavaPlugin {
             return false;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        return true;
     }
 
     public static Economy getEconomy() {

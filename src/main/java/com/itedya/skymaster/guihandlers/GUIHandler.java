@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;

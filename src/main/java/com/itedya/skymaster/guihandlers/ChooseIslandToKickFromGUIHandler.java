@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.runnables.kick.ShowMembersToKickRunnable;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
@@ -12,7 +12,7 @@ public class ChooseIslandToKickFromGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+    public void onEvent(InventoryClickEvent event, Player player) {
         var item = event.getCurrentItem();
         assert item != null;
 

@@ -1,4 +1,4 @@
-package com.itedya.skymaster.guihandler;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.runnables.island.ShowIslandGuiRunnable;
@@ -40,6 +40,7 @@ public class ListUserIslandsGUIHandler extends GUIHandler {
 
     public String getUserUuid(InventoryClickEvent event) {
         ItemStack firstItem = event.getInventory().getItem(0);
+        assert firstItem != null : "First item is null!";
 
         ItemMeta itemMeta = firstItem.getItemMeta();
         return PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "user-uuid");
