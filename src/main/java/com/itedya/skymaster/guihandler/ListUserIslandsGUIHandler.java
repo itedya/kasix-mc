@@ -16,32 +16,27 @@ public class ListUserIslandsGUIHandler extends GUIHandler {
     }
 
     @Override()
-    public void onEvent(InventoryClickEvent event, Player player) {
-        try {
-            String userUuid = this.getUserUuid(event);
-            if (userUuid == null) {
-                throw new Exception("User UUID is null");
-            }
-
-            ItemStack currentItem = event.getCurrentItem();
-
-            if (currentItem == null) return;
-
-            ItemMeta itemMeta = currentItem.getItemMeta();
-            Integer islandId = PersistentDataContainerUtil.getInt(
-                    itemMeta.getPersistentDataContainer(),
-                    "island-id"
-            );
-            if (islandId == null) {
-                throw new Exception("Island ID is null");
-            }
-
-            new ShowIslandGuiRunnable(player, islandId)
-                    .runTaskAsynchronously(SkyMaster.getInstance());
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+        String userUuid = this.getUserUuid(event);
+        if (userUuid == null) {
+            throw new Exception("User UUID is null");
         }
+
+        ItemStack currentItem = event.getCurrentItem();
+
+        if (currentItem == null) return;
+
+        ItemMeta itemMeta = currentItem.getItemMeta();
+        Integer islandId = PersistentDataContainerUtil.getInt(
+                itemMeta.getPersistentDataContainer(),
+                "island-id"
+        );
+        if (islandId == null) {
+            throw new Exception("Island ID is null");
+        }
+
+        new ShowIslandGuiRunnable(player, islandId)
+                .runTaskAsynchronously(SkyMaster.getInstance());
     }
 
     public String getUserUuid(InventoryClickEvent event) {

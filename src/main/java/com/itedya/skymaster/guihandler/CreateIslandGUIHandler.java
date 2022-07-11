@@ -17,24 +17,19 @@ public class CreateIslandGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) {
-        try {
-            ItemStack item = event.getCurrentItem();
-            if (item == null) return;
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+        ItemStack item = event.getCurrentItem();
+        if (item == null) return;
 
-            ItemMeta itemMeta = item.getItemMeta();
-            Integer schematicId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "schematic-id");
-            assert schematicId != null : "Schematic ID is null";
+        ItemMeta itemMeta = item.getItemMeta();
+        Integer schematicId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "schematic-id");
+        assert schematicId != null : "Schematic ID is null";
 
-            new ConversationFactory(SkyMaster.getInstance())
-                    .withConversationCanceller(new ExactMatchConversationCanceller("wyjdz"))
-                    .withLocalEcho(false)
-                    .withFirstPrompt(new ProvideIslandNamePrompt(schematicId))
-                    .buildConversation(player)
-                    .begin();
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
-        }
+        new ConversationFactory(SkyMaster.getInstance())
+                .withConversationCanceller(new ExactMatchConversationCanceller("wyjdz"))
+                .withLocalEcho(false)
+                .withFirstPrompt(new ProvideIslandNamePrompt(schematicId))
+                .buildConversation(player)
+                .begin();
     }
 }

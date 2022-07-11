@@ -18,29 +18,23 @@ public class IslandInfoGUIHandler extends GUIHandler {
     }
 
     @Override()
-    public void onEvent(InventoryClickEvent event, Player player) {
-        try {
-            ItemStack itemStack = event.getCurrentItem();
-            if (itemStack == null) return;
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+        ItemStack itemStack = event.getCurrentItem();
+        if (itemStack == null) return;
 
-            ItemMeta itemMeta = itemStack.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
 
-            Integer islandId = PersistentDataContainerUtil.getInt(
-                    itemMeta.getPersistentDataContainer(),
-                    "island-id"
-            );
+        Integer islandId = PersistentDataContainerUtil.getInt(
+                itemMeta.getPersistentDataContainer(),
+                "island-id"
+        );
 
-            Material material = itemStack.getType();
+        Material material = itemStack.getType();
 
-            switch (material) {
-                case GRASS_BLOCK -> ThreadUtil.async(new TeleportPlayerToIslandHomeRunnable(player, islandId));
-                case BARRIER -> ThreadUtil.async(new RemoveIslandRunnable(player, islandId));
-                case REPEATING_COMMAND_BLOCK ->
-                        ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(player, islandId));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
+        switch (material) {
+            case GRASS_BLOCK -> ThreadUtil.async(new TeleportPlayerToIslandHomeRunnable(player, islandId));
+            case BARRIER -> ThreadUtil.async(new RemoveIslandRunnable(player, islandId));
+            case REPEATING_COMMAND_BLOCK -> ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(player, islandId));
         }
     }
 }

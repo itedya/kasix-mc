@@ -22,38 +22,33 @@ public class ChooseIslandInviteMemberGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) {
-        try {
-            ItemStack currentItem = event.getCurrentItem();
-            if (currentItem == null) return;
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null) return;
 
-            ItemMeta itemMeta = currentItem.getItemMeta();
+        ItemMeta itemMeta = currentItem.getItemMeta();
 
-            Integer islandId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "island-id");
-            assert islandId != null;
+        Integer islandId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "island-id");
+        assert islandId != null;
 
-            var playerToInviteUuid = getPlayerToInviteUuid(currentItem);
-            var islandOwnerUuid = getIslandOwnerPlayerUuid(currentItem);
-            var withAccept = getWithAccept(currentItem);
+        var playerToInviteUuid = getPlayerToInviteUuid(currentItem);
+        var islandOwnerUuid = getIslandOwnerPlayerUuid(currentItem);
+        var withAccept = getWithAccept(currentItem);
 
-            if (withAccept) {
-                var playerToInvite = Bukkit.getPlayer(UUID.fromString(playerToInviteUuid));
-                var islandOwner = Bukkit.getPlayer(UUID.fromString(islandOwnerUuid));
+        if (withAccept) {
+            var playerToInvite = Bukkit.getPlayer(UUID.fromString(playerToInviteUuid));
+            var islandOwner = Bukkit.getPlayer(UUID.fromString(islandOwnerUuid));
 
-                if (playerToInvite == null) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Gracz nie jest online!");
-                    return;
-                }
-
-                ThreadUtil.async(new InvitePlayerToIslandRunnable(player, islandOwner, playerToInvite, islandId));
-            } else {
-                var playerToInvite = Bukkit.getOfflinePlayer(UUID.fromString(playerToInviteUuid));
-
-                ThreadUtil.sync(new AddPlayerToIslandRunnable(player, playerToInvite, islandId));
+            if (playerToInvite == null) {
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Gracz nie jest online!");
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
+
+            ThreadUtil.async(new InvitePlayerToIslandRunnable(player, islandOwner, playerToInvite, islandId));
+        } else {
+            var playerToInvite = Bukkit.getOfflinePlayer(UUID.fromString(playerToInviteUuid));
+
+            ThreadUtil.sync(new AddPlayerToIslandRunnable(player, playerToInvite, islandId));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.itedya.skymaster.guihandler;
 
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,12 +33,17 @@ public abstract class GUIHandler implements Listener {
         event.setCancelled(true);
         if (!(event instanceof Player player)) return;
 
-        this.onEvent(event, player);
+        try {
+            this.onEvent(event, player);
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.sendMessage(ChatUtil.getServerErrorMessage());
+        }
 
         event.getInventory().close();
     }
 
-    public void onEvent(InventoryClickEvent event, Player player) {
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
         // override this function
     }
 }

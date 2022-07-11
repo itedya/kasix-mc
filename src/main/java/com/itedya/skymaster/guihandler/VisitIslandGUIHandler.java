@@ -15,20 +15,15 @@ public class VisitIslandGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) {
-        try {
-            ItemStack currentItem = event.getCurrentItem();
-            if (currentItem == null) return;
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null) return;
 
-            ItemMeta itemMeta = currentItem.getItemMeta();
+        ItemMeta itemMeta = currentItem.getItemMeta();
 
-            Integer islandId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "island-id");
-            assert islandId != null;
+        Integer islandId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "island-id");
+        assert islandId != null;
 
-            ThreadUtil.async(new VisitIslandRunnable(player, islandId));
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
-        }
+        ThreadUtil.async(new VisitIslandRunnable(player, islandId));
     }
 }

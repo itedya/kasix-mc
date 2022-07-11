@@ -14,23 +14,18 @@ public class ChooseMemberToKickGUIHandler extends GUIHandler {
     }
 
     @Override
-    public void onEvent(InventoryClickEvent event, Player player) {
-        try {
-            var item = event.getCurrentItem();
-            assert item != null;
+    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
+        var item = event.getCurrentItem();
+        assert item != null;
 
-            var meta = item.getItemMeta();
-            var container = meta.getPersistentDataContainer();
+        var meta = item.getItemMeta();
+        var container = meta.getPersistentDataContainer();
 
-            var islandId = PersistentDataContainerUtil.getInt(container, "island-id");
-            var memberUuid = PersistentDataContainerUtil.getString(container, "member-uuid");
-            assert islandId != null;
-            assert memberUuid != null;
+        var islandId = PersistentDataContainerUtil.getInt(container, "island-id");
+        var memberUuid = PersistentDataContainerUtil.getString(container, "member-uuid");
+        assert islandId != null;
+        assert memberUuid != null;
 
-            ThreadUtil.async(new KickPlayerFromIslandRunnable(player, islandId, memberUuid));
-        } catch (Exception e) {
-            e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
-        }
+        ThreadUtil.async(new KickPlayerFromIslandRunnable(player, islandId, memberUuid));
     }
 }
