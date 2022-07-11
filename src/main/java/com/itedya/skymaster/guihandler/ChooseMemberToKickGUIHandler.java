@@ -1,4 +1,4 @@
-package com.itedya.skymaster.listeners;
+package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.runnables.kick.KickPlayerFromIslandRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
@@ -6,23 +6,11 @@ import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public class ChooseMemberToKickGUIHandler implements Listener {
-    public boolean react(InventoryClickEvent event) {
-        if (event.getCurrentItem() == null) return false;
-
-        ItemStack firstItem = event.getInventory().getItem(0);
-        if (firstItem == null) return false;
-
-        ItemMeta itemMeta = firstItem.getItemMeta();
-        String identifier = PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "inventory-identifier");
-        if (identifier == null) return false;
-
-        return identifier.equals("choose-member-to-kick-gui");
+public class ChooseMemberToKickGUIHandler extends GUIHandler {
+    public ChooseMemberToKickGUIHandler() {
+        super("choose-member-to-kick-gui");
     }
 
     @EventHandler()
