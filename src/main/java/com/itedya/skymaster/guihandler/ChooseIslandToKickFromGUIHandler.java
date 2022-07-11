@@ -30,7 +30,7 @@ public class ChooseIslandToKickFromGUIHandler extends GUIHandler {
             ThreadUtil.async(new ShowMembersToKickRunnable(player, islandId));
         } catch (Exception e) {
             e.printStackTrace();
-            event.getWhoClicked().sendMessage(ChatUtil.getServerErrorMessage());
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
     }
 }

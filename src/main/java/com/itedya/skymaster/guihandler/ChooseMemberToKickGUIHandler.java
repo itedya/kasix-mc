@@ -28,8 +28,6 @@ public class ChooseMemberToKickGUIHandler extends GUIHandler {
             assert memberUuid != null;
 
             ThreadUtil.async(new KickPlayerFromIslandRunnable(player, islandId, memberUuid));
-
-            event.getInventory().close();
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatUtil.getServerErrorMessage());

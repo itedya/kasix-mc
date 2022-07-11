@@ -2,6 +2,7 @@ package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.runnables.invite.AddPlayerToIslandRunnable;
 import com.itedya.skymaster.runnables.invite.InvitePlayerToIslandRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
@@ -50,12 +51,9 @@ public class ChooseIslandInviteMemberGUIHandler extends GUIHandler {
 
                 ThreadUtil.sync(new AddPlayerToIslandRunnable(player, playerToInvite, islandId));
             }
-
-            event.getInventory().close();
         } catch (Exception e) {
             e.printStackTrace();
-            event.getInventory().close();
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
     }
 
