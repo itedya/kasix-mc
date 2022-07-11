@@ -1,50 +1,30 @@
-package com.itedya.skymaster.listeners;
+package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.conversations.createisland.ProvideIslandNamePrompt;
 import com.itedya.skymaster.utils.*;
-import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.ExactMatchConversationCanceller;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 // GUI LAUNCHER - ShowCreateIslandGuiRunnable
-public class CreateIslandGUIHandler implements Listener {
-    public boolean react(InventoryClickEvent event) {
-        ItemStack firstItem = event.getInventory().getItem(0);
-        if (firstItem == null) return false;
-
-        ItemMeta itemMeta = firstItem.getItemMeta();
-        String identifier = PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "inventory-identifier");
-        if (identifier == null) return false;
-
-        return identifier.equals("create-island-choose-schematic-gui");
+public class CreateIslandGUIHandler extends GUIHandler {
+    public CreateIslandGUIHandler() {
+        super("create-island-choose-schematic-gui");
     }
 
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!react(event)) return;
-
-        event.setCancelled(true);
-
+    @Override
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
-            if (!(event.getWhoClicked() instanceof Player player)) {
-                return;
-            }
-
             ItemStack item = event.getCurrentItem();
             if (item == null) return;
 
             ItemMeta itemMeta = item.getItemMeta();
             Integer schematicId = PersistentDataContainerUtil.getInt(itemMeta.getPersistentDataContainer(), "schematic-id");
-            if (schematicId == null) {
-                throw new Exception("Schematic ID is null");
-            }
+            assert schematicId != null : "Schematic ID is null";
 
             new ConversationFactory(SkyMaster.getInstance())
                     .withConversationCanceller(new ExactMatchConversationCanceller("wyjdz"))
@@ -54,9 +34,7 @@ public class CreateIslandGUIHandler implements Listener {
                     .begin();
         } catch (Exception e) {
             e.printStackTrace();
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Wystąpił błąd serwera");
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
-
-        event.getInventory().close();
     }
 }

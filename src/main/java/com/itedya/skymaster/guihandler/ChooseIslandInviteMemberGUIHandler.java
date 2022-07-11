@@ -20,14 +20,8 @@ public class ChooseIslandInviteMemberGUIHandler extends GUIHandler {
         super("choose-island-invite-member-gui");
     }
 
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!react(event)) return;
-
-        event.setCancelled(true);
-
-        Player player = (Player) event.getWhoClicked();
-
+    @Override
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
             ItemStack currentItem = event.getCurrentItem();
             if (currentItem == null) return;

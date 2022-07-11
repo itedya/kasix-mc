@@ -1,6 +1,8 @@
 package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,5 +24,20 @@ public abstract class GUIHandler implements Listener {
         if (identifier == null) return false;
 
         return identifier.equals(this.inventoryIdentifier);
+    }
+
+    @EventHandler()
+    private void onInvClick(InventoryClickEvent event) {
+        if (!react(event)) return;
+        event.setCancelled(true);
+        if (!(event instanceof Player player)) return;
+
+        this.onEvent(event, player);
+
+        event.getInventory().close();
+    }
+
+    public void onEvent(InventoryClickEvent event, Player player) {
+        // override this function
     }
 }

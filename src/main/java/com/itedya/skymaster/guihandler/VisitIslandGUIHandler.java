@@ -5,8 +5,6 @@ import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,14 +14,8 @@ public class VisitIslandGUIHandler extends GUIHandler {
         super("visit-island-gui");
     }
 
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!react(event)) return;
-
-        event.setCancelled(true);
-
-        Player player = (Player) event.getWhoClicked();
-
+    @Override
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
             ItemStack currentItem = event.getCurrentItem();
             if (currentItem == null) return;

@@ -16,17 +16,9 @@ public class ChooseIslandToKickFromGUIHandler extends GUIHandler {
         super("choose-island-to-kick-member-gui");
     }
 
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!react(event)) return;
-
-        event.setCancelled(true);
-
+    @Override
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
-            if (!(event.getWhoClicked() instanceof Player player)) {
-                return;
-            }
-
             var item = event.getCurrentItem();
             assert item != null;
 

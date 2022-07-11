@@ -13,17 +13,9 @@ public class ChooseMemberToKickGUIHandler extends GUIHandler {
         super("choose-member-to-kick-gui");
     }
 
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!react(event)) return;
-
-        event.setCancelled(true);
-
+    @Override
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
-            if (!(event.getWhoClicked() instanceof Player player)) {
-                return;
-            }
-
             var item = event.getCurrentItem();
             assert item != null;
 
@@ -40,7 +32,7 @@ public class ChooseMemberToKickGUIHandler extends GUIHandler {
             event.getInventory().close();
         } catch (Exception e) {
             e.printStackTrace();
-            event.getWhoClicked().sendMessage(ChatUtil.getServerErrorMessage());
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
     }
 }
