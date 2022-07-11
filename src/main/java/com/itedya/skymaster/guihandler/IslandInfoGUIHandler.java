@@ -1,42 +1,25 @@
-package com.itedya.skymaster.listeners;
+package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.runnables.island.RemoveIslandRunnable;
 import com.itedya.skymaster.runnables.island.ResetWorldGuardPermissionsRunnable;
 import com.itedya.skymaster.runnables.home.TeleportPlayerToIslandHomeRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class IslandInfoGUIHandler implements Listener {
-    public boolean react(InventoryClickEvent event) {
-        ItemStack firstItem = event.getInventory().getItem(0);
-        if (firstItem == null) return false;
-
-        ItemMeta itemMeta = firstItem.getItemMeta();
-        String identifier = PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "inventory-identifier");
-        if (identifier == null) return false;
-
-        return identifier.equals("island-info-gui");
+public class IslandInfoGUIHandler extends GUIHandler {
+    public IslandInfoGUIHandler() {
+        super("island-info-gui");
     }
 
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!react(event)) return;
-
-        event.setCancelled(true);
-
+    @Override()
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
-            if (!(event.getWhoClicked() instanceof Player player)) {
-                throw new Exception("Entity that clicked is not a player.");
-            }
-
             ItemStack itemStack = event.getCurrentItem();
             if (itemStack == null) return;
 
@@ -55,14 +38,9 @@ public class IslandInfoGUIHandler implements Listener {
                 case REPEATING_COMMAND_BLOCK ->
                         ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(player, islandId));
             }
-
-            event.getWhoClicked().closeInventory();
         } catch (Exception e) {
             e.printStackTrace();
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Server error.");
-            event.getInventory().close();
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
     }
-
-
 }
