@@ -3,6 +3,7 @@ package com.itedya.skymaster;
 import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.guihandler.ChooseIslandInviteMemberGUIHandler;
+import com.itedya.skymaster.guihandler.ChooseIslandToKickFromGUIHandler;
 import com.itedya.skymaster.guihandler.ChooseMemberToKickGUIHandler;
 import com.itedya.skymaster.guihandler.VisitIslandGUIHandler;
 import com.itedya.skymaster.listeners.*;
