@@ -2,7 +2,6 @@ package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.runnables.island.ShowIslandGuiRunnable;
-import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

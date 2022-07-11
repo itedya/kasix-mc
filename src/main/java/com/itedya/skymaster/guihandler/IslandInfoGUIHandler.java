@@ -3,7 +3,6 @@ package com.itedya.skymaster.guihandler;
 import com.itedya.skymaster.runnables.island.RemoveIslandRunnable;
 import com.itedya.skymaster.runnables.island.ResetWorldGuardPermissionsRunnable;
 import com.itedya.skymaster.runnables.home.TeleportPlayerToIslandHomeRunnable;
-import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Material;

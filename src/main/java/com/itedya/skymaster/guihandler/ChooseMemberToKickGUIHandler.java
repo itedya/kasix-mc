@@ -1,11 +1,9 @@
 package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.runnables.kick.KickPlayerFromIslandRunnable;
-import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class ChooseMemberToKickGUIHandler extends GUIHandler {
