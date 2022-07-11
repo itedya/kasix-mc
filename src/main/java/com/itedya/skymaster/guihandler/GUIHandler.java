@@ -1,11 +1,12 @@
 package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public abstract class GUIHandler {
+public abstract class GUIHandler implements Listener {
     protected String inventoryIdentifier;
 
     public GUIHandler(String identifier) {

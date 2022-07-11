@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class VisitIslandGUIHandler extends GUIHandler implements Listener {
+public class VisitIslandGUIHandler extends GUIHandler {
     public VisitIslandGUIHandler() {
         super("visit-island-gui");
     }
