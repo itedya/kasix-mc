@@ -1,4 +1,4 @@
-package com.itedya.skymaster.listeners;
+package com.itedya.skymaster.guihandler;
 
 import com.itedya.skymaster.runnables.invite.AddPlayerToIslandRunnable;
 import com.itedya.skymaster.runnables.invite.InvitePlayerToIslandRunnable;
@@ -15,16 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
-public class ChooseIslandInviteMemberGUIHandler implements Listener {
-    public boolean react(InventoryClickEvent event) {
-        ItemStack firstItem = event.getInventory().getItem(0);
-        if (firstItem == null) return false;
-
-        ItemMeta itemMeta = firstItem.getItemMeta();
-        String identifier = PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "inventory-identifier");
-        if (identifier == null) return false;
-
-        return identifier.equals("choose-island-invite-member-gui");
+public class ChooseIslandInviteMemberGUIHandler extends GUIHandler {
+    public ChooseIslandInviteMemberGUIHandler() {
+        super("choose-island-invite-member-gui");
     }
 
     @EventHandler()
