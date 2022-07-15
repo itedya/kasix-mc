@@ -46,13 +46,7 @@ public final class SkyMaster extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        getServer().getPluginManager().registerEvents(new CreateIslandGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ListUserIslandsGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new IslandInfoGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ChooseIslandInviteMemberGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ChooseIslandToKickFromGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ChooseMemberToKickGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new VisitIslandGUIHandler(), this);
+        getServer().getPluginManager().registerEvents(new GUIListener(), this);
 
         new SkyMasterPlaceholderExpansion().register();
     }
