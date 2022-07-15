@@ -12,10 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Map;
 
 public class GUIListener implements Listener {
-    protected String inventoryIdentifier;
-
-    public GUIListener(String identifier) {
-        this.inventoryIdentifier = identifier;
+    public GUIListener() {
     }
 
     public Map<String, GUIHandler> handlers = Map.of(
@@ -44,12 +41,12 @@ public class GUIListener implements Listener {
 
         event.setCancelled(true);
 
-        if (!(event instanceof Player player)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
         try {
             var handler = this.handlers.get(handlerIdentifier);
             if (handler == null) return;
 
-            handler.onEvent(event);
+            handler.onEvent(event, player);
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatUtil.getServerErrorMessage());
