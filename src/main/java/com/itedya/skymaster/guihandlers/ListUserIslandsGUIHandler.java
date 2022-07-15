@@ -2,6 +2,7 @@ package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.runnables.island.ShowIslandGuiRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,27 +11,28 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 // GUI LAUNCHER - ShowIslandListGuiRunnable
 public class ListUserIslandsGUIHandler implements GUIHandler {
-    public void onEvent(InventoryClickEvent event, Player player) throws Exception {
-        String userUuid = this.getUserUuid(event);
-        if (userUuid == null) {
-            throw new Exception("User UUID is null");
+    public void onEvent(InventoryClickEvent event, Player player) {
+        try {
+            String userUuid = this.getUserUuid(event);
+            assert userUuid != null : "User UUID is null!";
+
+            ItemStack currentItem = event.getCurrentItem();
+
+            if (currentItem == null) return;
+
+            ItemMeta itemMeta = currentItem.getItemMeta();
+            Integer islandId = PersistentDataContainerUtil.getInt(
+                    itemMeta.getPersistentDataContainer(),
+                    "island-id"
+            );
+            assert islandId != null : "Island ID is null!";
+
+            new ShowIslandGuiRunnable(player, islandId)
+                    .runTaskAsynchronously(SkyMaster.getInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
-
-        ItemStack currentItem = event.getCurrentItem();
-
-        if (currentItem == null) return;
-
-        ItemMeta itemMeta = currentItem.getItemMeta();
-        Integer islandId = PersistentDataContainerUtil.getInt(
-                itemMeta.getPersistentDataContainer(),
-                "island-id"
-        );
-        if (islandId == null) {
-            throw new Exception("Island ID is null");
-        }
-
-        new ShowIslandGuiRunnable(player, islandId)
-                .runTaskAsynchronously(SkyMaster.getInstance());
     }
 
     public String getUserUuid(InventoryClickEvent event) {
