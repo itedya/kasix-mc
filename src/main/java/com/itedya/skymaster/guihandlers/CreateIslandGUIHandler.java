@@ -11,12 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 // GUI LAUNCHER - ShowCreateIslandGuiRunnable
-public class CreateIslandGUIHandler extends GUIHandler {
-    public CreateIslandGUIHandler() {
-        super("create-island-choose-schematic-gui");
-    }
-
-    @Override
+public class CreateIslandGUIHandler implements GUIHandler {
     public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;

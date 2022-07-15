@@ -9,12 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 // GUI LAUNCHER - ShowIslandListGuiRunnable
-public class ListUserIslandsGUIHandler extends GUIHandler {
-    public ListUserIslandsGUIHandler() {
-        super("user-islands-gui");
-    }
-
-    @Override()
+public class ListUserIslandsGUIHandler implements GUIHandler {
     public void onEvent(InventoryClickEvent event, Player player) throws Exception {
         String userUuid = this.getUserUuid(event);
         if (userUuid == null) {

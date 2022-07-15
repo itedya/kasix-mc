@@ -6,12 +6,7 @@ import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class ChooseMemberToKickGUIHandler extends GUIHandler {
-    public ChooseMemberToKickGUIHandler() {
-        super("choose-member-to-kick-gui");
-    }
-
-    @Override
+public class ChooseMemberToKickGUIHandler implements GUIHandler {
     public void onEvent(InventoryClickEvent event, Player player) {
         var item = event.getCurrentItem();
         assert item != null;

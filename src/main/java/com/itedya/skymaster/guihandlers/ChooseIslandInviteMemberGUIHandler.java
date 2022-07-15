@@ -12,13 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
-
-public class ChooseIslandInviteMemberGUIHandler extends GUIHandler {
-    public ChooseIslandInviteMemberGUIHandler() {
-        super("choose-island-invite-member-gui");
-    }
-
-    @Override
+public class ChooseIslandInviteMemberGUIHandler implements GUIHandler {
     public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;

@@ -11,12 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class IslandInfoGUIHandler extends GUIHandler {
-    public IslandInfoGUIHandler() {
-        super("island-info-gui");
-    }
-
-    @Override()
+public class IslandInfoGUIHandler implements GUIHandler {
     public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack itemStack = event.getCurrentItem();
         if (itemStack == null) return;

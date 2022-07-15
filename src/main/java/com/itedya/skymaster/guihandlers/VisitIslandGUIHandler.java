@@ -8,12 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class VisitIslandGUIHandler extends GUIHandler {
-    public VisitIslandGUIHandler() {
-        super("visit-island-gui");
-    }
-
-    @Override
+public class VisitIslandGUIHandler implements GUIHandler {
     public void onEvent(InventoryClickEvent event, Player player) {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
