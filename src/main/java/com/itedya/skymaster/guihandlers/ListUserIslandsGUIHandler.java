@@ -1,31 +1,20 @@
-package com.itedya.skymaster.listeners;
+package com.itedya.skymaster.guihandlers;
 
 import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.runnables.island.ShowIslandGuiRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
-import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 // GUI LAUNCHER - ShowIslandListGuiRunnable
-public class ListUserIslandsGUIHandler implements Listener {
-    @EventHandler()
-    public void onInvClick(InventoryClickEvent event) {
-        if (!this.react(event)) return;
-
-        event.setCancelled(true);
-
+public class ListUserIslandsGUIHandler implements GUIHandler {
+    public void onEvent(InventoryClickEvent event, Player player) {
         try {
-            Player player = (Player) event.getWhoClicked();
-
             String userUuid = this.getUserUuid(event);
-            if (userUuid == null) {
-                throw new Exception("User UUID is null");
-            }
+            assert userUuid != null : "User UUID is null!";
 
             ItemStack currentItem = event.getCurrentItem();
 
@@ -36,34 +25,19 @@ public class ListUserIslandsGUIHandler implements Listener {
                     itemMeta.getPersistentDataContainer(),
                     "island-id"
             );
-            if (islandId == null) {
-                throw new Exception("Island ID is null");
-            }
-
-            player.closeInventory();
+            assert islandId != null : "Island ID is null!";
 
             new ShowIslandGuiRunnable(player, islandId)
                     .runTaskAsynchronously(SkyMaster.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
-            event.getInventory().close();
+            player.sendMessage(ChatUtil.getServerErrorMessage());
         }
-    }
-
-    public boolean react(InventoryClickEvent event) {
-        ItemStack firstItem = event.getInventory().getItem(0);
-        if (firstItem == null) return false;
-
-        ItemMeta itemMeta = firstItem.getItemMeta();
-        String identifier = PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "inventory-identifier");
-        if (identifier == null) return false;
-
-        return identifier.equals("user-islands-gui");
     }
 
     public String getUserUuid(InventoryClickEvent event) {
         ItemStack firstItem = event.getInventory().getItem(0);
+        assert firstItem != null : "First item is null!";
 
         ItemMeta itemMeta = firstItem.getItemMeta();
         return PersistentDataContainerUtil.getString(itemMeta.getPersistentDataContainer(), "user-uuid");

@@ -2,8 +2,7 @@ package com.itedya.skymaster;
 
 import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
-import com.itedya.skymaster.guihandler.VisitIslandGUIHandler;
-import com.itedya.skymaster.listeners.*;
+import com.itedya.skymaster.guihandlers.*;
 import com.itedya.skymaster.rankings.IslandSizeRankingManager;
 import com.itedya.skymaster.utils.CommandUtil;
 import com.itedya.skymaster.utils.WorldUtil;
@@ -47,13 +46,7 @@ public final class SkyMaster extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        getServer().getPluginManager().registerEvents(new CreateIslandGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ListUserIslandsGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new IslandInfoGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ChooseIslandInviteMemberGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ChooseIslandToKickFromGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new ChooseMemberToKickGUIHandler(), this);
-        getServer().getPluginManager().registerEvents(new VisitIslandGUIHandler(), this);
+        getServer().getPluginManager().registerEvents(new GUIListener(), this);
 
         new SkyMasterPlaceholderExpansion().register();
     }
@@ -69,7 +62,7 @@ public final class SkyMaster extends JavaPlugin {
             return false;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        return true;
     }
 
     public static Economy getEconomy() {
