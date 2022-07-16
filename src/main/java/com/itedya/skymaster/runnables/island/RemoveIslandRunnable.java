@@ -10,11 +10,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.Connection;
 
 public class RemoveIslandRunnable extends BukkitRunnable {
-    private final Integer islandId;
+    private final int islandId;
     private final Player logPlayer;
     private Connection connection;
 
-    public RemoveIslandRunnable(Player logPlayer, Integer islandId) {
+    public RemoveIslandRunnable(Player logPlayer, int islandId) {
         this.islandId = islandId;
         this.logPlayer = logPlayer;
     }

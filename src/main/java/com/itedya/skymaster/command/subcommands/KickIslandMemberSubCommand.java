@@ -21,24 +21,12 @@ public class KickIslandMemberSubCommand implements CommandExecutor {
             return true;
         }
 
-        OfflinePlayer toCheck = player;
-
-        // check permissions
-        if (args.length > 0 && !args[0].equals(player.getName())) {
-            if (!player.hasPermission("skymaster.admin.islands.kick")) {
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
-                return true;
-            } else {
-                toCheck = Bukkit.getOfflinePlayer(args[0]);
-            }
-        } else {
-            if (!player.hasPermission("skymaster.islands.kick")) {
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
-                return true;
-            }
+        if (!player.hasPermission("skymaster.islands.kick")) {
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
+            return true;
         }
 
-        ThreadUtil.async(new ShowIslandsForKickRunnable(player, toCheck));
+        ThreadUtil.async(new ShowIslandsForKickRunnable(player, player));
 
         return true;
     }
