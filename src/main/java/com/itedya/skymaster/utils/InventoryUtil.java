@@ -1,7 +1,7 @@
 package com.itedya.skymaster.utils;
 
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

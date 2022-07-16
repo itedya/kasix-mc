@@ -3,7 +3,7 @@ package com.itedya.skymaster.runnables.view;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.VisitBlockDao;
-import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.utils.InventoryUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;

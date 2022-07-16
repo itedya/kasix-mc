@@ -2,8 +2,7 @@ package com.itedya.skymaster.runnables.home;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandHomeDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.utils.IslandHomeUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;

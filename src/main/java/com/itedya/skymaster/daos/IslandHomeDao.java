@@ -1,6 +1,6 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 
 import java.sql.*;
 

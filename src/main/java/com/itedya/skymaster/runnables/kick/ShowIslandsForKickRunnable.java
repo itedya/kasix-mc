@@ -3,7 +3,7 @@ package com.itedya.skymaster.runnables.kick;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandMemberDao;
-import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.InventoryUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;

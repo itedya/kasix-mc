@@ -1,4 +1,4 @@
-package com.itedya.skymaster.dtos;
+package com.itedya.skymaster.dtos.database;
 
 import java.sql.Date;
 import java.sql.ResultSet;

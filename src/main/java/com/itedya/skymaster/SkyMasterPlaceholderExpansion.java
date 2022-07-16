@@ -1,6 +1,6 @@
 package com.itedya.skymaster;
 
-import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.rankings.IslandSizeRankingManager;
 import com.itedya.skymaster.utils.SkyMasterStringUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

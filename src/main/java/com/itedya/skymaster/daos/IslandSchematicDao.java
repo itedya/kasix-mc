@@ -1,6 +1,6 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.dtos.database.IslandSchematicDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

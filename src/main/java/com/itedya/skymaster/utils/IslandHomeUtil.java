@@ -1,6 +1,6 @@
 package com.itedya.skymaster.utils;
 
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

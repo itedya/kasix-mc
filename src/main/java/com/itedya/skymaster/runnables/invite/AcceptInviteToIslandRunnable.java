@@ -2,8 +2,8 @@ package com.itedya.skymaster.runnables.invite;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandMemberDao;
-import com.itedya.skymaster.dtos.IslandInviteDto;
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandInviteDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
 import net.md_5.bungee.api.ChatColor;

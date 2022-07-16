@@ -1,6 +1,6 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 
 import java.sql.*;
 import java.util.ArrayList;

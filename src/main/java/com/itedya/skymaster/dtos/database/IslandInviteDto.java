@@ -1,6 +1,5 @@
-package com.itedya.skymaster.dtos;
+package com.itedya.skymaster.dtos.database;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class IslandInviteDto {

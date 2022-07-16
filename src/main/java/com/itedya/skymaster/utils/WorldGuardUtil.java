@@ -1,9 +1,8 @@
 package com.itedya.skymaster.utils;
 
 import com.fastasyncworldedit.core.FaweAPI;
-import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
@@ -16,7 +15,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 
 import java.util.HashMap;
 import java.util.List;

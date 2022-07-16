@@ -3,7 +3,7 @@ package com.itedya.skymaster.runnables.island;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandSchematicDao;
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.dtos.database.IslandSchematicDto;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.PlayerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;

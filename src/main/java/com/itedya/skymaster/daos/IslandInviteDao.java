@@ -1,6 +1,6 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.IslandInviteDto;
+import com.itedya.skymaster.dtos.database.IslandInviteDto;
 import com.itedya.skymaster.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
