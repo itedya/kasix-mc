@@ -84,7 +84,8 @@ public class IslandHomeDao {
         stmt.setString(4, islandHomeDto.worldUuid);
         stmt.setInt(5, islandId);
 
-        stmt.executeUpdate();
+        int affectedRows = stmt.executeUpdate();
+        if (affectedRows == 0) throw new SQLException("No rows affected!");
 
         stmt.close();
     }

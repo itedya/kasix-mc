@@ -88,13 +88,6 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
 
     public void saveData() {
         try {
-            Location homeLocationNormalized = new Location(
-                    playerLocation.getWorld(),
-                    playerLocation.getBlockX(),
-                    playerLocation.getBlockY(),
-                    playerLocation.getBlockZ()
-            );
-
             IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
 
             IslandHomeDto islandHomeDto = new IslandHomeDto();
@@ -102,14 +95,15 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
             islandHomeDto.x = playerLocation.getBlockX();
             islandHomeDto.y = playerLocation.getBlockY();
             islandHomeDto.z = playerLocation.getBlockZ();
-            
-            islandHomeDao.updateByIslandId(islandHomeDto.id, islandHomeDto);
 
+            islandHomeDao.updateByIslandId(islandDto.id, islandHomeDto);
+
+            connection.commit();
 
             player.sendMessage(ChatColor.GREEN + "Zaktualizowano dom wyspy na lokalizacje " +
-                    "X:" + homeLocationNormalized.getBlockX() + " " +
-                    "Y:" + homeLocationNormalized.getBlockY() + " " +
-                    "Z:" + homeLocationNormalized.getBlockZ()
+                    "X:" + playerLocation.getBlockX() + " " +
+                    "Y:" + playerLocation.getBlockY() + " " +
+                    "Z:" + playerLocation.getBlockZ()
             );
         } catch (Exception e) {
             e.printStackTrace();
