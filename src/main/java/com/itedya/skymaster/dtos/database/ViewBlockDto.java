@@ -1,10 +1,10 @@
-package com.itedya.skymaster.dtos;
+package com.itedya.skymaster.dtos.database;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ViewBlockDto {
+public class ViewBlockDto implements DatabaseDto {
     public int id;
     public int islandId;
     public String blockedPlayerUuid;

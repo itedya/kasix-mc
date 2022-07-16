@@ -2,8 +2,7 @@ package com.itedya.skymaster.runnables.home;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandHomeDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.utils.IslandHomeUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
@@ -27,7 +26,7 @@ public class TeleportPlayerToIslandHomeRunnable extends BukkitRunnable {
         try {
             this.connection = Database.getInstance().getConnection();
             IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
-            IslandHomeDto islandHomeDto = islandHomeDao.firstByIslandId(islandId);
+            IslandHomeDto islandHomeDto = islandHomeDao.getByIslandId(islandId);
 
             ThreadUtil.sync(() -> IslandHomeUtil.addPlayerToQueue(player, islandHomeDto));
             connection.close();

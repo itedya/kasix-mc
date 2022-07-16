@@ -1,10 +1,8 @@
 package com.itedya.skymaster.runnables.kick;
 
 import com.itedya.skymaster.daos.Database;
-import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandMemberDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.InventoryUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
@@ -66,7 +64,7 @@ public class ShowMembersToKickRunnable extends BukkitRunnable {
                 var meta = itemStack.getItemMeta();
                 var container = meta.getPersistentDataContainer();
 
-                PersistentDataContainerUtil.setString(container, "member-uuid", member.getPlayerUuid());
+                PersistentDataContainerUtil.setString(container, "member-uuid", member.playerUuid);
                 PersistentDataContainerUtil.setInt(container, "island-id", islandId);
                 PersistentDataContainerUtil.setString(container, "inventory-identifier", "choose-member-to-kick-gui");
 

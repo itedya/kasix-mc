@@ -3,8 +3,8 @@ package com.itedya.skymaster.runnables.island;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandMemberDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
@@ -53,15 +53,15 @@ public class ResetWorldGuardPermissionsRunnable extends SkymasterRunnable {
 
             var manager = WorldGuardUtil.getRegionManager();
 
-            ProtectedRegion protectedRegion = WorldGuardUtil.getRegionForId(islandDto.getId());
+            ProtectedRegion protectedRegion = WorldGuardUtil.getRegionForId(islandDto.id);
             if (protectedRegion != null) manager.removeRegion(protectedRegion.getId());
 
-            var radius = islandDto.getRadius();
+            var radius = islandDto.radius;
 
-            var middleVector = WorldGuardUtil.calculateIslandPosition(islandDto.getId());
+            var middleVector = WorldGuardUtil.calculateIslandPosition(islandDto.id);
 
             protectedRegion = WorldGuardUtil.createRegionWithoutSaving(
-                    "island_" + islandDto.getId(),
+                    "island_" + islandDto.id,
                     BlockVector3.at(middleVector.getX() - radius, -64, middleVector.getZ() + radius),
                     BlockVector3.at(middleVector.getX() + radius, 319, middleVector.getZ() - radius)
             );

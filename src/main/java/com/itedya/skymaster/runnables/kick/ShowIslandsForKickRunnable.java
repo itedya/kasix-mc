@@ -3,7 +3,7 @@ package com.itedya.skymaster.runnables.kick;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandMemberDao;
-import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.InventoryUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
@@ -47,10 +47,10 @@ public class ShowIslandsForKickRunnable extends BukkitRunnable {
 
             // filter islands based on amount of members
             for (var island : rawIslands) {
-                var members = memberDao.getByIslandId(island.getId());
+                var members = memberDao.getByIslandId(island.id);
 
                 if (members.size() > 0) {
-                    island.setMembers(members);
+                    island.members = members;
                     islands.add(island);
                 }
             }

@@ -3,7 +3,7 @@ package com.itedya.skymaster.runnables.view;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandHomeDao;
 import com.itedya.skymaster.daos.VisitBlockDao;
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.utils.IslandHomeUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -37,7 +37,7 @@ public class VisitIslandRunnable extends SkymasterRunnable {
 
             IslandHomeDao homeDao = new IslandHomeDao(connection);
 
-            var home = homeDao.firstByIslandId(islandId);
+            var home = homeDao.getByIslandId(islandId);
 
             data.put("home", home);
 

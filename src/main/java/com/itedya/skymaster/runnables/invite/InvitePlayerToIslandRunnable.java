@@ -4,8 +4,8 @@ import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandInviteDao;
 import com.itedya.skymaster.daos.IslandMemberDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandInviteDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandInviteDto;
 import com.itedya.skymaster.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -26,10 +26,10 @@ public class InvitePlayerToIslandRunnable implements Runnable {
      * Sends island member invite offer to player
      * Run asynchronously!
      *
-     * @param executor Executor of command
-     * @param islandOwner Owner of island that member is invited to
+     * @param executor       Executor of command
+     * @param islandOwner    Owner of island that member is invited to
      * @param inviteToPlayer Player that is invited to island
-     * @param islandId Island id
+     * @param islandId       Island id
      */
     public InvitePlayerToIslandRunnable(Player executor, Player islandOwner, Player inviteToPlayer, int islandId) {
         this.executor = executor;
@@ -58,9 +58,9 @@ public class InvitePlayerToIslandRunnable implements Runnable {
             islandDto = islandDao.getById(islandId);
 
             inviteDto = new IslandInviteDto();
-            inviteDto.setIslandDto(islandDto);
-            inviteDto.setFromPlayer(this.islandOwner);
-            inviteDto.setToPlayer(this.inviteToPlayer);
+            inviteDto.islandDto = islandDto;
+            inviteDto.fromPlayer = this.islandOwner;
+            inviteDto.toPlayer = this.inviteToPlayer;
 
             ThreadUtil.sync(this::finish);
         } catch (Exception e) {
@@ -82,13 +82,13 @@ public class InvitePlayerToIslandRunnable implements Runnable {
                     .append("Zaproszono gracza ")
                     .append(inviteToPlayer.getName()).bold(true)
                     .append(" do wyspy ").bold(false)
-                    .append("\"" + islandDto.getName() + "\"").bold(true)
+                    .append("\"" + islandDto.name + "\"").bold(true)
                     .create());
 
             inviteToPlayer.sendMessage(new ComponentBuilder()
                     .color(net.md_5.bungee.api.ChatColor.GREEN)
                     .append("Dostałeś zaproszenie do wyspy ")
-                    .append("\"" + islandDto.getName() + "\"").bold(true)
+                    .append("\"" + islandDto.name + "\"").bold(true)
                     .append(" od gracza ").bold(false)
                     .append(islandOwner.getName()).bold(true)
                     .create());

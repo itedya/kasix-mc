@@ -1,6 +1,6 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.ViewBlockDto;
+import com.itedya.skymaster.dtos.database.ViewBlockDto;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

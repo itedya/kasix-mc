@@ -1,8 +1,9 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandHomeDto;
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandSchematicDto;
+import com.itedya.skymaster.utils.sql.IslandDaoSqlUtil;
 import org.bukkit.Material;
 
 import java.sql.*;
@@ -21,8 +22,7 @@ public class IslandDao {
     }
 
     public int getSumByOwnerUuid(String ownerUuid, Boolean withDeleted) throws SQLException {
-        String query = "SELECT count(*) FROM `skymaster_islands` WHERE `ownerUuid` = ?";
-        if (!withDeleted) query += " AND `deletedAt` = null";
+        String query = (withDeleted) ? IslandDaoSqlUtil.GET_SUM_BY_OWNER_UUID_WITH_DELETED : IslandDaoSqlUtil.GET_SUM_BY_OWNER_UUID;
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -48,8 +48,7 @@ public class IslandDao {
     }
 
     public List<IslandDto> getByOwnerUuid(String ownerUuid, Boolean withDeleted) throws SQLException {
-        String query = "SELECT * FROM `skymaster_islands` WHERE `ownerUuid` = ?";
-        if (!withDeleted) query += " AND `deletedAt` IS NULL";
+        String query = withDeleted ? IslandDaoSqlUtil.GET_BY_OWNER_UUID_WITH_DELETED : IslandDaoSqlUtil.GET_BY_OWNER_UUID;
 
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setString(1, ownerUuid);
@@ -59,7 +58,7 @@ public class IslandDao {
         List<IslandDto> result = new ArrayList<>();
 
         while (resultSet.next()) {
-            IslandDto dto = new IslandDto(resultSet);
+            IslandDto dto = IslandDto.fromResultSet(resultSet);
             result.add(dto);
         }
 
@@ -74,9 +73,7 @@ public class IslandDao {
     }
 
     public int getCount(Boolean withDeleted) throws SQLException {
-        String query = "SELECT COUNT(*) as `size` FROM skymaster_islands";
-
-        if (!withDeleted) query += " WHERE deletedAt IS NULL";
+        String query = withDeleted ? IslandDaoSqlUtil.GET_COUNT_WITH_DELETED : IslandDaoSqlUtil.GET_COUNT;
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -99,21 +96,21 @@ public class IslandDao {
     }
 
     public IslandDto create(IslandDto islandDto) throws SQLException {
-        String query = "INSERT INTO `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?, radius = ?";
+        String query = IslandDaoSqlUtil.CREATE;
 
         PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        stmt.setString(1, islandDto.getOwnerUuid());
-        stmt.setInt(2, islandDto.getSchematicId());
-        stmt.setString(3, islandDto.getName());
-        stmt.setInt(4, islandDto.getRadius());
+        stmt.setString(1, islandDto.ownerUuid);
+        stmt.setInt(2, islandDto.schematicId);
+        stmt.setString(3, islandDto.name);
+        stmt.setInt(4, islandDto.radius);
 
         int affectedRows = stmt.executeUpdate();
         if (affectedRows == 0) throw new SQLException("No rows affected!");
 
         ResultSet rs = stmt.getGeneratedKeys();
 
-        if (rs.next()) islandDto.setId(rs.getInt(1));
+        if (rs.next()) islandDto.id = rs.getInt(1);
         else throw new SQLException("No id generated for added island!");
 
         rs.close();
@@ -127,17 +124,14 @@ public class IslandDao {
     }
 
     public IslandDto getById(int id, Boolean withDeleted) throws SQLException {
-        String query = "SELECT * FROM `skymaster_islands` WHERE `id` = ?";
-        if (!withDeleted) query += " AND deletedAt IS NULL";
-        query += " LIMIT 1";
-
+        String query = withDeleted ? IslandDaoSqlUtil.GET_BY_ID_WITH_DELETED : IslandDaoSqlUtil.GET_BY_ID;
         PreparedStatement stmt = connection.prepareStatement(query);
 
         stmt.setInt(1, id);
 
         ResultSet rs = stmt.executeQuery();
 
-        IslandDto result = (rs.next()) ? new IslandDto(rs) : null;
+        IslandDto result = (rs.next()) ? IslandDto.fromResultSet(rs) : null;
 
         rs.close();
         stmt.close();
@@ -146,22 +140,22 @@ public class IslandDao {
     }
 
     public void update(IslandDto islandDto) throws SQLException {
-        String query = "UPDATE `skymaster_islands` SET ownerUuid = ?, schematicId = ?, name = ?, radius = ? WHERE id = ?";
+        String query = IslandDaoSqlUtil.UPDATE;
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        stmt.setString(1, islandDto.getOwnerUuid());
-        stmt.setInt(2, islandDto.getSchematicId());
-        stmt.setString(3, islandDto.getName());
-        stmt.setInt(4, islandDto.getRadius());
-        stmt.setInt(5, islandDto.getId());
+        stmt.setString(1, islandDto.ownerUuid);
+        stmt.setInt(2, islandDto.schematicId);
+        stmt.setString(3, islandDto.name);
+        stmt.setInt(4, islandDto.radius);
+        stmt.setInt(5, islandDto.id);
 
         stmt.executeUpdate();
         stmt.close();
     }
 
     public void removeById(Integer islandId) throws SQLException {
-        String query = "UPDATE `skymaster_islands` SET deletedAt = CURRENT_TIMESTAMP WHERE id = ?";
+        String query = IslandDaoSqlUtil.REMOVE_BY_ID;
 
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setInt(1, islandId);
@@ -175,14 +169,7 @@ public class IslandDao {
     }
 
     public List<IslandDto> getByOwnerUuidWithAllRelations(String ownerUuid, Boolean withDeleted) throws SQLException {
-        String query = "SELECT skymaster_islands.*, skymaster_homes.*, skymaster_schematics.* " +
-                "FROM `skymaster_islands` " +
-                "         JOIN skymaster_island_has_homes ON skymaster_islands.id = skymaster_island_has_homes.islandId " +
-                "         JOIN skymaster_homes ON skymaster_homes.id = skymaster_island_has_homes.homeId " +
-                "         JOIN skymaster_schematics ON skymaster_schematics.id = skymaster_islands.schematicId " +
-                "WHERE skymaster_islands.ownerUuid = ?";
-
-        if (!withDeleted) query += " AND skymaster_islands.deletedAt IS NULL";
+        String query = withDeleted ? IslandDaoSqlUtil.GET_WITH_ALL_RELATIONS_BY_OWNER_UUID_WITH_DELETED : IslandDaoSqlUtil.GET_WITH_ALL_RELATIONS_BY_OWNER_UUID;
 
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setString(1, ownerUuid);
@@ -191,40 +178,12 @@ public class IslandDao {
         List<IslandDto> result = new ArrayList<>();
 
         while (rs.next()) {
-            IslandDto islandDto = new IslandDto();
+            IslandDto islandDto = IslandDto.fromResultSet(rs, "island_");
+            IslandHomeDto islandHomeDto = IslandHomeDto.fromResultSet(rs, "home_");
+            IslandSchematicDto schematicDto = IslandSchematicDto.fromResultSet(rs, "schematic_");
 
-            islandDto.setId(rs.getInt("skymaster_islands.id"));
-            islandDto.setName(rs.getString("skymaster_islands.name"));
-            islandDto.setOwnerUuid(rs.getString("ownerUuid"));
-            islandDto.setRadius(rs.getInt("radius"));
-            islandDto.setSchematicId(rs.getInt("schematicId"));
-            islandDto.setUpdatedAt(rs.getDate("skymaster_islands.updatedAt"));
-            islandDto.setCreatedAt(rs.getDate("skymaster_islands.createdAt"));
-            islandDto.setDeletedAt(rs.getDate("skymaster_islands.deletedAt"));
-
-            IslandHomeDto islandHomeDto = new IslandHomeDto();
-            islandHomeDto.setId(rs.getInt("skymaster_homes.id"));
-            islandHomeDto.setX(rs.getInt("x"));
-            islandHomeDto.setY(rs.getInt("y"));
-            islandHomeDto.setZ(rs.getInt("z"));
-            islandHomeDto.setWorldUuid(rs.getString("worldUuid"));
-            islandHomeDto.setCreatedAt(rs.getDate("skymaster_homes.createdAt"));
-            islandHomeDto.setUpdatedAt(rs.getDate("skymaster_homes.updatedAt"));
-            islandHomeDto.setDeletedAt(rs.getDate("skymaster_homes.deletedAt"));
-            islandDto.setHome(islandHomeDto);
-
-            IslandSchematicDto schematicDto = new IslandSchematicDto();
-            schematicDto.setId(rs.getInt("skymaster_schematics.id"));
-            schematicDto.setName(rs.getString("skymaster_schematics.name"));
-            schematicDto.setDescription(rs.getString("description"));
-            schematicDto.setFilePath(rs.getString("filePath"));
-
-            Material material = Material.valueOf(rs.getString("material"));
-            schematicDto.setMaterial(material);
-            schematicDto.setCreatedAt(rs.getDate("skymaster_schematics.createdAt"));
-            schematicDto.setUpdatedAt(rs.getDate("skymaster_schematics.updatedAt"));
-            schematicDto.setDeletedAt(rs.getDate("skymaster_schematics.deletedAt"));
-            islandDto.setSchematic(schematicDto);
+            islandDto.home = islandHomeDto;
+            islandDto.schematic = schematicDto;
 
             result.add(islandDto);
         }
@@ -237,15 +196,12 @@ public class IslandDao {
     }
 
     public List<IslandDto> getByMemberUuidWithAllRelations(String memberUuid, Boolean withDeleted) throws SQLException {
-        String query = "SELECT skymaster_islands.*, skymaster_homes.*, skymaster_schematics.* " +
-                "FROM `skymaster_island_has_members` " +
-                "         JOIN skymaster_islands ON skymaster_island_has_members.islandId = skymaster_islands.id " +
-                "         JOIN skymaster_island_has_homes ON skymaster_islands.id = skymaster_island_has_homes.islandId " +
-                "         JOIN skymaster_homes ON skymaster_homes.id = skymaster_island_has_homes.homeId " +
-                "         JOIN skymaster_schematics ON skymaster_schematics.id = skymaster_islands.schematicId " +
-                "WHERE skymaster_island_has_members.playerUuid = ?";
-
-        if (!withDeleted) query += " AND skymaster_islands.deletedAt IS NULL";
+        String query;
+        if (withDeleted) {
+            query = IslandDaoSqlUtil.GET_WITH_ALL_RELATIONS_BY_MEMBER_UUID_WITH_DELETED;
+        } else {
+            query = IslandDaoSqlUtil.GET_WITH_ALL_RELATIONS_BY_MEMBER_UUID;
+        }
 
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setString(1, memberUuid);
@@ -254,40 +210,12 @@ public class IslandDao {
         List<IslandDto> result = new ArrayList<>();
 
         while (rs.next()) {
-            IslandDto islandDto = new IslandDto();
+            IslandDto islandDto = IslandDto.fromResultSet(rs, "island_");
+            IslandHomeDto islandHomeDto = IslandHomeDto.fromResultSet(rs, "home_");
+            IslandSchematicDto schematicDto = IslandSchematicDto.fromResultSet(rs, "schematic_");
 
-            islandDto.setId(rs.getInt("skymaster_islands.id"));
-            islandDto.setName(rs.getString("skymaster_islands.name"));
-            islandDto.setOwnerUuid(rs.getString("ownerUuid"));
-            islandDto.setRadius(rs.getInt("radius"));
-            islandDto.setSchematicId(rs.getInt("schematicId"));
-            islandDto.setUpdatedAt(rs.getDate("skymaster_islands.updatedAt"));
-            islandDto.setCreatedAt(rs.getDate("skymaster_islands.createdAt"));
-            islandDto.setDeletedAt(rs.getDate("skymaster_islands.deletedAt"));
-
-            IslandHomeDto islandHomeDto = new IslandHomeDto();
-            islandHomeDto.setId(rs.getInt("skymaster_homes.id"));
-            islandHomeDto.setX(rs.getInt("x"));
-            islandHomeDto.setY(rs.getInt("y"));
-            islandHomeDto.setZ(rs.getInt("z"));
-            islandHomeDto.setWorldUuid(rs.getString("worldUuid"));
-            islandHomeDto.setCreatedAt(rs.getDate("skymaster_homes.createdAt"));
-            islandHomeDto.setUpdatedAt(rs.getDate("skymaster_homes.updatedAt"));
-            islandHomeDto.setDeletedAt(rs.getDate("skymaster_homes.deletedAt"));
-            islandDto.setHome(islandHomeDto);
-
-            IslandSchematicDto schematicDto = new IslandSchematicDto();
-            schematicDto.setId(rs.getInt("skymaster_schematics.id"));
-            schematicDto.setName(rs.getString("skymaster_schematics.name"));
-            schematicDto.setDescription(rs.getString("description"));
-            schematicDto.setFilePath(rs.getString("filePath"));
-
-            Material material = Material.valueOf(rs.getString("material"));
-            schematicDto.setMaterial(material);
-            schematicDto.setCreatedAt(rs.getDate("skymaster_schematics.createdAt"));
-            schematicDto.setUpdatedAt(rs.getDate("skymaster_schematics.updatedAt"));
-            schematicDto.setDeletedAt(rs.getDate("skymaster_schematics.deletedAt"));
-            islandDto.setSchematic(schematicDto);
+            islandDto.home = islandHomeDto;
+            islandDto.schematic = schematicDto;
 
             result.add(islandDto);
         }
@@ -300,9 +228,12 @@ public class IslandDao {
     }
 
     public List<IslandDto> getFirstNTHByIslandSize(boolean withDeleted, int nth) throws SQLException {
-        String query = "SELECT * FROM `skymaster_islands`";
-        if (!withDeleted) query += " WHERE `deletedAt` IS NULL";
-        query += " ORDER BY radius DESC";
+        String query;
+        if (withDeleted) {
+            query = IslandDaoSqlUtil.GET_FIRST_NTH_BY_ISLAND_RADIUS_WITH_DELETED;
+        } else {
+            query = IslandDaoSqlUtil.GET_FIRST_NTH_BY_ISLAND_RADIUS;
+        }
 
         PreparedStatement stmt = connection.prepareStatement(query);
         ResultSet resultSet = stmt.executeQuery();
@@ -311,13 +242,17 @@ public class IslandDao {
         List<String> existingUUIDs = new ArrayList<>();
 
         while (resultSet.next()) {
-            IslandDto dto = new IslandDto(resultSet);
+            var dto = IslandDto.fromResultSet(resultSet);
 
-            var found = existingUUIDs.stream().filter(uuid -> uuid.equals(dto.getOwnerUuid())).findFirst().orElse(null);
+            var found = existingUUIDs
+                    .stream()
+                    .filter(uuid -> uuid.equals(dto.ownerUuid))
+                    .findFirst()
+                    .orElse(null);
 
             if (found == null) {
                 result.add(dto);
-                existingUUIDs.add(dto.getOwnerUuid());
+                existingUUIDs.add(dto.ownerUuid);
             }
         }
 

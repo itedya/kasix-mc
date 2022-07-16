@@ -1,6 +1,7 @@
 package com.itedya.skymaster.daos;
 
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.dtos.database.IslandSchematicDto;
+import com.itedya.skymaster.utils.sql.IslandSchematicDaoSqlUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,18 +21,21 @@ public class IslandSchematicDao {
         return getByName(data, false);
     }
 
-    public IslandSchematicDto getByName(String data, Boolean withDeleted) throws SQLException {
-        String query = "SELECT * FROM `skymaster_schematics` WHERE name = ?";
-
-        if (!withDeleted) query += " AND deletedAt != null";
+    public IslandSchematicDto getByName(String name, Boolean withDeleted) throws SQLException {
+        String query;
+        if (withDeleted) {
+            query = IslandSchematicDaoSqlUtil.GET_BY_NAME_WITH_DELETED;
+        } else {
+            query = IslandSchematicDaoSqlUtil.GET_BY_NAME;
+        }
 
         PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, data);
+        stmt.setString(1, name);
 
         ResultSet rs = stmt.executeQuery();
 
         IslandSchematicDto schematic = null;
-        if (rs.next()) schematic = new IslandSchematicDto(rs);
+        if (rs.next()) schematic = IslandSchematicDto.fromResultSet(rs);
 
         rs.close();
         stmt.close();
@@ -44,9 +48,12 @@ public class IslandSchematicDao {
     }
 
     public List<IslandSchematicDto> getAll(Boolean withDeleted) throws SQLException {
-        String query = "SELECT * FROM `skymaster_schematics`";
-
-        if (!withDeleted) query += " WHERE deletedAt IS NULL";
+        String query;
+        if (withDeleted) {
+            query = IslandSchematicDaoSqlUtil.GET_ALL_WITH_DELETED;
+        } else {
+            query = IslandSchematicDaoSqlUtil.GET_ALL;
+        }
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -55,7 +62,7 @@ public class IslandSchematicDao {
         List<IslandSchematicDto> result = new ArrayList<>();
 
         while (rs.next()) {
-            var dto = new IslandSchematicDto(rs);
+            var dto = IslandSchematicDto.fromResultSet(rs);
             result.add(dto);
         }
 
@@ -70,8 +77,12 @@ public class IslandSchematicDao {
     }
 
     public IslandSchematicDto getById(int id, Boolean withDeleted) throws SQLException {
-        String query = "SELECT * FROM `skymaster_schematics` WHERE id = ?";
-        if (!withDeleted) query += " AND deletedAt IS NULL";
+        String query;
+        if (withDeleted) {
+            query = IslandSchematicDaoSqlUtil.GET_BY_ID_WITH_DELETED;
+        } else {
+            query = IslandSchematicDaoSqlUtil.GET_BY_ID;
+        }
 
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setInt(1, id);
@@ -81,7 +92,7 @@ public class IslandSchematicDao {
         IslandSchematicDto result = null;
 
         if (rs.next()) {
-            result = new IslandSchematicDto(rs);
+            result = IslandSchematicDto.fromResultSet(rs);
         }
 
         rs.close();
@@ -91,13 +102,13 @@ public class IslandSchematicDao {
     }
 
     public void create(IslandSchematicDto islandSchematicDto) throws SQLException {
-        String query = "INSERT INTO `skymaster_schematics` SET `name` = ?, `description` = ?, `filePath` = ?, `material` = ?";
+        String query = IslandSchematicDaoSqlUtil.CREATE;
 
         PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, islandSchematicDto.getName());
-        stmt.setString(2, islandSchematicDto.getDescription());
-        stmt.setString(3, islandSchematicDto.getFilePath());
-        stmt.setString(4, islandSchematicDto.getMaterial().toString());
+        stmt.setString(1, islandSchematicDto.name);
+        stmt.setString(2, islandSchematicDto.description);
+        stmt.setString(3, islandSchematicDto.filePath);
+        stmt.setString(4, islandSchematicDto.material.toString());
 
         stmt.executeUpdate();
 

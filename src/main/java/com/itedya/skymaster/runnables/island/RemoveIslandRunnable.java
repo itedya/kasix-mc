@@ -2,8 +2,6 @@ package com.itedya.skymaster.runnables.island;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -5,9 +5,9 @@ import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandHomeDao;
 import com.itedya.skymaster.daos.IslandSchematicDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandHomeDto;
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandSchematicDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.utils.PathUtil;
 import com.itedya.skymaster.utils.PlayerUtil;
@@ -90,10 +90,10 @@ public class CreateIslandRunnable extends SkymasterRunnable {
             var radius = (int) data.get("radius");
 
             var islandDto = new IslandDto();
-            islandDto.setOwnerUuid(player.getUniqueId().toString());
-            islandDto.setName(islandName);
-            islandDto.setSchematicId(schematicId);
-            islandDto.setRadius(radius);
+            islandDto.ownerUuid = player.getUniqueId().toString();
+            islandDto.name = islandName;
+            islandDto.schematicId = schematicId;
+            islandDto.radius = radius;
 
             IslandDao islandDao = new IslandDao(connection);
             islandDto = islandDao.create(islandDto);
@@ -110,7 +110,7 @@ public class CreateIslandRunnable extends SkymasterRunnable {
             var schematicDto = (IslandSchematicDto) data.get("schematicDto");
 
             // get schematic file
-            File schematicFile = new File(PathUtil.getSchematicFilePath(schematicDto.getFilePath()));
+            File schematicFile = new File(PathUtil.getSchematicFilePath(schematicDto.filePath));
 
             // load schematic into clipboard
             var clipboard = FaweAPI.load(schematicFile);
@@ -128,11 +128,11 @@ public class CreateIslandRunnable extends SkymasterRunnable {
             var clipboard = (Clipboard) data.get("clipboard");
             var adaptedWorld = (World) data.get("adaptedWorld");
             var islandDto = (IslandDto) data.get("islandDto");
-            var spawnVector = WorldGuardUtil.calculateClipboardSpawnPosition(islandDto.getId(), clipboard);
+            var spawnVector = WorldGuardUtil.calculateClipboardSpawnPosition(islandDto.id, clipboard);
 
             clipboard.paste(adaptedWorld, spawnVector, true, false, true, null);
 
-            var homeVector = WorldGuardUtil.calculateIslandHomePosition(islandDto.getId());
+            var homeVector = WorldGuardUtil.calculateIslandHomePosition(islandDto.id);
             data.put("homeVector", homeVector);
 
             ThreadUtil.async(this::createHomeInDatabase);
@@ -148,13 +148,13 @@ public class CreateIslandRunnable extends SkymasterRunnable {
             var homeVector = (BlockVector3) data.get("homeVector");
 
             var homeLocation = new IslandHomeDto();
-            homeLocation.setX(homeVector.getX());
-            homeLocation.setY(homeVector.getY());
-            homeLocation.setZ(homeVector.getZ());
-            homeLocation.setWorldUuid(world.getUID().toString());
+            homeLocation.x = homeVector.getX();
+            homeLocation.y = homeVector.getY();
+            homeLocation.z = homeVector.getZ();
+            homeLocation.worldUuid = world.getUID().toString();
 
             var dao = new IslandHomeDao(connection);
-            dao.create(islandDto.getId(), homeLocation);
+            dao.create(islandDto.id, homeLocation);
 
             data.put("homeLocation", homeLocation);
 
@@ -171,9 +171,9 @@ public class CreateIslandRunnable extends SkymasterRunnable {
             var radius = (int) data.get("radius");
 
             ProtectedRegion region = WorldGuardUtil.createRegionWithoutSaving(
-                    "island_" + islandDto.getId(),
-                    BlockVector3.at(homeLocation.getX() - radius, -64, homeLocation.getZ() + radius),
-                    BlockVector3.at(homeLocation.getX() + radius, 319, homeLocation.getZ() - radius)
+                    "island_" + islandDto.id,
+                    BlockVector3.at(homeLocation.x - radius, -64, homeLocation.z + radius),
+                    BlockVector3.at(homeLocation.x + radius, 319, homeLocation.z - radius)
             );
 
             WorldGuardUtil.resetRegionFlags(region);
@@ -210,8 +210,8 @@ public class CreateIslandRunnable extends SkymasterRunnable {
             var world = (org.bukkit.World) data.get("world");
             var homeLocation = (IslandHomeDto) data.get("homeLocation");
 
-            player.sendMessage("%sWygenerowano na koordynatach: X:%s Y:%s Z:%s".formatted(ChatColor.GREEN, homeLocation.getX(), homeLocation.getY(), homeLocation.getZ()));
-            player.teleport(new Location(world, homeLocation.getX(), homeLocation.getY(), homeLocation.getZ()));
+            player.sendMessage("%sWygenerowano na koordynatach: X:%s Y:%s Z:%s".formatted(ChatColor.GREEN, homeLocation.x, homeLocation.y, homeLocation.z));
+            player.teleport(new Location(world, homeLocation.x, homeLocation.y, homeLocation.z));
         } catch (Exception e) {
             super.errorHandling(e);
         }

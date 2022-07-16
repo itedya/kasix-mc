@@ -2,7 +2,7 @@ package com.itedya.skymaster.runnables.schematics;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandSchematicDao;
-import com.itedya.skymaster.dtos.IslandSchematicDto;
+import com.itedya.skymaster.dtos.database.IslandSchematicDto;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.scheduler.BukkitRunnable;

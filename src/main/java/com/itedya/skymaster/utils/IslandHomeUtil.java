@@ -1,6 +1,6 @@
 package com.itedya.skymaster.utils;
 
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,8 +16,8 @@ public class IslandHomeUtil {
     private static final Map<String, Integer> playerTicks = new HashMap<>();
 
     public static void addPlayerToQueue(Player player, IslandHomeDto home) {
-        World world = Bukkit.getWorld(UUID.fromString(home.getWorldUuid()));
-        Location location = new Location(world, home.getX(), home.getY(), home.getZ());
+        World world = Bukkit.getWorld(UUID.fromString(home.worldUuid));
+        Location location = new Location(world, home.x, home.y, home.z);
 
         if (player.hasPermission("skymaster.islands.teleport-instantly")) {
             player.teleport(location);

@@ -1,9 +1,8 @@
 package com.itedya.skymaster.rankings;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.dtos.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -58,7 +57,7 @@ public class IslandSizeRankingManager extends RankingManager {
         List<String> nicks = new ArrayList<>();
 
         islandDtos.forEach(island -> {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(island.getOwnerUuid()));
+            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(island.ownerUuid));
 
             nicks.add(player.getName());
         });

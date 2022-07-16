@@ -1,7 +1,7 @@
 package com.itedya.skymaster.utils;
 
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandMemberDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -33,31 +33,31 @@ public class InventoryUtil {
      * @return ItemStack
      */
     public static ItemStack createItemStack(IslandDto islandDto) {
-        var schematic = islandDto.getSchematic();
-        var home = islandDto.getHome();
+        var schematic = islandDto.schematic;
+        var home = islandDto.home;
 
-        var itemStack = new ItemStack(schematic.getMaterial());
+        var itemStack = new ItemStack(schematic.material);
         var meta = itemStack.getItemMeta();
 
         // set item name
-        meta.setDisplayName(ChatColor.YELLOW + "" + "Wyspa " + ChatColor.BOLD + "\"" + islandDto.getName() + "\"");
+        meta.setDisplayName(ChatColor.YELLOW + "" + "Wyspa " + ChatColor.BOLD + "\"" + islandDto.name + "\"");
 
         var lore = meta.getLore();
         if (lore == null) lore = new ArrayList<>();
 
-        var player = Bukkit.getOfflinePlayer(UUID.fromString(islandDto.getOwnerUuid()));
+        var player = Bukkit.getOfflinePlayer(UUID.fromString(islandDto.ownerUuid));
 
         lore.add(ChatColor.GRAY + "Właściciel: " + ChatColor.BOLD + player.getName());
-        lore.add(ChatColor.GRAY + "X Domu: " + ChatColor.BOLD + home.getX());
-        lore.add(ChatColor.GRAY + "Z Domu: " + ChatColor.BOLD + home.getZ());
-        lore.add(ChatColor.GRAY + "Wielkość wyspy: " + ChatColor.BOLD + (islandDto.getRadius() * 2));
-        lore.add(ChatColor.GRAY + "Nazwa schematu: " + ChatColor.BOLD + schematic.getName());
+        lore.add(ChatColor.GRAY + "X Domu: " + ChatColor.BOLD + home.x);
+        lore.add(ChatColor.GRAY + "Z Domu: " + ChatColor.BOLD + home.z);
+        lore.add(ChatColor.GRAY + "Wielkość wyspy: " + ChatColor.BOLD + (islandDto.radius * 2));
+        lore.add(ChatColor.GRAY + "Nazwa schematu: " + ChatColor.BOLD + schematic.name);
 
         meta.setLore(lore);
 
         var dataContainer = meta.getPersistentDataContainer();
 
-        PersistentDataContainerUtil.setInt(dataContainer, "island-id", islandDto.getId());
+        PersistentDataContainerUtil.setInt(dataContainer, "island-id", islandDto.id);
 
         itemStack.setItemMeta(meta);
 
@@ -73,7 +73,7 @@ public class InventoryUtil {
      * @return ItemStack
      */
     public static ItemStack createItemStack(IslandMemberDto memberDto) {
-        var player = Bukkit.getOfflinePlayer(UUID.fromString(memberDto.getPlayerUuid()));
+        var player = Bukkit.getOfflinePlayer(UUID.fromString(memberDto.playerUuid));
 
         var itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
         ItemMeta meta = itemStack.getItemMeta();
@@ -83,7 +83,7 @@ public class InventoryUtil {
         var lore = meta.getLore();
         if (lore == null) lore = new ArrayList<>();
 
-        lore.add(ChatColor.GRAY + "Dodany: " + ChatColor.BOLD + memberDto.getCreatedAt());
+        lore.add(ChatColor.GRAY + "Dodany: " + ChatColor.BOLD + memberDto.createdAt);
 
         meta.setLore(lore);
 

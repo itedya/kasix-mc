@@ -1,11 +1,10 @@
 package com.itedya.skymaster.runnables.home;
 
-import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandHomeDao;
-import com.itedya.skymaster.dtos.IslandDto;
-import com.itedya.skymaster.dtos.IslandHomeDto;
+import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -78,8 +77,8 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
     public void checkPermissions() {
         String playerUuid = player.getUniqueId().toString();
 
-        if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("skymaster.islands.set-home")) &&
-                (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("skymaster.islands.set-home-someone"))) {
+        if ((playerUuid.equals(islandDto.ownerUuid) && !player.hasPermission("skymaster.islands.set-home")) &&
+                (!playerUuid.equals(islandDto.ownerUuid) && !player.hasPermission("skymaster.islands.set-home-someone"))) {
             player.sendMessage(ChatColor.RED + "Brak permisji!");
             return;
         }
@@ -89,27 +88,22 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
 
     public void saveData() {
         try {
-            Location homeLocationNormalized = new Location(
-                    playerLocation.getWorld(),
-                    playerLocation.getBlockX(),
-                    playerLocation.getBlockY(),
-                    playerLocation.getBlockZ()
-            );
-
             IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
 
             IslandHomeDto islandHomeDto = new IslandHomeDto();
-            islandHomeDto.setWorldUuid(playerLocation.getWorld().getUID().toString());
-            islandHomeDto.setX(playerLocation.getBlockX());
-            islandHomeDto.setY(playerLocation.getBlockY());
-            islandHomeDto.setZ(playerLocation.getBlockZ());
-            islandHomeDao.updateByIslandId(islandHomeDto.getId(), islandHomeDto);
+            islandHomeDto.worldUuid = playerLocation.getWorld().getUID().toString();
+            islandHomeDto.x = playerLocation.getBlockX();
+            islandHomeDto.y = playerLocation.getBlockY();
+            islandHomeDto.z = playerLocation.getBlockZ();
 
+            islandHomeDao.updateByIslandId(islandDto.id, islandHomeDto);
+
+            connection.commit();
 
             player.sendMessage(ChatColor.GREEN + "Zaktualizowano dom wyspy na lokalizacje " +
-                    "X:" + homeLocationNormalized.getBlockX() + " " +
-                    "Y:" + homeLocationNormalized.getBlockY() + " " +
-                    "Z:" + homeLocationNormalized.getBlockZ()
+                    "X:" + playerLocation.getBlockX() + " " +
+                    "Y:" + playerLocation.getBlockY() + " " +
+                    "Z:" + playerLocation.getBlockZ()
             );
         } catch (Exception e) {
             e.printStackTrace();
