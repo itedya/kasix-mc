@@ -23,7 +23,7 @@ public class ExpandIslandAdminSubCommand implements CommandExecutor {
             return true;
         }
 
-        if (!player.hasPermission("skymaster.islands.admin.expand")) {
+        if (!player.hasPermission("skymaster.admin.islands.expand")) {
             player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
             return true;
         }

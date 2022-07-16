@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class RemoveIslandMemberAdminSubCommand implements CommandExecutor {
+public class KickIslandMemberAdminSubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
@@ -19,7 +19,7 @@ public class RemoveIslandMemberAdminSubCommand implements CommandExecutor {
             return true;
         }
 
-        if (!player.hasPermission("skymaster.admin.islands.remove-member")) {
+        if (!player.hasPermission("skymaster.admin.islands.kick")) {
             player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
             return true;
         }

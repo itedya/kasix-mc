@@ -2,7 +2,7 @@ package com.itedya.skymaster.command;
 
 import com.itedya.skymaster.command.subcommands.admin.AddIslandMemberAdminSubCommand;
 import com.itedya.skymaster.command.subcommands.admin.ExpandIslandAdminSubCommand;
-import com.itedya.skymaster.command.subcommands.admin.RemoveIslandMemberAdminSubCommand;
+import com.itedya.skymaster.command.subcommands.admin.KickIslandMemberAdminSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class AdminCommand implements CommandExecutor {
     public final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.of(
             "zapros", new AddIslandMemberAdminSubCommand(),
-            "wyrzuc", new RemoveIslandMemberAdminSubCommand(),
+            "wyrzuc", new KickIslandMemberAdminSubCommand(),
             "powieksz", new ExpandIslandAdminSubCommand()
     ));
 
