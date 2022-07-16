@@ -26,7 +26,7 @@ public class IslandDaoSqlUtil {
             "SELECT " +
             NAMED_COLUMNS + ", " +
             IslandHomeDaoSqlUtil.NAMED_COLUMNS + ", " +
-            IslandSchematicDaoSqlUtil.NAMED_COLUMNS + ", " +
+            IslandSchematicDaoSqlUtil.NAMED_COLUMNS + " " +
             "FROM `skymaster_islands` " +
             "JOIN skymaster_island_has_homes ON skymaster_islands.id = skymaster_island_has_homes.islandId " +
             "JOIN skymaster_homes ON skymaster_homes.id = skymaster_island_has_homes.homeId " +
@@ -39,12 +39,13 @@ public class IslandDaoSqlUtil {
             "SELECT " +
             NAMED_COLUMNS + ", " +
             IslandHomeDaoSqlUtil.NAMED_COLUMNS + ", " +
-            IslandSchematicDaoSqlUtil.NAMED_COLUMNS + ", " +
-            "FROM `skymaster_islands` " +
+            IslandSchematicDaoSqlUtil.NAMED_COLUMNS + " " +
+            "FROM `skymaster_island_has_members` " +
+            "JOIN skymaster_islands ON skymaster_island_has_members.islandId = skymaster_islands.id " +
             "JOIN skymaster_island_has_homes ON skymaster_islands.id = skymaster_island_has_homes.islandId " +
             "JOIN skymaster_homes ON skymaster_homes.id = skymaster_island_has_homes.homeId " +
             "JOIN skymaster_schematics ON skymaster_schematics.id = skymaster_islands.schematicId " +
-            "WHERE skymaster_islands.memberUuid = ?";
+            "WHERE skymaster_island_has_members.playerUuid = ?";
 
     public static final String GET_WITH_ALL_RELATIONS_BY_MEMBER_UUID =
             GET_WITH_ALL_RELATIONS_BY_MEMBER_UUID_WITH_DELETED + " AND skymaster_islands.deletedAt IS NULL";

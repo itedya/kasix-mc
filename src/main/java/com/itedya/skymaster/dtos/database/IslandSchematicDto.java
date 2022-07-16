@@ -17,7 +17,7 @@ public class IslandSchematicDto implements DatabaseDto {
     public Date deletedAt;
 
     public static IslandSchematicDto fromResultSet(ResultSet rs) throws SQLException {
-        return fromResultSet(rs);
+        return fromResultSet(rs, "");
     }
 
     public static IslandSchematicDto fromResultSet(ResultSet rs, String prefix) throws SQLException {

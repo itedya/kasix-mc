@@ -50,9 +50,9 @@ public class IslandSchematicDao {
     public List<IslandSchematicDto> getAll(Boolean withDeleted) throws SQLException {
         String query;
         if (withDeleted) {
-            query = IslandSchematicDaoSqlUtil.GET_BY_NAME_WITH_DELETED;
+            query = IslandSchematicDaoSqlUtil.GET_ALL_WITH_DELETED;
         } else {
-            query = IslandSchematicDaoSqlUtil.GET_BY_NAME;
+            query = IslandSchematicDaoSqlUtil.GET_ALL;
         }
 
         PreparedStatement stmt = connection.prepareStatement(query);

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class IslandHomeDto implements DatabaseDto {
     public static IslandHomeDto fromResultSet(ResultSet rs) throws SQLException {
-        return fromResultSet(rs);
+        return fromResultSet(rs, "");
     }
         public static IslandHomeDto fromResultSet(ResultSet rs, String prefix) throws SQLException {
         IslandHomeDto islandHomeDto = new IslandHomeDto();
