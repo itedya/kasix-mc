@@ -45,12 +45,12 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
 
             var executor = (Player) data.get("executor");
             var admin = (boolean) data.get("admin");
-            if (!admin && !Objects.equals(dto.getOwnerUuid(), executor.getUniqueId().toString())) {
+            if (!admin && !Objects.equals(dto.ownerUuid, executor.getUniqueId().toString())) {
                 executor.sendMessage(ChatColor.YELLOW + "Ta wyspa nie jest twoja!");
                 return;
             }
 
-            dto.setRadius((int) data.get("newRadius"));
+            dto.radius = (int) data.get("newRadius");
             data.put("islandDto", dto);
 
 
@@ -68,7 +68,7 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
         try {
             var dto = (IslandDto) data.get("islandDto");
 
-            var owner = Bukkit.getOfflinePlayer(UUID.fromString(dto.getOwnerUuid()));
+            var owner = Bukkit.getOfflinePlayer(UUID.fromString(dto.ownerUuid));
             data.put("islandOwner", owner);
 
             var eco = SkyMaster.getEconomy();
@@ -105,7 +105,7 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
 
             var executor = (Player) data.get("executor");
             var islandDto = (IslandDto) data.get("islandDto");
-            ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(executor, islandDto.getId()));
+            ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(executor, islandDto.id));
         }
     }
 
@@ -116,20 +116,20 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
             var dto = (IslandDto) data.get("islandDto");
             var owner = (OfflinePlayer) data.get("islandOwner");
 
-            ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(executor, dto.getId()));
+            ThreadUtil.async(new ResetWorldGuardPermissionsRunnable(executor, dto.id));
 
             if (admin) {
-                owner = Bukkit.getOfflinePlayer(UUID.fromString(dto.getOwnerUuid()));
+                owner = Bukkit.getOfflinePlayer(UUID.fromString(dto.ownerUuid));
 
                 executor.sendRawMessage("%sPowiększyłeś wyspę %s\"%s\"%s gracza %s do %s kratek!".formatted(
-                        ChatColor.GREEN, ChatColor.BOLD, dto.getName(), ChatColor.RESET + "" + ChatColor.GREEN,
+                        ChatColor.GREEN, ChatColor.BOLD, dto.name, ChatColor.RESET + "" + ChatColor.GREEN,
                         ChatColor.BOLD + owner.getName() + ChatColor.RESET + "" + ChatColor.GREEN,
-                        ChatColor.BOLD + "" + (dto.getRadius() * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
+                        ChatColor.BOLD + "" + (dto.radius * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
                 ));
             } else {
                 executor.sendRawMessage("%sPowiększyłeś wyspę %s\"%s\"%s do %s kratek!".formatted(
-                        ChatColor.GREEN, ChatColor.BOLD, dto.getName(), ChatColor.RESET + "" + ChatColor.GREEN,
-                        ChatColor.BOLD + "" + (dto.getRadius() * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
+                        ChatColor.GREEN, ChatColor.BOLD, dto.name, ChatColor.RESET + "" + ChatColor.GREEN,
+                        ChatColor.BOLD + "" + (dto.radius * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
                 ));
             }
         } catch (Exception e) {

@@ -23,13 +23,13 @@ public class IslandInviteDao {
 
     public IslandInviteDto getByToPlayerUuid(String uuid) {
         return data.stream()
-                .filter(ele -> ele.getToPlayer().getUniqueId().toString().equals(uuid))
+                .filter(ele -> ele.toPlayer.getUniqueId().toString().equals(uuid))
                 .findFirst()
                 .orElse(null);
     }
 
     public void remove(String toPlayerUuid) {
-        data.removeIf(ele -> ele.getToPlayer().getUniqueId().toString().equals(toPlayerUuid));
+        data.removeIf(ele -> ele.toPlayer.getUniqueId().toString().equals(toPlayerUuid));
     }
 
     public boolean doesPlayerHaveInvite(String uuid) {
@@ -44,8 +44,8 @@ public class IslandInviteDao {
 
     private void tick(IslandInviteDto inviteDto, int seconds, int rmsec) {
         if (seconds <= 0) {
-            var fromPlayer = inviteDto.getFromPlayer();
-            var toPlayer = inviteDto.getToPlayer();
+            var fromPlayer = inviteDto.fromPlayer;
+            var toPlayer = inviteDto.toPlayer;
 
             if (!doesPlayerHaveInvite(toPlayer.getUniqueId().toString())) {
                 return;

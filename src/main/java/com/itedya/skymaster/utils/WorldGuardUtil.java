@@ -44,8 +44,8 @@ public class WorldGuardUtil {
 
         members.removeAll();
 
-        members.addPlayer(UUID.fromString(islandDto.getOwnerUuid()));
-        islandMembers.forEach(ele -> members.addPlayer(UUID.fromString(ele.getPlayerUuid())));
+        members.addPlayer(UUID.fromString(islandDto.ownerUuid));
+        islandMembers.forEach(ele -> members.addPlayer(UUID.fromString(ele.playerUuid)));
 
         protectedRegion.setMembers(members);
         return protectedRegion;
