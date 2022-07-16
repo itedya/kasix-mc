@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class SkyMasterPlaceholderExpansion extends PlaceholderExpansion {
-    private Pattern islandSizeNicknamePattern = Pattern.compile("island_size_player_\\d", Pattern.CASE_INSENSITIVE);
-    private Pattern islandSizePattern = Pattern.compile("island_size_\\d", Pattern.CASE_INSENSITIVE);
+    private final Pattern islandSizeNicknamePattern = Pattern.compile("island_size_player_\\d", Pattern.CASE_INSENSITIVE);
+    private final Pattern islandSizePattern = Pattern.compile("island_size_\\d", Pattern.CASE_INSENSITIVE);
 
     public SkyMasterPlaceholderExpansion() {
 
@@ -33,7 +33,7 @@ public class SkyMasterPlaceholderExpansion extends PlaceholderExpansion {
         return "1.0.0";
     }
 
-    public String onRequest(OfflinePlayer player, String params) {
+    public String onRequest(OfflinePlayer player, @NotNull String params) {
         try {
             if (islandSizeNicknamePattern.matcher(params).find()) {
                 int place = SkyMasterStringUtil.getIntFromEnd(params);
@@ -52,7 +52,7 @@ public class SkyMasterPlaceholderExpansion extends PlaceholderExpansion {
 
                 IslandDto islandDto = (IslandDto) placeData.get("dto");
 
-                return String.valueOf(islandDto.getRadius() * 2);
+                return String.valueOf(islandDto.radius * 2);
             }
         } catch (Exception e) {
             e.printStackTrace();

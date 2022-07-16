@@ -77,7 +77,7 @@ public class ShowCreateIslandGuiRunnable extends BukkitRunnable {
             this.schematics = new ArrayList<>();
 
             for (IslandSchematicDto schematic : dao.getAll()) {
-                boolean hasPermission = player.hasPermission("skymaster.islands.use-schematic." + schematic.getId());
+                boolean hasPermission = player.hasPermission("skymaster.islands.use-schematic." + schematic.id);
 
                 if (hasPermission) {
                     this.schematics.add(schematic);
@@ -110,16 +110,16 @@ public class ShowCreateIslandGuiRunnable extends BukkitRunnable {
         for (int i = 0; i < schematics.size(); i++) {
             IslandSchematicDto schematic = schematics.get(i);
 
-            ItemStack itemStack = new ItemStack(schematic.getMaterial());
+            ItemStack itemStack = new ItemStack(schematic.material);
             ItemMeta itemMeta = itemStack.getItemMeta();
 
             if (i == 0) {
                 PersistentDataContainerUtil.setString(itemMeta.getPersistentDataContainer(), "inventory-identifier", "create-island-choose-schematic-gui");
             }
 
-            PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "schematic-id", schematic.getId());
+            PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "schematic-id", schematic.id);
 
-            itemMeta.setDisplayName(schematic.getName());
+            itemMeta.setDisplayName(schematic.name);
             itemStack.setItemMeta(itemMeta);
 
             gui.addItem(itemStack);

@@ -28,15 +28,15 @@ public class AcceptInviteToIslandRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        var island = dto.getIslandDto();
-        var toPlayer = dto.getToPlayer();
+        var island = dto.islandDto;
+        var toPlayer = dto.toPlayer;
 
         try {
             this.connection = Database.getInstance().getConnection();
 
             IslandMemberDto memberDto = new IslandMemberDto();
-            memberDto.setIslandId(island.getId());
-            memberDto.setPlayerUuid(toPlayer.getUniqueId().toString());
+            memberDto.islandId = island.id;
+            memberDto.playerUuid = toPlayer.getUniqueId().toString();
 
             IslandMemberDao islandMemberDao = new IslandMemberDao(connection);
             islandMemberDao.create(memberDto);
@@ -50,10 +50,10 @@ public class AcceptInviteToIslandRunnable extends BukkitRunnable {
     }
 
     private void commitWorldGuard() {
-        var region = WorldGuardUtil.getRegionForId(dto.getIslandDto().getId());
+        var region = WorldGuardUtil.getRegionForId(dto.islandDto.id);
 
         var members = region.getMembers();
-        members.addPlayer(dto.getToPlayer().getUniqueId());
+        members.addPlayer(dto.toPlayer.getUniqueId());
         region.setMembers(members);
 
         ThreadUtil.async(this::commitData);
@@ -61,9 +61,9 @@ public class AcceptInviteToIslandRunnable extends BukkitRunnable {
 
     private void commitData() {
         try {
-            var island = dto.getIslandDto();
-            var fromPlayer = dto.getFromPlayer();
-            var toPlayer = dto.getToPlayer();
+            var island = dto.islandDto;
+            var fromPlayer = dto.fromPlayer;
+            var toPlayer = dto.toPlayer;
 
             connection.commit();
             connection.close();
@@ -74,7 +74,7 @@ public class AcceptInviteToIslandRunnable extends BukkitRunnable {
                         .append("Gracz ")
                         .append(toPlayer.getName()).bold(true)
                         .append(" został dodany do wyspy ").bold(false)
-                        .append("\"" + island.getName() + "\"").bold(true)
+                        .append("\"" + island.name + "\"").bold(true)
                         .append(" gracza ")
                         .append(toPlayer.getName()).bold(true)
                         .create());
@@ -92,7 +92,7 @@ public class AcceptInviteToIslandRunnable extends BukkitRunnable {
             toPlayer.sendMessage(new ComponentBuilder()
                     .color(ChatColor.GREEN)
                     .append("Zostałeś dodany do wyspy ")
-                    .append("\"" + island.getName() + "\"").bold(true)
+                    .append("\"" + island.name + "\"").bold(true)
                     .append(" gracza ").bold(false)
                     .append(toPlayer.getName()).bold(true)
                     .create());

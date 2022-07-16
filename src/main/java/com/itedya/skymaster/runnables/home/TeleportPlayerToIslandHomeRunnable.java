@@ -26,7 +26,7 @@ public class TeleportPlayerToIslandHomeRunnable extends BukkitRunnable {
         try {
             this.connection = Database.getInstance().getConnection();
             IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
-            IslandHomeDto islandHomeDto = islandHomeDao.firstByIslandId(islandId);
+            IslandHomeDto islandHomeDto = islandHomeDao.getByIslandId(islandId);
 
             ThreadUtil.sync(() -> IslandHomeUtil.addPlayerToQueue(player, islandHomeDto));
             connection.close();

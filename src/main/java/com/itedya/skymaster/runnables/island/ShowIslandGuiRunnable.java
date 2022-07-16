@@ -41,7 +41,7 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
             IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
 
             this.islandDto = islandDao.getById(islandId);
-            this.islandHomeDto = islandHomeDao.firstByIslandId(islandId);
+            this.islandHomeDto = islandHomeDao.getByIslandId(islandId);
 
             ThreadUtil.sync(this::createInventory);
 
@@ -59,13 +59,13 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
 
         String playerUuid = player.getUniqueId().toString();
 
-        if ((playerUuid.equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.remove")) ||
-                !player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.remove-someone")) {
+        if ((playerUuid.equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.remove")) ||
+                !player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.remove-someone")) {
             inventory.addItem(getRemoveItem());
         }
 
-        if ((player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.reset-permissions")) ||
-                !player.getUniqueId().toString().equals(islandDto.getOwnerUuid()) && player.hasPermission("skymaster.islands.reset-permissions-someone")) {
+        if ((player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.reset-permissions")) ||
+                !player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.reset-permissions-someone")) {
             inventory.addItem(getResetWorldGuardItem());
         }
 
@@ -77,10 +77,10 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(ChatColor.GREEN + "Teleportuj do domu wyspy");
         itemMeta.setLore(List.of(
-                ChatColor.YELLOW + "X: " + islandHomeDto.getX(),
-                ChatColor.YELLOW + "Z: " + islandHomeDto.getZ()
+                ChatColor.YELLOW + "X: " + islandHomeDto.x,
+                ChatColor.YELLOW + "Z: " + islandHomeDto.z
         ));
-        PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.getId());
+        PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.id);
         PersistentDataContainerUtil.setString(itemMeta.getPersistentDataContainer(), "inventory-identifier", "island-info-gui");
         item.setItemMeta(itemMeta);
         return item;
@@ -90,7 +90,7 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(ChatColor.RED + "Usuń wyspę");
-        PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.getId());
+        PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.id);
         item.setItemMeta(itemMeta);
         return item;
     }
@@ -104,7 +104,7 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
                 ChatColor.YELLOW + "Ktoś ma permisje do robienia czegoś mimo iż nie powinien?",
                 ChatColor.GOLD + "Ten przycisk służy do naprawy takich rzeczy!"
         ));
-        PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.getId());
+        PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "island-id", islandDto.id);
         item.setItemMeta(itemMeta);
         return item;
     }

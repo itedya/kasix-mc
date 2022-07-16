@@ -46,7 +46,7 @@ public class ShowVisitIslandGUIRunnable extends SkymasterRunnable {
             VisitBlockDao blockDao = new VisitBlockDao(connection);
 
             for (IslandDto island : islands) {
-                if (blockDao.get(island.getId(), executor.getUniqueId().toString()) == null) {
+                if (blockDao.get(island.id, executor.getUniqueId().toString()) == null) {
                     filteredIslands.add(island);
                 }
             }

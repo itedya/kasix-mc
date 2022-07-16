@@ -36,10 +36,10 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
         }
 
         IslandSchematicDto dto = new IslandSchematicDto();
-        dto.setName((String) context.getSessionData("name"));
-        dto.setDescription((String) context.getSessionData("description"));
-        dto.setFilePath((String) context.getSessionData("fileName"));
-        dto.setMaterial(material);
+        dto.name = (String) context.getSessionData("name");
+        dto.description = (String) context.getSessionData("description");
+        dto.filePath = (String) context.getSessionData("fileName");
+        dto.material = material;
 
         ThreadUtil.async(new SaveIslandSchematicRunnable(conversable, dto));
 

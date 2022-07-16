@@ -47,10 +47,10 @@ public class ShowIslandsForKickRunnable extends BukkitRunnable {
 
             // filter islands based on amount of members
             for (var island : rawIslands) {
-                var members = memberDao.getByIslandId(island.getId());
+                var members = memberDao.getByIslandId(island.id);
 
                 if (members.size() > 0) {
-                    island.setMembers(members);
+                    island.members = members;
                     islands.add(island);
                 }
             }

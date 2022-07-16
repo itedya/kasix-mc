@@ -64,7 +64,7 @@ public class ShowMembersToKickRunnable extends BukkitRunnable {
                 var meta = itemStack.getItemMeta();
                 var container = meta.getPersistentDataContainer();
 
-                PersistentDataContainerUtil.setString(container, "member-uuid", member.getPlayerUuid());
+                PersistentDataContainerUtil.setString(container, "member-uuid", member.playerUuid);
                 PersistentDataContainerUtil.setInt(container, "island-id", islandId);
                 PersistentDataContainerUtil.setString(container, "inventory-identifier", "choose-member-to-kick-gui");
 

@@ -53,15 +53,15 @@ public class ResetWorldGuardPermissionsRunnable extends SkymasterRunnable {
 
             var manager = WorldGuardUtil.getRegionManager();
 
-            ProtectedRegion protectedRegion = WorldGuardUtil.getRegionForId(islandDto.getId());
+            ProtectedRegion protectedRegion = WorldGuardUtil.getRegionForId(islandDto.id);
             if (protectedRegion != null) manager.removeRegion(protectedRegion.getId());
 
-            var radius = islandDto.getRadius();
+            var radius = islandDto.radius;
 
-            var middleVector = WorldGuardUtil.calculateIslandPosition(islandDto.getId());
+            var middleVector = WorldGuardUtil.calculateIslandPosition(islandDto.id);
 
             protectedRegion = WorldGuardUtil.createRegionWithoutSaving(
-                    "island_" + islandDto.getId(),
+                    "island_" + islandDto.id,
                     BlockVector3.at(middleVector.getX() - radius, -64, middleVector.getZ() + radius),
                     BlockVector3.at(middleVector.getX() + radius, 319, middleVector.getZ() - radius)
             );

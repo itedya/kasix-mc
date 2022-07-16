@@ -77,8 +77,8 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
     public void checkPermissions() {
         String playerUuid = player.getUniqueId().toString();
 
-        if ((playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("skymaster.islands.set-home")) &&
-                (!playerUuid.equals(islandDto.getOwnerUuid()) && !player.hasPermission("skymaster.islands.set-home-someone"))) {
+        if ((playerUuid.equals(islandDto.ownerUuid) && !player.hasPermission("skymaster.islands.set-home")) &&
+                (!playerUuid.equals(islandDto.ownerUuid) && !player.hasPermission("skymaster.islands.set-home-someone"))) {
             player.sendMessage(ChatColor.RED + "Brak permisji!");
             return;
         }
@@ -98,11 +98,12 @@ public class SetIslandHomeRunnable extends BukkitRunnable {
             IslandHomeDao islandHomeDao = new IslandHomeDao(connection);
 
             IslandHomeDto islandHomeDto = new IslandHomeDto();
-            islandHomeDto.setWorldUuid(playerLocation.getWorld().getUID().toString());
-            islandHomeDto.setX(playerLocation.getBlockX());
-            islandHomeDto.setY(playerLocation.getBlockY());
-            islandHomeDto.setZ(playerLocation.getBlockZ());
-            islandHomeDao.updateByIslandId(islandHomeDto.getId(), islandHomeDto);
+            islandHomeDto.worldUuid = playerLocation.getWorld().getUID().toString();
+            islandHomeDto.x = playerLocation.getBlockX();
+            islandHomeDto.y = playerLocation.getBlockY();
+            islandHomeDto.z = playerLocation.getBlockZ();
+            
+            islandHomeDao.updateByIslandId(islandHomeDto.id, islandHomeDto);
 
 
             player.sendMessage(ChatColor.GREEN + "Zaktualizowano dom wyspy na lokalizacje " +

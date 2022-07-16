@@ -47,8 +47,8 @@ public class AddPlayerToIslandRunnable extends BukkitRunnable {
             islandDto = islandDao.getById(islandId);
 
             IslandMemberDto memberDto = new IslandMemberDto();
-            memberDto.setIslandId(islandId);
-            memberDto.setPlayerUuid(inviteToPlayer.getUniqueId().toString());
+            memberDto.islandId = islandId;
+            memberDto.playerUuid = inviteToPlayer.getUniqueId().toString();
 
             IslandMemberDao islandMemberDao = new IslandMemberDao(connection);
             islandMemberDao.create(memberDto);
@@ -85,14 +85,14 @@ public class AddPlayerToIslandRunnable extends BukkitRunnable {
     }
 
     private void announce() {
-        OfflinePlayer islandOwner = Bukkit.getOfflinePlayer(UUID.fromString(islandDto.getOwnerUuid()));
+        OfflinePlayer islandOwner = Bukkit.getOfflinePlayer(UUID.fromString(islandDto.ownerUuid));
 
         executor.sendMessage(new ComponentBuilder()
                 .color(ChatColor.GREEN)
                 .append("Gracz ")
                 .append(inviteToPlayer.getName()).bold(true)
                 .append(" został dodany do wyspy ").bold(false)
-                .append("\"" + islandDto.getName() + "\"").bold(true)
+                .append("\"" + islandDto.name + "\"").bold(true)
                 .append(" gracza ").bold(false)
                 .append(islandOwner.getName()).bold(true)
                 .create());

@@ -57,7 +57,7 @@ public class IslandSizeRankingManager extends RankingManager {
         List<String> nicks = new ArrayList<>();
 
         islandDtos.forEach(island -> {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(island.getOwnerUuid()));
+            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(island.ownerUuid));
 
             nicks.add(player.getName());
         });

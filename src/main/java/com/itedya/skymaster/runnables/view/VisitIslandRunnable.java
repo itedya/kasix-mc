@@ -37,7 +37,7 @@ public class VisitIslandRunnable extends SkymasterRunnable {
 
             IslandHomeDao homeDao = new IslandHomeDao(connection);
 
-            var home = homeDao.firstByIslandId(islandId);
+            var home = homeDao.getByIslandId(islandId);
 
             data.put("home", home);
 
