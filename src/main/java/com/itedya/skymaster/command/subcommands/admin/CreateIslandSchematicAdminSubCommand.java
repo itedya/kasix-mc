@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands.admin;
 
 import com.itedya.skymaster.SkyMaster;
+import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.conversations.createislandschematic.prompts.ProvideIslandSchematicNamePrompt;
 import com.itedya.skymaster.utils.ChatUtil;
 import org.bukkit.command.Command;
@@ -11,8 +12,16 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.ExactMatchConversationCanceller;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class CreateIslandSchematicAdminSubCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class CreateIslandSchematicAdminSubCommand extends SubCommand {
+    public CreateIslandSchematicAdminSubCommand() {
+        super("skymaster.admin.islands.createschematic");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // check if user is in game
@@ -21,7 +30,7 @@ public class CreateIslandSchematicAdminSubCommand implements CommandExecutor {
             return true;
         }
 
-        if (! player.hasPermission("skymaster.admin.islands.create")) {
+        if (!player.hasPermission(permission)) {
             player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
@@ -35,5 +44,10 @@ public class CreateIslandSchematicAdminSubCommand implements CommandExecutor {
         conversation.begin();
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return new ArrayList<>();
     }
 }

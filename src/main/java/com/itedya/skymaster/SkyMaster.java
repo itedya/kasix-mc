@@ -38,7 +38,7 @@ public final class SkyMaster extends JavaPlugin {
         this.saveDefaultConfig();
         Database.getInstance().migrate();
 
-        CommandUtil.registerCommand(new IslandCommand("wyspa"));
+        IslandCommand.register();
 
         if (!WorldUtil.doesWorldExists("world_islands")) {
             WorldUtil.createVoidWorld("world_islands");

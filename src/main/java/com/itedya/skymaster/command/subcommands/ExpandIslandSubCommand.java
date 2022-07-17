@@ -1,5 +1,6 @@
 package com.itedya.skymaster.command.subcommands;
 
+import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.runnables.expand.ExpandIslandGuiRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -8,19 +9,27 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ExpandIslandSubCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExpandIslandSubCommand extends SubCommand {
+    public ExpandIslandSubCommand() {
+        super("skymaster.islands.expand");
+    }
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
             return true;
         }
 
-        if (!player.hasPermission("skymaster.islands.expand")) {
+        if (!player.hasPermission(permission)) {
             player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
@@ -63,5 +72,10 @@ public class ExpandIslandSubCommand implements CommandExecutor {
         ThreadUtil.async(new ExpandIslandGuiRunnable(player, islandId, radius + 50, false));
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return new ArrayList<>();
     }
 }

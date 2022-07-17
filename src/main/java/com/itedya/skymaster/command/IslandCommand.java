@@ -1,45 +1,46 @@
 package com.itedya.skymaster.command;
 
+import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.command.subcommands.*;
-import com.itedya.skymaster.command.subcommands.admin.CreateIslandSchematicAdminSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class IslandCommand extends Command {
-    public IslandCommand(@NotNull String name) {
-        super(name);
+public class IslandCommand extends SubCommand {
+    public static void register() {
+        var plugin = SkyMaster.getInstance();
+        var instance = new IslandCommand();
+
+        var command = plugin.getCommand("wyspa");
+        assert command != null : "Command is null!";
+
+        command.setExecutor(instance);
+        command.setTabCompleter(instance);
     }
 
-    @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
-        if (args.length == 1) {
-            return executorMap.keySet()
-                    .stream()
-                    .toList();
-        }
-
-        return new ArrayList<>();
+    public IslandCommand() {
+        super(null);
     }
 
-    public final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.of(
+    public final Map<String, SubCommand> executorMap = new HashMap<>(Map.of(
+            "admin", new AdminSubCommand(),
+            "akceptuj", new AcceptInviteToIslandSubCommand(),
             "stworz", new CreateIslandSubCommand(),
+            "powieksz", new ExpandIslandSubCommand(),
+            "zapros", new InviteIslandMemberSubCommand(),
+            "wyrzuc", new KickIslandMemberSubCommand(),
             "lista", new ListIslandsSubCommand(),
             "ustawdom", new SetIslandHomeSubCommand(),
-            "zapros", new InviteIslandMemberSubCommand(),
-            "akceptuj", new AcceptInviteToIslandSubCommand(),
-            "wyrzuc", new KickIslandMemberSubCommand(),
-            "powieksz", new ExpandIslandSubCommand(),
-            "odwiedz", new VisitIslandSubCommand(),
-            "admin", new AdminCommand()
+            "odwiedz", new VisitIslandSubCommand()
     ));
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Podaj nazwę komendy");
             return true;
@@ -51,8 +52,27 @@ public class IslandCommand extends Command {
             return true;
         }
 
-        commandExecutor.onCommand(sender, this, commandLabel, Arrays.copyOfRange(args, 1, args.length));
+        commandExecutor.onCommand(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 0) {
+            return new ArrayList<>();
+        } else if (args.length == 1) {
+            return executorMap.keySet().stream()
+                    .filter(key -> {
+                        var ex = executorMap.get(key);
+                        if (ex.permission == null) return true;
+                        return sender.hasPermission(ex.permission);
+                    }).toList();
+        }
+
+        var ex = executorMap.get(args[0]);
+        if (ex == null) return new ArrayList<>();
+
+        return ex.onTabComplete(sender, command, alias, Arrays.copyOfRange(args, 1, args.length));
     }
 }

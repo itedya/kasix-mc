@@ -1,5 +1,6 @@
 package com.itedya.skymaster.command.subcommands;
 
+import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.daos.IslandInviteDao;
 import com.itedya.skymaster.runnables.invite.ShowIslandsForInvitesGuiRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
@@ -11,8 +12,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class InviteIslandMemberSubCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class InviteIslandMemberSubCommand extends SubCommand {
+    public InviteIslandMemberSubCommand() {
+        super("skymaster.islands.invite");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         try {
@@ -21,16 +30,13 @@ public class InviteIslandMemberSubCommand implements CommandExecutor {
                 return true;
             }
 
-            // check arguments
             if (args.length == 0) {
                 player.sendMessage(ChatColor.YELLOW + "Nie wprowadziłeś nicku gracza, którego chcesz zaprosić.");
                 return true;
-            } else if (args.length >= 2) {
-                player.sendMessage(ChatColor.YELLOW + "Podałeś za dużo argumentów");
             }
 
             // check permissions
-            if (!player.hasPermission("skymaster.islands.invite")) {
+            if (!player.hasPermission(permission)) {
                 player.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
@@ -64,5 +70,14 @@ public class InviteIslandMemberSubCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Server error.");
         }
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("Nick gracza którego chcesz zaprosić");
+        }
+
+        return new ArrayList<>();
     }
 }

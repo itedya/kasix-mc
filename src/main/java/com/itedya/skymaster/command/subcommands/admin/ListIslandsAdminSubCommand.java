@@ -1,13 +1,13 @@
-package com.itedya.skymaster.command.subcommands;
+package com.itedya.skymaster.command.subcommands.admin;
 
 import com.itedya.skymaster.command.SubCommand;
-import com.itedya.skymaster.daos.IslandInviteDao;
-import com.itedya.skymaster.runnables.invite.AcceptInviteToIslandRunnable;
+import com.itedya.skymaster.runnables.list.ShowIslandListGuiRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcceptInviteToIslandSubCommand extends SubCommand {
-    public AcceptInviteToIslandSubCommand() {
-        super("skymaster.islands.accept-invite");
+public class ListIslandsAdminSubCommand extends SubCommand {
+    public ListIslandsAdminSubCommand() {
+        super("skymaster.admin.islands.list");
     }
 
     @Override
@@ -28,28 +28,29 @@ public class AcceptInviteToIslandSubCommand extends SubCommand {
             return true;
         }
 
-        if (!player.hasPermission("skymaster.islands.accept-invite")) {
-            sender.sendMessage(ChatUtil.NO_PERMISSION);
+        if (!player.hasPermission(permission)) {
+            player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 
-        var dao = IslandInviteDao.getInstance();
-        var invite = dao.getByToPlayerUuid(player.getUniqueId().toString());
-
-        if (invite == null) {
-            player.sendMessage(ChatColor.YELLOW + "Nie masz zaproszenia do żadnej wyspy lub zaproszenie wygasło!");
+        if (args.length == 0) {
+            player.sendMessage(ChatColor.YELLOW + "Podaj nick gracza");
             return true;
         }
 
-        dao.remove(player.getUniqueId().toString());
+        OfflinePlayer playerToCheck = Bukkit.getOfflinePlayer(args[0]);
 
-        ThreadUtil.async(new AcceptInviteToIslandRunnable(player, invite));
+        ThreadUtil.async(new ShowIslandListGuiRunnable(player, playerToCheck));
 
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("Nick gracza");
+        }
+
         return new ArrayList<>();
     }
 }
