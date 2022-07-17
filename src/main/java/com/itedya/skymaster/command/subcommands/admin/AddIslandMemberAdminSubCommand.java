@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands.admin;
 
 import com.itedya.skymaster.runnables.invite.ShowIslandsForInvitesGuiRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -17,12 +18,12 @@ public class AddIslandMemberAdminSubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Musisz być w grze, aby użyć tej komendy!");
+            sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
             return true;
         }
 
         if (!player.hasPermission("skymaster.admin.islands.add-member")) {
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
+            player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 

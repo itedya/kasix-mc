@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.runnables.view.ShowVisitIslandGUIRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,17 +16,17 @@ public class VisitIslandSubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Musisz być w grze, aby wykonać tą komendę!");
+            sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
+            return true;
+        }
+
+        if (!player.hasPermission("skymaster.islands.visit")) {
+            player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 
         if (args.length == 0) {
             player.sendMessage(ChatColor.YELLOW + "Musisz podać nick gracza, którego chcesz odwiedzić");
-            return true;
-        }
-
-        if (!player.hasPermission("skymaster.islands.visit")) {
-            player.sendMessage(ChatColor.RED + "Brak permisji!");
             return true;
         }
 

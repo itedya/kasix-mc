@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command;
 
 import com.itedya.skymaster.command.subcommands.*;
+import com.itedya.skymaster.command.subcommands.admin.CreateIslandSchematicAdminSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +27,6 @@ public class IslandCommand extends Command {
     }
 
     public final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.of(
-            "stworzschemat", new CreateIslandSchematicSubCommand(),
             "stworz", new CreateIslandSubCommand(),
             "lista", new ListIslandsSubCommand(),
             "ustawdom", new SetIslandHomeSubCommand(),

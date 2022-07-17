@@ -60,7 +60,7 @@ public class ShowIslandsForKickRunnable extends BukkitRunnable {
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 

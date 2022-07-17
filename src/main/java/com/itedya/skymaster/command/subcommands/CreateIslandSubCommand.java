@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.runnables.island.ShowCreateIslandGuiRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,13 +18,13 @@ public class CreateIslandSubCommand implements CommandExecutor {
         try {
             // check if user is in game
             if (!(sender instanceof Player player)) {
-                sender.sendMessage(ChatColor.RED + "Musisz być w grze, aby użyć tej komendy!");
+                sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
                 return true;
             }
 
             // check if user has permission
             if (!player.hasPermission("skymaster.islands.create")) {
-                sender.sendMessage(ChatColor.RED + "Brak permisji!");
+                sender.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
 

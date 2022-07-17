@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.runnables.home.SetIslandHomeRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,7 +18,12 @@ public class SetIslandHomeSubCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         try {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage("Musisz być w grze, aby wykonać tą komendę!");
+                sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
+                return true;
+            }
+
+            if (!player.hasPermission("skymaster.islands.sethome")) {
+                player.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
 

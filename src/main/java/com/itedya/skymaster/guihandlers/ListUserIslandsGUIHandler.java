@@ -31,7 +31,7 @@ public class ListUserIslandsGUIHandler implements GUIHandler {
                     .runTaskAsynchronously(SkyMaster.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
+            player.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 

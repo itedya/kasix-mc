@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.runnables.list.ShowIslandListGuiRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,7 +17,7 @@ public class ListIslandsSubCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // check if user is in game
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Musisz być w grze, aby wykonać tą komendę.");
+            sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
             return true;
         }
 
@@ -26,7 +27,7 @@ public class ListIslandsSubCommand implements CommandExecutor {
         if (args.length > 0) {
             // check if user has permission to list someone's islands
             if (!player.hasPermission("skymaster.islands.list-someone")) {
-                player.sendMessage(ChatColor.RED + "Brak permisji.");
+                player.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
 
@@ -40,7 +41,7 @@ public class ListIslandsSubCommand implements CommandExecutor {
         } else {
             // check if user has permission to list their islands
             if (!player.hasPermission("skymaster.islands.list")) {
-                player.sendMessage(ChatColor.RED + "Brak permisji.");
+                player.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
 

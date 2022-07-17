@@ -47,7 +47,7 @@ public class ShowMembersToKickRunnable extends BukkitRunnable {
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 
@@ -75,7 +75,7 @@ public class ShowMembersToKickRunnable extends BukkitRunnable {
             executor.openInventory(inv);
         } catch (Exception e) {
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 }
