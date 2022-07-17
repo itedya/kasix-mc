@@ -1,6 +1,6 @@
 package com.itedya.skymaster.command.subcommands.admin;
 
-import com.itedya.skymaster.SkyMaster;
+import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.runnables.expand.ExpandIslandGuiRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -13,10 +13,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ExpandIslandAdminSubCommand implements CommandExecutor {
+public class ExpandIslandAdminSubCommand extends SubCommand {
+    public ExpandIslandAdminSubCommand() {
+        super("skymaster.admin.islands.expand");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         try {
@@ -25,13 +31,13 @@ public class ExpandIslandAdminSubCommand implements CommandExecutor {
                 return true;
             }
 
-            if (!player.hasPermission("skymaster.admin.islands.expand")) {
+            if (!player.hasPermission(permission)) {
                 player.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
 
-            if (args.length != 1) {
-                player.sendMessage(ChatColor.YELLOW + "Musisz podać tylko wielkość wyspy");
+            if (args.length == 0) {
+                player.sendMessage(ChatColor.YELLOW + "Musisz podać wielkość wyspy");
                 return true;
             }
 
@@ -73,5 +79,14 @@ public class ExpandIslandAdminSubCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("Średnica wyspy");
+        }
+
+        return new ArrayList<>();
     }
 }

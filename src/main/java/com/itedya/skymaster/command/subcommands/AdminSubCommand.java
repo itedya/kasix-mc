@@ -2,6 +2,10 @@ package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.command.subcommands.admin.AddIslandMemberAdminSubCommand;
+import com.itedya.skymaster.command.subcommands.admin.CreateIslandSchematicAdminSubCommand;
+import com.itedya.skymaster.command.subcommands.admin.ExpandIslandAdminSubCommand;
+import com.itedya.skymaster.command.subcommands.admin.KickIslandMemberAdminSubCommand;
+import com.itedya.skymaster.utils.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,10 +17,10 @@ import java.util.*;
 
 public class AdminSubCommand extends SubCommand {
     public final Map<String, SubCommand> executorMap = new HashMap<>(Map.of(
-//            "stworzschemat", new CreateIslandSchematicAdminSubCommand(),
-            "zapros", new AddIslandMemberAdminSubCommand()
-//            "wyrzuc", new KickIslandMemberAdminSubCommand(),
-//            "powieksz", new ExpandIslandAdminSubCommand()
+            "stworzschemat", new CreateIslandSchematicAdminSubCommand(),
+            "dodajczlonka", new AddIslandMemberAdminSubCommand(),
+            "wyrzucczlonka", new KickIslandMemberAdminSubCommand(),
+            "powieksz", new ExpandIslandAdminSubCommand()
     ));
 
     public AdminSubCommand() {
@@ -25,6 +29,11 @@ public class AdminSubCommand extends SubCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission(permission)) {
+            sender.sendMessage(ChatUtil.NO_PERMISSION);
+            return true;
+        }
+
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Podaj nazwę komendy");
             return true;

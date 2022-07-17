@@ -1,5 +1,6 @@
 package com.itedya.skymaster.command.subcommands.admin;
 
+import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.runnables.kick.ShowIslandsForKickRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -11,8 +12,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class KickIslandMemberAdminSubCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class KickIslandMemberAdminSubCommand extends SubCommand {
+    public KickIslandMemberAdminSubCommand() {
+        super("skymaster.admin.islands.kick");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
@@ -20,13 +29,13 @@ public class KickIslandMemberAdminSubCommand implements CommandExecutor {
             return true;
         }
 
-        if (!player.hasPermission("skymaster.admin.islands.kick")) {
+        if (!player.hasPermission(permission)) {
             player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 
-        if (args.length != 1) {
-            player.sendMessage(ChatColor.YELLOW + "Musisz podać jeden argument - " + ChatColor.GOLD + "właściciel wyspy");
+        if (args.length == 0) {
+            player.sendMessage(ChatColor.YELLOW + "Musisz podać " + ChatColor.GOLD + "właściciela wyspy");
             return true;
         }
 
@@ -35,5 +44,13 @@ public class KickIslandMemberAdminSubCommand implements CommandExecutor {
         ThreadUtil.async(new ShowIslandsForKickRunnable(player, playerToKick));
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("Właściciel wyspy");
+        }
+        return new ArrayList<>();
     }
 }
