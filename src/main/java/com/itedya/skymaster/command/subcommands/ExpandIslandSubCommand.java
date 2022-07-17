@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.runnables.expand.ExpandIslandGuiRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -15,12 +16,12 @@ public class ExpandIslandSubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Musisz być w grze, aby wykonać tą komendę!");
+            sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
             return true;
         }
 
         if (!player.hasPermission("skymaster.islands.expand")) {
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
+            player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 

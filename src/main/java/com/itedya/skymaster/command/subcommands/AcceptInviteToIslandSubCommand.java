@@ -2,6 +2,7 @@ package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.daos.IslandInviteDao;
 import com.itedya.skymaster.runnables.invite.AcceptInviteToIslandRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,12 +15,12 @@ public class AcceptInviteToIslandSubCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Musisz być w grze, żeby wykonać tą komendę");
+            sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
             return true;
         }
 
         if (!player.hasPermission("skymaster.islands.accept-invite")) {
-            sender.sendMessage(ChatColor.RED + "Brak permisji!");
+            sender.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 

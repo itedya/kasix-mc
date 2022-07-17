@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.runnables.kick.ShowIslandsForKickRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -17,12 +18,12 @@ public class KickIslandMemberSubCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // check sender type
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Musisz być w grze, żeby wykonać tą komendę");
+            sender.sendMessage(ChatUtil.YOU_HAVE_TO_BE_IN_GAME);
             return true;
         }
 
         if (!player.hasPermission("skymaster.islands.kick")) {
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Brak permisji!");
+            player.sendMessage(ChatUtil.NO_PERMISSION);
             return true;
         }
 
