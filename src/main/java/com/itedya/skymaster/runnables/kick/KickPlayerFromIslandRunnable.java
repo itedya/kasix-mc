@@ -56,7 +56,7 @@ public class KickPlayerFromIslandRunnable extends BukkitRunnable {
         } catch (Exception e) {
             this.shutdown();
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 
@@ -72,7 +72,7 @@ public class KickPlayerFromIslandRunnable extends BukkitRunnable {
         } catch (Exception e) {
             ThreadUtil.async(this::shutdown);
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 
@@ -89,7 +89,7 @@ public class KickPlayerFromIslandRunnable extends BukkitRunnable {
         } catch (Exception e) {
             this.shutdown();
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 
@@ -105,7 +105,7 @@ public class KickPlayerFromIslandRunnable extends BukkitRunnable {
                     .create());
         } catch (Exception e) {
             e.printStackTrace();
-            executor.sendMessage(ChatUtil.getServerErrorMessage());
+            executor.sendMessage(ChatUtil.SERVER_ERROR);
         }
     }
 

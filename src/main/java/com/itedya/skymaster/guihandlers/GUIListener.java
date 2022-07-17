@@ -49,7 +49,7 @@ public class GUIListener implements Listener {
             handler.onEvent(event, player);
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatUtil.getServerErrorMessage());
+            player.sendMessage(ChatUtil.SERVER_ERROR);
         }
 
         event.getInventory().close();
