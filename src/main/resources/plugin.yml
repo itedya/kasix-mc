@@ -8,3 +8,5 @@ depend:
   - WorldGuard
   - FastAsyncWorldEdit
   - PlaceholderAPI
+commands:
+  wyspa:

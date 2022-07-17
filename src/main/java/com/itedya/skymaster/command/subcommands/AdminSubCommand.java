@@ -1,7 +1,7 @@
-package com.itedya.skymaster.command;
+package com.itedya.skymaster.command.subcommands;
 
-import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.command.subcommands.AdminSubCommand;
+import com.itedya.skymaster.command.SubCommand;
+import com.itedya.skymaster.command.subcommands.admin.AddIslandMemberAdminSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,25 +11,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class IslandCommand extends SubCommand {
-    public static void register() {
-        var plugin = SkyMaster.getInstance();
-        var instance = new IslandCommand();
-
-        var command = plugin.getCommand("wyspa");
-        assert command != null : "Command is null!";
-
-        command.setExecutor(instance);
-        command.setTabCompleter(instance);
-    }
-
-    public IslandCommand() {
-        super(null);
-    }
-
+public class AdminSubCommand extends SubCommand {
     public final Map<String, SubCommand> executorMap = new HashMap<>(Map.of(
-            "admin", new AdminSubCommand()
+//            "stworzschemat", new CreateIslandSchematicAdminSubCommand(),
+            "zapros", new AddIslandMemberAdminSubCommand()
+//            "wyrzuc", new KickIslandMemberAdminSubCommand(),
+//            "powieksz", new ExpandIslandAdminSubCommand()
     ));
+
+    public AdminSubCommand() {
+        super("skymaster.admin.islands");
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -51,20 +43,20 @@ public class IslandCommand extends SubCommand {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 0) {
-            return new ArrayList<>();
-        } else if (args.length == 1) {
-            return executorMap.keySet().stream()
-                    .filter(key -> {
+        if (args.length == 1) {
+            return executorMap.keySet()
+                    .stream().filter(key -> {
                         var ex = executorMap.get(key);
-                        if (ex.permission == null) return true;
+                        if (ex == null) return true;
                         return sender.hasPermission(ex.permission);
                     }).toList();
         }
 
-        var ex = executorMap.get(args[0]);
-        if (ex == null) return new ArrayList<>();
+        var commandExecutor = executorMap.get(args[0]);
+        if (commandExecutor != null) {
+            return commandExecutor.onTabComplete(sender, command, alias, Arrays.copyOfRange(args, 1, args.length));
+        }
 
-        return ex.onTabComplete(sender, command, alias, Arrays.copyOfRange(args, 1, args.length));
+        return new ArrayList<>();
     }
 }
