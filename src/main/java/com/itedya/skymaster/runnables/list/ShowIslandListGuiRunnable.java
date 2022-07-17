@@ -8,6 +8,7 @@ import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,12 +20,12 @@ import java.util.List;
 // LISTENER - ListUserIslandsGUIHandler
 public class ShowIslandListGuiRunnable extends BukkitRunnable {
     private final Player player;
-    private final Player playerToCheck;
+    private final OfflinePlayer playerToCheck;
     private Connection connection;
     private int guiSize;
     private List<IslandDto> userIslands = new ArrayList<>();
 
-    public ShowIslandListGuiRunnable(Player player, Player playerToCheck) {
+    public ShowIslandListGuiRunnable(Player player, OfflinePlayer playerToCheck) {
         this.player = player;
         this.playerToCheck = playerToCheck;
     }

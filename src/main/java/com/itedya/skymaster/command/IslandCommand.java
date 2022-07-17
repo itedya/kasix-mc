@@ -1,7 +1,7 @@
 package com.itedya.skymaster.command;
 
 import com.itedya.skymaster.SkyMaster;
-import com.itedya.skymaster.command.subcommands.AdminSubCommand;
+import com.itedya.skymaster.command.subcommands.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +28,15 @@ public class IslandCommand extends SubCommand {
     }
 
     public final Map<String, SubCommand> executorMap = new HashMap<>(Map.of(
-            "admin", new AdminSubCommand()
+            "admin", new AdminSubCommand(),
+            "akceptuj", new AcceptInviteToIslandSubCommand(),
+            "stworz", new CreateIslandSubCommand(),
+            "powieksz", new ExpandIslandSubCommand(),
+            "zapros", new InviteIslandMemberSubCommand(),
+            "wyrzuc", new KickIslandMemberSubCommand(),
+            "lista", new ListIslandsSubCommand(),
+            "ustawdom", new SetIslandHomeSubCommand(),
+            "odwiedz", new VisitIslandSubCommand()
     ));
 
     @Override

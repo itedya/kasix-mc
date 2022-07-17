@@ -1,10 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.command.SubCommand;
-import com.itedya.skymaster.command.subcommands.admin.AddIslandMemberAdminSubCommand;
-import com.itedya.skymaster.command.subcommands.admin.CreateIslandSchematicAdminSubCommand;
-import com.itedya.skymaster.command.subcommands.admin.ExpandIslandAdminSubCommand;
-import com.itedya.skymaster.command.subcommands.admin.KickIslandMemberAdminSubCommand;
+import com.itedya.skymaster.command.subcommands.admin.*;
 import com.itedya.skymaster.utils.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,7 +17,8 @@ public class AdminSubCommand extends SubCommand {
             "stworzschemat", new CreateIslandSchematicAdminSubCommand(),
             "dodajczlonka", new AddIslandMemberAdminSubCommand(),
             "wyrzucczlonka", new KickIslandMemberAdminSubCommand(),
-            "powieksz", new ExpandIslandAdminSubCommand()
+            "powieksz", new ExpandIslandAdminSubCommand(),
+            "lista", new ListIslandsAdminSubCommand()
     ));
 
     public AdminSubCommand() {

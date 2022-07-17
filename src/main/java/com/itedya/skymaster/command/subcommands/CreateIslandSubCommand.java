@@ -1,5 +1,6 @@
 package com.itedya.skymaster.command.subcommands;
 
+import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.runnables.island.ShowCreateIslandGuiRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -9,9 +10,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class CreateIslandSubCommand implements CommandExecutor {
+public class CreateIslandSubCommand extends SubCommand {
+    public CreateIslandSubCommand() {
+        super("skymaster.islands.create");
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -23,7 +31,7 @@ public class CreateIslandSubCommand implements CommandExecutor {
             }
 
             // check if user has permission
-            if (!player.hasPermission("skymaster.islands.create")) {
+            if (!player.hasPermission(permission)) {
                 sender.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
@@ -33,8 +41,13 @@ public class CreateIslandSubCommand implements CommandExecutor {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            sender.sendMessage(ChatColor.RED + "Wystąpił błąd serwera");
+            sender.sendMessage(ChatUtil.SERVER_ERROR);
             return true;
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return new ArrayList<>();
     }
 }
