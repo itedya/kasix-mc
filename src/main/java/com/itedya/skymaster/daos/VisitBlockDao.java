@@ -70,4 +70,15 @@ public class VisitBlockDao {
 
         return blockRequest;
     }
+
+    public ViewBlockDto delete(String islandOwnerUuid, String blockedPlayerUuid) throws SQLException {
+        String query = VisitBlockDaoSqulUnit.REMOVE;
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, islandOwnerUuid);
+        stmt.setString(2, blockedPlayerUuid);
+
+        stmt.executeUpdate();
+        stmt.close();
+    }
 }
