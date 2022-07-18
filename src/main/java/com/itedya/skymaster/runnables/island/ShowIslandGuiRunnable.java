@@ -60,12 +60,12 @@ public class ShowIslandGuiRunnable extends BukkitRunnable {
         String playerUuid = player.getUniqueId().toString();
 
         if ((playerUuid.equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.remove")) ||
-                !player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.remove-someone")) {
+                !player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.admin.islands.remove")) {
             inventory.addItem(getRemoveItem());
         }
 
         if ((player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.reset-permissions")) ||
-                !player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.islands.reset-permissions-someone")) {
+                !player.getUniqueId().toString().equals(islandDto.ownerUuid) && player.hasPermission("skymaster.admin.islands.reset-permissions")) {
             inventory.addItem(getResetWorldGuardItem());
         }
 
