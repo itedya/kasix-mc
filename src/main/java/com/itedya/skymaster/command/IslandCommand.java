@@ -11,10 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class IslandCommand extends Command {
-    public IslandCommand(@NotNull String name) {
-        super(name);
-    }
-
+    public IslandCommand(@NotNull String name) { super(name);}
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
         if (args.length == 1) {
@@ -22,7 +19,6 @@ public class IslandCommand extends Command {
                     .stream()
                     .toList();
         }
-
         return new ArrayList<>();
     }
 
@@ -37,9 +33,6 @@ public class IslandCommand extends Command {
             "odwiedz", new VisitIslandSubCommand(),
             "admin", new AdminSubCommand(),
             "blokuj", new BlockVisitIslandSubCommand()
-
-
-
     ));
 
     @Override
@@ -48,15 +41,12 @@ public class IslandCommand extends Command {
             sender.sendMessage(ChatColor.RED + "Podaj nazwę komendy");
             return true;
         }
-
         CommandExecutor commandExecutor = executorMap.get(args[0]);
         if (commandExecutor == null) {
             sender.sendMessage(ChatColor.RED + "Taka komenda nie istnieje!");
             return true;
         }
-
         commandExecutor.onCommand(sender, this, commandLabel, Arrays.copyOfRange(args, 1, args.length));
-
         return true;
     }
 }

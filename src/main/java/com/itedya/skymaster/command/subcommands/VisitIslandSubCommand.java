@@ -1,6 +1,7 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.command.SubCommand;
+import com.itedya.skymaster.daos.VisitBlockDao;
 import com.itedya.skymaster.runnables.view.ShowVisitIslandGUIRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -46,6 +47,7 @@ public class VisitIslandSubCommand extends SubCommand {
             player.sendMessage(ChatColor.YELLOW + "Nie ma po co odwiedzać samego siebie :P");
             return true;
         }
+
 
         ThreadUtil.async(new ShowVisitIslandGUIRunnable(player, owner));
 

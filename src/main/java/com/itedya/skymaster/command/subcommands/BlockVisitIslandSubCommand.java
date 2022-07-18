@@ -18,10 +18,7 @@ import java.util.List;
 
 public class BlockVisitIslandSubCommand extends SubCommand {
 
-    public BlockVisitIslandSubCommand(){
-        super("skymaster.islands.blockvisit");
-    }
-
+    public BlockVisitIslandSubCommand(){ super("skymaster.islands.blockvisit");}
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         try {
