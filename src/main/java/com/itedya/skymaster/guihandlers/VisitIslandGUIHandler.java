@@ -1,6 +1,6 @@
 package com.itedya.skymaster.guihandlers;
 
-import com.itedya.skymaster.runnables.view.VisitIslandRunnable;
+import com.itedya.skymaster.runnables.visit.VisitIslandRunnable;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.entity.Player;

@@ -1,15 +1,13 @@
 package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.command.SubCommand;
-import com.itedya.skymaster.daos.VisitBlockDao;
-import com.itedya.skymaster.runnables.view.ShowVisitIslandGUIRunnable;
+import com.itedya.skymaster.runnables.visit.ShowVisitIslandGUIRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

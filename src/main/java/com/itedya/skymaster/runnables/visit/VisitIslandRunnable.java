@@ -1,4 +1,4 @@
-package com.itedya.skymaster.runnables.view;
+package com.itedya.skymaster.runnables.visit;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandHomeDao;
@@ -7,7 +7,6 @@ import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.utils.IslandHomeUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class VisitIslandRunnable extends SkymasterRunnable {

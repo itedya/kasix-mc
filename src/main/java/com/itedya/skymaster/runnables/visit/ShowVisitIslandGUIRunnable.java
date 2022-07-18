@@ -1,4 +1,4 @@
-package com.itedya.skymaster.runnables.view;
+package com.itedya.skymaster.runnables.visit;
 
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.daos.IslandDao;
