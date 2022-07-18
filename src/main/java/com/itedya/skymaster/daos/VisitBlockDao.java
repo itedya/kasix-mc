@@ -71,7 +71,7 @@ public class VisitBlockDao {
         return blockRequest;
     }
 
-    public ViewBlockDto delete(String islandOwnerUuid, String blockedPlayerUuid) throws SQLException {
+    public void delete(String islandOwnerUuid, String blockedPlayerUuid) throws SQLException {
         String query = VisitBlockDaoSqulUnit.REMOVE;
 
         PreparedStatement stmt = connection.prepareStatement(query);

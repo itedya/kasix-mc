@@ -54,8 +54,11 @@ public class BlockPlayerFromVisitIslandRunnable extends BukkitRunnable {
             //set block to DB, new checker in VisitIslandSubCommand
             Connection connection = Database.getInstance().getConnection();
             VisitBlockDao visitBlockDao = new VisitBlockDao(connection);
-            if (visitBlockDao.get(executor.getUniqueId().toString(),userToBlock.getUniqueId().toString()) != null)
-                executor.sendMessage(org.bukkit.ChatColor.YELLOW + "Pomyslnie zablokowano użytkownika " + userToBlock.getName() );
+            var visitBlockDto = visitBlockDao.get(executor.getUniqueId().toString(),userToBlock.getUniqueId().toString());
+            if(visitBlockDto != null)
+                executor.sendMessage(org.bukkit.ChatColor.YELLOW + userToBlock.getName() + " jest już zablokowany");
+            else
+                visitBlockDao.create(visitBlockDto);
             connection.close();
 
         }catch(Exception e){

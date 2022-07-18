@@ -2,6 +2,7 @@ package com.itedya.skymaster.command;
 
 import com.itedya.skymaster.command.subcommands.*;
 import com.itedya.skymaster.command.subcommands.admin.CreateIslandSchematicAdminSubCommand;
+import com.itedya.skymaster.runnables.block.UnblockPlayerFromVisitIslandRunnable;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,17 +23,17 @@ public class IslandCommand extends Command {
         return new ArrayList<>();
     }
 
-    public final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.of(
-            "stworz", new CreateIslandSubCommand(),
-            "lista", new ListIslandsSubCommand(),
-            "ustawdom", new SetIslandHomeSubCommand(),
-            "zapros", new InviteIslandMemberSubCommand(),
-            "akceptuj", new AcceptInviteToIslandSubCommand(),
-            "wyrzuc", new KickIslandMemberSubCommand(),
-            "powieksz", new ExpandIslandSubCommand(),
-            "odwiedz", new VisitIslandSubCommand(),
-            "admin", new AdminSubCommand(),
-            "blokuj", new BlockVisitIslandSubCommand()
+    public final Map<String, CommandExecutor> executorMap = new HashMap<>(Map.ofEntries(
+            Map.entry("stworz", new CreateIslandSubCommand()),
+            Map.entry("lista", new ListIslandsSubCommand()),
+            Map.entry("ustawdom", new SetIslandHomeSubCommand()),
+            Map.entry("zapros", new InviteIslandMemberSubCommand()),
+            Map.entry("akceptuj", new AcceptInviteToIslandSubCommand()),
+            Map.entry("wyrzuc", new KickIslandMemberSubCommand()),
+            Map.entry("powieksz", new ExpandIslandSubCommand()),
+            Map.entry("odwiedz", new VisitIslandSubCommand()),
+            Map.entry("blokuj", new BlockVisitIslandSubCommand()),
+            Map.entry("odblokuj", new UnblockVisitIslandSubCommand())
     ));
 
     @Override
