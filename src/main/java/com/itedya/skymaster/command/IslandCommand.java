@@ -27,16 +27,17 @@ public class IslandCommand extends SubCommand {
         super(null);
     }
 
-    public final Map<String, SubCommand> executorMap = new HashMap<>(Map.of(
-            "admin", new AdminSubCommand(),
-            "akceptuj", new AcceptInviteToIslandSubCommand(),
-            "stworz", new CreateIslandSubCommand(),
-            "powieksz", new ExpandIslandSubCommand(),
-            "zapros", new InviteIslandMemberSubCommand(),
-            "wyrzuc", new KickIslandMemberSubCommand(),
-            "lista", new ListIslandsSubCommand(),
-            "ustawdom", new SetIslandHomeSubCommand(),
-            "odwiedz", new VisitIslandSubCommand()
+    public final Map<String, SubCommand> executorMap = new HashMap<>(Map.ofEntries(
+            Map.entry("stworz", new CreateIslandSubCommand()),
+            Map.entry("lista", new ListIslandsSubCommand()),
+            Map.entry("ustawdom", new SetIslandHomeSubCommand()),
+            Map.entry("zapros", new InviteIslandMemberSubCommand()),
+            Map.entry("akceptuj", new AcceptInviteToIslandSubCommand()),
+            Map.entry("wyrzuc", new KickIslandMemberSubCommand()),
+            Map.entry("powieksz", new ExpandIslandSubCommand()),
+            Map.entry("odwiedz", new VisitIslandSubCommand()),
+            Map.entry("blokuj", new BlockVisitIslandSubCommand()),
+            Map.entry("odblokuj", new UnblockVisitIslandSubCommand())
     ));
 
     @Override

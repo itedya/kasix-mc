@@ -1,6 +1,6 @@
 package com.itedya.skymaster.runnables;
 
-import com.itedya.skymaster.daos.Database;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class SkymasterRunnable extends BukkitRunnable {
-    private final Conversable executor;
+    protected final Conversable executor;
     protected Connection connection;
     protected final Map<String, Object> data = new HashMap<>();
 
@@ -22,9 +22,7 @@ public abstract class SkymasterRunnable extends BukkitRunnable {
 
     protected void errorHandling(Exception e) {
         e.printStackTrace();
-        executor.sendRawMessage("%sWystąpił błąd serwera!"
-                .formatted(ChatColor.RED));
-
+        executor.sendRawMessage(ChatUtil.SERVER_ERROR);
         ThreadUtil.async(this::closeDatabase);
     }
 
