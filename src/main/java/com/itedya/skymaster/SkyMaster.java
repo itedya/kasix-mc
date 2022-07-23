@@ -4,7 +4,6 @@ import com.itedya.skymaster.command.IslandCommand;
 import com.itedya.skymaster.daos.Database;
 import com.itedya.skymaster.guihandlers.*;
 import com.itedya.skymaster.rankings.IslandSizeRankingManager;
-import com.itedya.skymaster.utils.CommandUtil;
 import com.itedya.skymaster.utils.WorldUtil;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
