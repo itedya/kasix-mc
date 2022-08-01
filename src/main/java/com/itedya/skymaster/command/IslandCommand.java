@@ -37,7 +37,8 @@ public class IslandCommand extends SubCommand {
             Map.entry("powieksz", new ExpandIslandSubCommand()),
             Map.entry("odwiedz", new VisitIslandSubCommand()),
             Map.entry("blokuj", new BlockVisitIslandSubCommand()),
-            Map.entry("odblokuj", new UnblockVisitIslandSubCommand())
+            Map.entry("odblokuj", new UnblockVisitIslandSubCommand()),
+            Map.entry("admin", new AdminSubCommand())
     ));
 
     @Override
