@@ -15,6 +15,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,24 @@ public class WorldGuardUtil {
 
     public static ProtectedRegion createRegionWithoutSaving(String regionName, BlockVector3 from, BlockVector3 to) {
         return new ProtectedCuboidRegion(regionName, from, to);
+    }
+
+    public static ProtectedRegion getRegionForLocation(Location location) {
+        var vector = BlockVector3.at(location.getX(), location.getY(), location.getZ());
+
+        var regionManager = WorldGuardUtil.getRegionManager();
+        var applicableRegions = regionManager.getApplicableRegions(vector);
+
+        ProtectedRegion islandRegion = null;
+
+        for (var region : applicableRegions) {
+            if (region.getId().startsWith("island_")) {
+                islandRegion = region;
+                break;
+            }
+        }
+
+        return islandRegion;
     }
 
     public static ProtectedRegion resetRegionFlags(ProtectedRegion protectedRegion) {
