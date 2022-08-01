@@ -2,6 +2,7 @@ package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.runnables.block.UnblockPlayerFromVisitIslandRunnable;
+import com.itedya.skymaster.runnables.island.RatePlayerIslandRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import com.itedya.skymaster.utils.WorldGuardUtil;
@@ -25,6 +26,7 @@ public class RateIslandSubCommand extends SubCommand {
 
     public RateIslandSubCommand() {
         super("skymaster.islands.rate");
+
     }
 
     @Override
@@ -72,11 +74,9 @@ public class RateIslandSubCommand extends SubCommand {
             }
             //get island's id based on region
             String islandId = visitedRegion.getId().replaceAll("island_","");
-            int id = Integer.getInteger(islandId);
+            int casted_islandId = Integer.getInteger(islandId);
 
-
-
-           //ThreadUtil.async(new UnblockPlayerFromVisitIslandRunnable(player, playerToRate));
+           ThreadUtil.async(new RatePlayerIslandRunnable(player,casted_islandId,arg1));
             return true;
         } catch (Exception e) {
             e.printStackTrace();

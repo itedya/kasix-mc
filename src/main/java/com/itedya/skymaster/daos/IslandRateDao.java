@@ -1,14 +1,13 @@
 package com.itedya.skymaster.daos;
 
+import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import com.itedya.skymaster.dtos.database.IslandRateDto;
 import com.itedya.skymaster.enums.IslandRate;
+import com.itedya.skymaster.utils.sql.IslandHomeDaoSqlUtil;
 import com.itedya.skymaster.utils.sql.IslandMemberDaoSqlUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class IslandRateDao {
 
         return result;
     }
-    public IslandRateDto getByIslandId_ratingPlayerUUID(Integer islandId, String ratingPlayerUUID,Integer value, boolean withDeleted) throws SQLException {
+    public IslandRateDto getByIslandId_ratingPlayerUUID(Integer islandId, String ratingPlayerUUID, boolean withDeleted) throws SQLException {
         String query;
         if (withDeleted) {
             query = IslandMemberDaoSqlUtil.GET_BY_ISLAND_ID_WITH_DELETED;
@@ -63,5 +62,26 @@ public class IslandRateDao {
         rs.close();
         statement.close();
         return result;
+    }
+
+    public IslandRateDto create(int islandId, String ratingPlayerUUID, int rateValue) throws SQLException {
+        String query = IslandHomeDaoSqlUtil.CREATE;
+        PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        stmt.setInt(1, islandId);
+        stmt.setString(2, ratingPlayerUUID);
+        stmt.setInt(3, rateValue);
+
+        int affectedRows = stmt.executeUpdate();
+
+        if (affectedRows == 0) throw new SQLException("No rows affected!");
+
+        IslandRateDto dto = new IslandRateDto();
+        dto.value = rateValue;
+        dto.islandId = islandId;
+        dto.ratingPlayerUUID = ratingPlayerUUID;
+
+        stmt.close();
+        return dto;
     }
 }
