@@ -15,17 +15,12 @@ public class IslandCommand extends SubCommand {
     public static void register() {
         var plugin = SkyMaster.getInstance();
         var instance = new IslandCommand();
-
         var command = plugin.getCommand("wyspa");
         assert command != null : "Command is null!";
-
         command.setExecutor(instance);
         command.setTabCompleter(instance);
     }
-
-    public IslandCommand() {
-        super(null);
-    }
+    public IslandCommand() {super(null);}
 
     public final Map<String, SubCommand> executorMap = new HashMap<>(Map.ofEntries(
             Map.entry("stworz", new CreateIslandSubCommand()),
@@ -37,7 +32,8 @@ public class IslandCommand extends SubCommand {
             Map.entry("powieksz", new ExpandIslandSubCommand()),
             Map.entry("odwiedz", new VisitIslandSubCommand()),
             Map.entry("blokuj", new BlockVisitIslandSubCommand()),
-            Map.entry("odblokuj", new UnblockVisitIslandSubCommand())
+            Map.entry("odblokuj", new UnblockVisitIslandSubCommand()),
+            Map.entry("ocen", new RateIslandSubCommand())
     ));
 
     @Override
@@ -46,18 +42,14 @@ public class IslandCommand extends SubCommand {
             sender.sendMessage(ChatColor.RED + "Podaj nazwę komendy");
             return true;
         }
-
         CommandExecutor commandExecutor = executorMap.get(args[0]);
         if (commandExecutor == null) {
             sender.sendMessage(ChatColor.RED + "Taka komenda nie istnieje!");
             return true;
         }
-
         commandExecutor.onCommand(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
-
         return true;
     }
-
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 0) {
@@ -70,10 +62,8 @@ public class IslandCommand extends SubCommand {
                         return sender.hasPermission(ex.permission);
                     }).toList();
         }
-
         var ex = executorMap.get(args[0]);
         if (ex == null) return new ArrayList<>();
-
         return ex.onTabComplete(sender, command, alias, Arrays.copyOfRange(args, 1, args.length));
     }
 }

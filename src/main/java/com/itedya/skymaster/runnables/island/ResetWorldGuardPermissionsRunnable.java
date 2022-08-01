@@ -32,7 +32,6 @@ public class ResetWorldGuardPermissionsRunnable extends SkymasterRunnable {
             IslandMemberDao islandMemberDao = new IslandMemberDao(connection);
 
             var islandId = (int) data.get("islandId");
-
             var islandDto = islandDao.getById(islandId);
             var members = islandMemberDao.getByIslandId(islandId);
 

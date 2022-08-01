@@ -27,13 +27,6 @@ public class VisitIslandRunnable extends SkymasterRunnable {
             int islandId = (int) data.get("islandId");
             Player executor = (Player) data.get("executor");
 
-//            var block = blockDao.get(islandId, executor.getUniqueId().toString());
-//            if (block != null) {
-//                executor.sendMessage(ChatColor.YELLOW + "Nie możesz odwiedzić tej wyspy, właściciel zablokował Ci możliwość jej odwiedzania.");
-//                this.closeDatabase();
-//                return;
-//            }
-
             IslandHomeDao homeDao = new IslandHomeDao(connection);
 
             var home = homeDao.getByIslandId(islandId);
