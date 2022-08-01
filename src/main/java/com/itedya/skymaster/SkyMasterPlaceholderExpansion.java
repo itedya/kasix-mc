@@ -1,13 +1,11 @@
 package com.itedya.skymaster;
 
-import com.itedya.skymaster.dtos.database.IslandDto;
+import com.itedya.skymaster.dtos.IslandSizeRankingDto;
 import com.itedya.skymaster.rankings.IslandSizeRankingManager;
-import com.itedya.skymaster.utils.SkyMasterStringUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class SkyMasterPlaceholderExpansion extends PlaceholderExpansion {
@@ -36,23 +34,21 @@ public class SkyMasterPlaceholderExpansion extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         try {
             if (islandSizeNicknamePattern.matcher(params).find()) {
-                int place = SkyMasterStringUtil.getIntFromEnd(params);
+                int place = Integer.parseInt(params.replaceAll("island_size_player_", ""));
                 var rankingManager = IslandSizeRankingManager.getInstance();
 
-                Map placeData = rankingManager.getDataForPlace(place);
-                if (placeData == null) return "";
+                IslandSizeRankingDto dto = rankingManager.getDataForPlace(place);
+                if (dto == null) return "";
 
-                return (String) placeData.get("nickname");
+                return dto.islandOwnerName;
             } else if (islandSizePattern.matcher(params).find()) {
-                int place = SkyMasterStringUtil.getIntFromEnd(params);
+                int place = Integer.parseInt(params.replaceAll("island_size_", ""));
                 var rankingManager = IslandSizeRankingManager.getInstance();
 
-                Map placeData = rankingManager.getDataForPlace(place);
-                if (placeData == null) return "";
+                IslandSizeRankingDto dto = rankingManager.getDataForPlace(place);
+                if (dto == null) return "";
 
-                IslandDto islandDto = (IslandDto) placeData.get("dto");
-
-                return String.valueOf(islandDto.radius * 2);
+                return String.valueOf(dto.islandDto.radius * 2);
             }
         } catch (Exception e) {
             e.printStackTrace();
