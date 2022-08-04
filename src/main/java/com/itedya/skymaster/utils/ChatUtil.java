@@ -6,4 +6,9 @@ public class ChatUtil {
     public static final String SERVER_ERROR = ChatColor.RED + "Wystąpił błąd";
     public static final String NO_PERMISSION = ChatColor.RED + "Brak permisji!";
     public static final String YOU_HAVE_TO_BE_IN_GAME = ChatColor.RED + "Musisz być w grze, aby użyć tej komendy!";
+    public static final String PREFIX = ChatUtil.p("&1[&9SkyMaster&1]&7");
+
+    public static String p(String str) {
+        return ChatColor.translateAlternateColorCodes('&', str);
+    }
 }
