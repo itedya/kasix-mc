@@ -113,12 +113,10 @@ public class ShowCreateIslandGuiRunnable extends BukkitRunnable {
             ItemStack itemStack = new ItemStack(schematic.material);
             ItemMeta itemMeta = itemStack.getItemMeta();
 
-            if (i == 0) {
-                PersistentDataContainerUtil.setString(itemMeta.getPersistentDataContainer(), "inventory-identifier", "create-island-choose-schematic-gui");
-            }
-
+            PersistentDataContainerUtil.setString(itemMeta.getPersistentDataContainer(), "inventory-identifier", "create-island-choose-schematic-gui");
             PersistentDataContainerUtil.setInt(itemMeta.getPersistentDataContainer(), "schematic-id", schematic.id);
 
+            itemMeta.setLore(List.of(schematic.description));
             itemMeta.setDisplayName(schematic.name);
             itemStack.setItemMeta(itemMeta);
 
