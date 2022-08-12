@@ -43,6 +43,7 @@ public class PlayerUtil {
         return 50;
     }
 
+    // TODO: USE IT
     public static Integer getMaxAllowedIslandMembers(Player player) {
         for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
             String permissionId = permission.getPermission();
