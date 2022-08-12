@@ -6,6 +6,8 @@ import com.itedya.skymaster.daos.IslandInviteDao;
 import com.itedya.skymaster.daos.IslandMemberDao;
 import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.dtos.database.IslandInviteDto;
+import com.itedya.skymaster.utils.ChatUtil;
+import com.itedya.skymaster.utils.PlayerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -44,6 +46,12 @@ public class InvitePlayerToIslandRunnable implements Runnable {
             connection = Database.getInstance().getConnection();
 
             IslandMemberDao islandMemberDao = new IslandMemberDao(connection);
+
+            var maxMembers = PlayerUtil.getMaxAllowedIslandMembers(inviteToPlayer);
+            if (islandMemberDao.getByIslandId(islandId).size() >= maxMembers) {
+                executor.sendMessage(ChatUtil.p("&cMożesz dodać maksymalnie %d członków do wyspy!".formatted(maxMembers)));
+                return;
+            }
 
             if (islandMemberDao.isMember(inviteToPlayer.getUniqueId().toString(), islandId)) {
                 executor.sendMessage(new ComponentBuilder()
