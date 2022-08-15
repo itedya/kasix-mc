@@ -4,8 +4,8 @@ import com.itedya.skymaster.SkyMaster;
 import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.conversations.createislandschematic.prompts.ProvideIslandSchematicNamePrompt;
 import com.itedya.skymaster.utils.ChatUtil;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CreateIslandSchematicAdminSubCommand extends SubCommand {
     public CreateIslandSchematicAdminSubCommand() {
@@ -39,6 +40,7 @@ public class CreateIslandSchematicAdminSubCommand extends SubCommand {
                 .withConversationCanceller(new ExactMatchConversationCanceller("wyjdz"))
                 .withFirstPrompt(new ProvideIslandSchematicNamePrompt())
                 .withLocalEcho(false)
+                .withInitialSessionData(Map.of("exitMessage", ChatColor.GRAY + "Jeżeli chcesz wyjść, wpisz \"wyjdz\""))
                 .buildConversation(player);
 
         conversation.begin();

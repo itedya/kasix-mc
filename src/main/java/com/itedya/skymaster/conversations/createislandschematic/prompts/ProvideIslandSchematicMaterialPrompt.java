@@ -1,8 +1,6 @@
 package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
-import com.itedya.skymaster.dtos.database.IslandSchematicDto;
-import com.itedya.skymaster.runnables.schematics.SaveIslandSchematicRunnable;
-import com.itedya.skymaster.utils.ThreadUtil;
+import com.itedya.skymaster.utils.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.Conversable;
@@ -15,7 +13,9 @@ import org.jetbrains.annotations.Nullable;
 public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
     @Override
     public @NotNull String getPromptText(@NotNull ConversationContext context) {
-        return ChatColor.GRAY + "Podaj materiał reprezentacyjny schematu";
+        return ChatUtil.PREFIX + " " +
+                "%sPodaj materiał reprezentacyjny schematu. " .formatted(ChatColor.GRAY) +
+                context.getSessionData("exitMessage");
     }
 
     @Override
@@ -35,16 +35,8 @@ public class ProvideIslandSchematicMaterialPrompt extends StringPrompt {
             return new ProvideIslandSchematicMaterialPrompt();
         }
 
-        IslandSchematicDto dto = new IslandSchematicDto();
-        dto.name = (String) context.getSessionData("name");
-        dto.description = (String) context.getSessionData("description");
-        dto.filePath = (String) context.getSessionData("fileName");
-        dto.material = material;
+        context.setSessionData("material", material);
 
-        ThreadUtil.async(new SaveIslandSchematicRunnable(conversable, dto));
-
-        conversable.sendRawMessage(ChatColor.GREEN + "Przyjęto do realizacji, serwer za chwilę spróbuje zapisać schemat. Daj mu chwilkę ;)");
-
-        return null;
+        return new CheckWorldEditClipboardPrompt();
     }
 }

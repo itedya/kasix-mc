@@ -1,5 +1,6 @@
 package com.itedya.skymaster.conversations.createislandschematic.prompts;
 
+import com.itedya.skymaster.utils.ChatUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.conversations.Conversable;
@@ -13,7 +14,11 @@ public class ProvideIslandSchematicNamePrompt extends StringPrompt {
 
     @Override
     public @NotNull String getPromptText(@NotNull ConversationContext context) {
-        return ChatColor.GRAY + "Podaj nazwę schematu.";
+        return new StringBuilder()
+                .append(ChatUtil.PREFIX + " ")
+                .append("%sPodaj nazwę schematu. " .formatted(ChatColor.GRAY))
+                .append(context.getSessionData("exitMessage"))
+                .toString();
     }
 
     @Override
@@ -22,9 +27,7 @@ public class ProvideIslandSchematicNamePrompt extends StringPrompt {
 
         if (input == null) {
             conversable.sendRawMessage(new ComponentBuilder()
-                    .append("Nie wpisałeś nazwy! Jeżeli chcesz wyjdź, wpisz ").color(ChatColor.YELLOW)
-                    .append("wyjdz").color(ChatColor.RED)
-                    .append(".").color(ChatColor.YELLOW)
+                    .append("Nie wpisałeś nazwy!").color(ChatColor.YELLOW)
                     .toString());
             return new ProvideIslandSchematicNamePrompt();
         }
