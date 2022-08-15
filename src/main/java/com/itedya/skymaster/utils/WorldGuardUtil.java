@@ -3,7 +3,6 @@ package com.itedya.skymaster.utils;
 import com.fastasyncworldedit.core.FaweAPI;
 import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.dtos.database.IslandMemberDto;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
@@ -23,13 +22,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WorldGuardUtil {
-//    public static ProtectedRegion createRegion(String regionName, BlockVector3 from, BlockVector3 to) {
-//        ProtectedRegion protectedRegion = new ProtectedCuboidRegion(regionName, from, to);
-//        RegionManager regionManager = getRegionManager();
-//        regionManager.addRegion(protectedRegion);
-//        return protectedRegion;
-//    }
-
     public static ProtectedRegion createRegionWithoutSaving(String regionName, BlockVector3 from, BlockVector3 to) {
         return new ProtectedCuboidRegion(regionName, from, to);
     }
@@ -101,15 +93,6 @@ public class WorldGuardUtil {
         return regionManager.getRegions();
     }
 
-//    public static ProtectedRegion getRegionForDto(IslandDto islandDto) {
-//        return getAllRegions()
-//                .values()
-//                .stream()
-//                .filter(ele -> ele.getId().equals("island_" + islandDto.getId()))
-//                .findFirst()
-//                .orElse(null);
-//    }
-
     public static ProtectedRegion getRegionForId(Integer islandId) {
         return getAllRegions()
                 .values()
@@ -129,25 +112,6 @@ public class WorldGuardUtil {
         var x = nth * 1000 + nth * 1000 - 1000 - 500;
         var z = 500;
 
-        return BlockVector3.at(x, 0, z);
-    }
-
-    public static BlockVector3 calculateClipboardSpawnPosition(int nth, Clipboard clipboard) {
-        var islandPosition = calculateIslandPosition(nth);
-
-        var spawnAtX = islandPosition.getX() + (clipboard.getWidth() / 2.0);
-        var spawnAtY = 120;
-        var spawnAtZ = islandPosition.getZ() + (clipboard.getLength() / 2.0);
-
-        return BlockVector3.at(spawnAtX, spawnAtY, spawnAtZ);
-    }
-
-    public static BlockVector3 calculateIslandHomePosition(int nth) {
-        var islandPosition = calculateIslandPosition(nth);
-        org.bukkit.World world = Bukkit.getWorld("world_islands");
-
-        double middleY = world.getHighestBlockYAt(islandPosition.getX(), islandPosition.getZ()) + 1;
-
-        return BlockVector3.at(islandPosition.getX(), middleY, islandPosition.getZ());
+        return BlockVector3.at(x, 120, z);
     }
 }
