@@ -91,4 +91,29 @@ public class IslandMemberDao {
         return dto;
     }
 
+    public int getSumByMemberUuid(String memberUuid) throws SQLException {
+        return getSumByMemberUuid(memberUuid, false);
+    }
+
+    public int getSumByMemberUuid(String memberUuid, Boolean withDeleted) throws SQLException {
+        String query = (withDeleted) ? IslandMemberDaoSqlUtil.GET_SUM_BY_MEMBER_UUID_WITH_DELETED : IslandMemberDaoSqlUtil.GET_SUM_BY_MEMBER_UUID;
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setString(1, memberUuid);
+
+        ResultSet resultSet = stmt.executeQuery();
+
+        Integer result = null;
+        if (resultSet.next()) {
+            result = resultSet.getInt("count(*)");
+        } else {
+            throw new SQLException("Result set is empty IslandDao:42");
+        }
+
+        resultSet.close();
+        stmt.close();
+
+        return result;
+    }
 }
