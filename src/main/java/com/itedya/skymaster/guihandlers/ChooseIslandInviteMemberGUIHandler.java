@@ -62,7 +62,6 @@ public class ChooseIslandInviteMemberGUIHandler implements GUIHandler {
         var container = meta.getPersistentDataContainer();
 
         Integer value = PersistentDataContainerUtil.getInt(container, "with-accept");
-        assert value != null;
 
         return value == 1;
     }
