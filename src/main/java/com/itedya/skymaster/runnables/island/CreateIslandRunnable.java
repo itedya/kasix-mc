@@ -25,14 +25,12 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 // RUNNABLE LAUNCHER - CreateIslandGUIHandler
 public class CreateIslandRunnable extends SkymasterRunnable {
-    private Player player;
-    private int schematicId;
-    private String islandName;
+    private final Player player;
+    private final int schematicId;
+    private final String islandName;
 
     public CreateIslandRunnable(Player executor, Player player, Integer schematicId, String islandName) {
         super(executor, true);
@@ -116,15 +114,19 @@ public class CreateIslandRunnable extends SkymasterRunnable {
     }
 
     private BlockVector3 spawnVector;
-    private BlockVector3 homeVector;
 
     public void pasteClipboard() {
         try {
-            spawnVector = WorldGuardUtil.calculateClipboardSpawnPosition(islandDto.id, clipboard);
+            spawnVector = WorldGuardUtil.calculateIslandPosition(islandDto.id);
 
-            clipboard.paste(adaptedWorld, spawnVector, true, false, true, null);
+            var centeredSpawnVector = spawnVector.add(
+                    -schematicDto.spawnOffsetX,
+                    -schematicDto.spawnOffsetY,
+                    -schematicDto.spawnOffsetZ
+            );
 
-            homeVector = WorldGuardUtil.calculateIslandHomePosition(islandDto.id);
+            clipboard.setOrigin(clipboard.getRegion().getMinimumPoint());
+            clipboard.paste(adaptedWorld, centeredSpawnVector, true, true, true, null);
 
             ThreadUtil.async(this::createHomeInDatabase);
         } catch (Exception e) {
@@ -137,9 +139,9 @@ public class CreateIslandRunnable extends SkymasterRunnable {
     public void createHomeInDatabase() {
         try {
             homeDto = new IslandHomeDto();
-            homeDto.x = homeVector.getX();
-            homeDto.y = homeVector.getY();
-            homeDto.z = homeVector.getZ();
+            homeDto.x = spawnVector.getX();
+            homeDto.y = spawnVector.getY();
+            homeDto.z = spawnVector.getZ();
             homeDto.worldUuid = world.getUID().toString();
 
             var dao = new IslandHomeDao(connection);
