@@ -34,7 +34,7 @@ public class ShowCreateIslandGuiRunnable extends BukkitRunnable {
     public void run() {
         try {
             this.connection = Database.getInstance().getConnection();
-            this.userIslands = IslandUtil.getIslandAmount(connection, player.getUniqueId().toString())
+            this.userIslands = IslandUtil.getIslandAmount(connection, player.getUniqueId().toString());
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");
