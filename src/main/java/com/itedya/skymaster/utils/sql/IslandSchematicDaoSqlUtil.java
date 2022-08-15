@@ -6,6 +6,9 @@ public class IslandSchematicDaoSqlUtil {
             skymaster_schematics.name        as schematic_name,
             skymaster_schematics.description as schematic_description,
             skymaster_schematics.filePath    as schematic_filePath,
+            skymaster_schematics.spawnOffsetX    as schematic_spawnOffsetX,
+            skymaster_schematics.spawnOffsetY    as schematic_spawnOffsetY,
+            skymaster_schematics.spawnOffsetZ    as schematic_spawnOffsetZ,
             skymaster_schematics.material    as schematic_material,
             skymaster_schematics.updatedAt   as schematic_updatedAt,
             skymaster_schematics.createdAt   as schematic_createdAt,
@@ -17,5 +20,5 @@ public class IslandSchematicDaoSqlUtil {
     public static final String GET_ALL = GET_ALL_WITH_DELETED + " WHERE deletedAt IS NULL";
     public static final String GET_BY_ID_WITH_DELETED = "SELECT * FROM `skymaster_schematics` WHERE id = ?";
     public static final String GET_BY_ID = GET_BY_ID_WITH_DELETED + " AND deletedAt IS NULL";
-    public static final String CREATE = "INSERT INTO `skymaster_schematics` SET `name` = ?, `description` = ?, `filePath` = ?, `material` = ?";
+    public static final String CREATE = "INSERT INTO `skymaster_schematics` SET `name` = ?, `description` = ?, `filePath` = ?, `spawnOffsetX` = ?, `spawnOffsetY` = ?, `spawnOffsetZ` = ?, `material` = ?";
 }

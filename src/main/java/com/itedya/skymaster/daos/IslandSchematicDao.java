@@ -108,7 +108,10 @@ public class IslandSchematicDao {
         stmt.setString(1, islandSchematicDto.name);
         stmt.setString(2, islandSchematicDto.description);
         stmt.setString(3, islandSchematicDto.filePath);
-        stmt.setString(4, islandSchematicDto.material.toString());
+        stmt.setInt(4, islandSchematicDto.spawnOffsetX);
+        stmt.setInt(5, islandSchematicDto.spawnOffsetY);
+        stmt.setInt(6, islandSchematicDto.spawnOffsetZ);
+        stmt.setString(7, islandSchematicDto.material.toString());
 
         stmt.executeUpdate();
 

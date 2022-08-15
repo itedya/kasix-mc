@@ -12,6 +12,9 @@ public class IslandSchematicDto implements DatabaseDto {
     public String description;
     public String filePath;
     public Material material;
+    public int spawnOffsetX;
+    public int spawnOffsetY;
+    public int spawnOffsetZ;
     public Date updatedAt;
     public Date createdAt;
     public Date deletedAt;
@@ -26,6 +29,9 @@ public class IslandSchematicDto implements DatabaseDto {
         dto.name = rs.getString(prefix + "name");
         dto.description = rs.getString(prefix + "description");
         dto.filePath = rs.getString(prefix + "filePath");
+        dto.spawnOffsetX = rs.getInt(prefix + "spawnOffsetX");
+        dto.spawnOffsetY = rs.getInt(prefix + "spawnOffsetY");
+        dto.spawnOffsetZ = rs.getInt(prefix + "spawnOffsetZ");
         dto.material = Material.valueOf(rs.getString(prefix + "material"));
         dto.updatedAt = rs.getDate(prefix + "updatedAt");
         dto.createdAt = rs.getDate(prefix + "createdAt");
