@@ -1,9 +1,9 @@
 package com.itedya.skymaster.runnables.island;
 
 import com.itedya.skymaster.daos.Database;
-import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.daos.IslandSchematicDao;
 import com.itedya.skymaster.dtos.database.IslandSchematicDto;
+import com.itedya.skymaster.utils.IslandUtil;
 import com.itedya.skymaster.utils.PersistentDataContainerUtil;
 import com.itedya.skymaster.utils.PlayerUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
@@ -33,12 +33,8 @@ public class ShowCreateIslandGuiRunnable extends BukkitRunnable {
     @Override
     public void run() {
         try {
-            // get connection
             this.connection = Database.getInstance().getConnection();
-
-            // get sum of user owned islands
-            IslandDao islandDao = new IslandDao(this.connection);
-            this.userIslands = islandDao.getSumByOwnerUuid(player.getUniqueId().toString());
+            this.userIslands = IslandUtil.getIslandAmount(connection, player.getUniqueId().toString());
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.RED + "Wystąpił błąd serwera.");

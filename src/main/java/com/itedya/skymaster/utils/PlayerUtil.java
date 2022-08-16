@@ -17,7 +17,7 @@ public class PlayerUtil {
                 } catch (Exception e) {
                     SkyMaster.getPluginLogger().severe("Wrong format in max island amount permission.");
                     e.printStackTrace();
-                    return null;
+                    return 1;
                 }
             }
         }
@@ -43,8 +43,6 @@ public class PlayerUtil {
 
         return 50;
     }
-
-    // TODO: USE IT
 
     /**
      * Checks how much island members can user have

@@ -9,6 +9,7 @@ import com.itedya.skymaster.utils.ThreadUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -26,9 +27,9 @@ public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
      * Shows islands to which executor can add members
      * Run asynchronously!
      *
-     * @param executor       Executor of command
-     * @param islandOwner    Owner of islands to display in GUI
-     * @param invitedPlayer  Player that executor is inviting
+     * @param executor      Executor of command
+     * @param islandOwner   Owner of islands to display in GUI
+     * @param invitedPlayer Player that executor is inviting
      */
     public ShowIslandsForInvitesGuiRunnable(Player executor, OfflinePlayer islandOwner, OfflinePlayer invitedPlayer, Boolean withAccept) {
         this.executor = executor;
@@ -62,24 +63,26 @@ public class ShowIslandsForInvitesGuiRunnable extends BukkitRunnable {
     }
 
     public void generateInventory() {
-        Inventory inventory = Bukkit.createInventory(null, 9, "Wybierz wyspę do której chcesz zaprosić");
+        Inventory inventory = Bukkit.createInventory(null, InventoryUtil.calculateInvSize(userIslands.size()), "Wybierz wyspę do której chcesz zaprosić");
 
         for (IslandDto island : userIslands) {
-            inventory.addItem(InventoryUtil.createItemStack(island));
-        }
+            ItemStack itemStack = InventoryUtil.createItemStack(island);
 
-        var firstItem = inventory.getItem(0);
-        if (firstItem != null) {
-            var meta = firstItem.getItemMeta();
+            var meta = itemStack.getItemMeta();
             var container = meta.getPersistentDataContainer();
 
             PersistentDataContainerUtil.setString(container, "inventory-identifier", "choose-island-invite-member-gui");
             PersistentDataContainerUtil.setString(container, "island-owner-uuid", islandOwner.getUniqueId().toString());
             PersistentDataContainerUtil.setString(container, "invite-to-player-uuid", invitedPlayer.getUniqueId().toString());
-            PersistentDataContainerUtil.setInt(container, "with-accept", this.withAccept ? 1 : 0);
+            if (this.withAccept) {
+                PersistentDataContainerUtil.setInt(container, "with-accept", 1);
+            } else {
+                PersistentDataContainerUtil.setInt(container, "with-accept", 0);
+            }
 
-            firstItem.setItemMeta(meta);
-            inventory.setItem(0, firstItem);
+            itemStack.setItemMeta(meta);
+
+            inventory.addItem(itemStack);
         }
 
         executor.openInventory(inventory);
