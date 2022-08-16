@@ -22,7 +22,8 @@ public class GUIListener implements Listener {
             "create-island-choose-schematic-gui", new CreateIslandGUIHandler(),
             "island-info-gui", new IslandInfoGUIHandler(),
             "user-islands-gui", new ListUserIslandsGUIHandler(),
-            "visit-island-gui", new VisitIslandGUIHandler()
+            "visit-island-gui", new VisitIslandGUIHandler(),
+            "choose-island-to-leave-gui", new ChooseIslandToLeaveGUIHandler()
     );
 
     protected String getHandlerIdentifier(InventoryClickEvent event) {
