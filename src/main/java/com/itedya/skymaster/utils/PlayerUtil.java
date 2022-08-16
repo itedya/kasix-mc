@@ -44,8 +44,6 @@ public class PlayerUtil {
         return 50;
     }
 
-    // TODO: USE IT
-
     /**
      * Checks how much island members can user have
      *
