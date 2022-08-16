@@ -213,8 +213,22 @@ public class CreateIslandRunnable extends SkymasterRunnable {
         try {
             player.sendMessage("%sWygenerowano na koordynatach: X:%s Y:%s Z:%s".formatted(ChatColor.GREEN, homeDto.x, homeDto.y, homeDto.z));
             player.teleport(new Location(world, homeDto.x, homeDto.y, homeDto.z));
+
+            this.addCooldown();
         } catch (Exception e) {
             super.errorHandling(e);
         }
+    }
+
+    public void addCooldown() {
+        if (player.hasPermission("skymaster.islands.omit-creation-cooldown")) {
+            return;
+        }
+        IslandCreationCooldownDao dao = IslandCreationCooldownDao.getInstance();
+
+        IslandCreationCooldownDto dto = new IslandCreationCooldownDto();
+        dto.playerUuid = player.getUniqueId().toString();
+        dto.expiresIn = 60 * 60 * 4; // 4 hours
+        dao.add(dto);
     }
 }
