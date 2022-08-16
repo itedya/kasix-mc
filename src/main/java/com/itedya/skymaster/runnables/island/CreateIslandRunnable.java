@@ -1,25 +1,21 @@
 package com.itedya.skymaster.runnables.island;
 
 import com.fastasyncworldedit.core.FaweAPI;
-import com.itedya.skymaster.daos.Database;
-import com.itedya.skymaster.daos.IslandDao;
-import com.itedya.skymaster.daos.IslandHomeDao;
-import com.itedya.skymaster.daos.IslandSchematicDao;
+import com.itedya.skymaster.daos.*;
+import com.itedya.skymaster.dtos.IslandCreationCooldownDto;
 import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.dtos.database.IslandHomeDto;
 import com.itedya.skymaster.dtos.database.IslandSchematicDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
-import com.itedya.skymaster.utils.PathUtil;
-import com.itedya.skymaster.utils.PlayerUtil;
-import com.itedya.skymaster.utils.ThreadUtil;
-import com.itedya.skymaster.utils.WorldGuardUtil;
+import com.itedya.skymaster.utils.*;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -44,6 +40,30 @@ public class CreateIslandRunnable extends SkymasterRunnable {
 
     @Override
     public void run() {
+        IslandCreationCooldownDao dao = IslandCreationCooldownDao.getInstance();
+        IslandCreationCooldownDto dto = dao.getByPlayerUuid(player.getUniqueId().toString());
+
+        if (dto != null) {
+            int hours = dto.expiresIn / 3600;
+            int minutes = (dto.expiresIn % 3600) / 60;
+            int seconds = dto.expiresIn % 60;
+
+            player.sendMessage(new ComponentBuilder()
+                    .append(ChatUtil.PREFIX + " ")
+                    .append("Kolejną wyspę będziesz mógł stworzyć za: ").color(ChatColor.RED)
+                    .append(hours + "").bold(true)
+                    .append(":").bold(false)
+                    .append(minutes + "").bold(true)
+                    .append(":").bold(false)
+                    .append(seconds + "").bold(true)
+                    .create());
+            return;
+        }
+
+        ThreadUtil.async(this::getSchematic);
+    }
+
+    public void getSchematic() {
         try {
             this.connection = Database.getInstance().getConnection();
 
