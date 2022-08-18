@@ -44,18 +44,17 @@ public class CreateIslandRunnable extends SkymasterRunnable {
         IslandCreationCooldownDto dto = dao.getByPlayerUuid(player.getUniqueId().toString());
 
         if (dto != null) {
-            int hours = dto.expiresIn / 3600;
-            int minutes = (dto.expiresIn % 3600) / 60;
-            int seconds = dto.expiresIn % 60;
 
             player.sendMessage(new ComponentBuilder()
                     .append(ChatUtil.PREFIX + " ")
                     .append("Kolejną wyspę będziesz mógł stworzyć za: ").color(ChatColor.RED)
-                    .append(hours + "").bold(true)
+                    .append(dto.getStringHours()).bold(true)
                     .append(":").bold(false)
-                    .append(minutes + "").bold(true)
+                    .append(dto.getStringMinutes()).bold(true)
                     .append(":").bold(false)
-                    .append(seconds + "").bold(true)
+                    .append(dto.getStringSeconds()).bold(true)
+                    .append(". ").bold(false)
+                    .append("Jeżeli jesteś w wyjątkowej sytuacji i potrzebujesz jej szybciej to napisz na /helpop, pomożemy :)").color(ChatColor.YELLOW)
                     .create());
             return;
         }
@@ -228,7 +227,7 @@ public class CreateIslandRunnable extends SkymasterRunnable {
 
         IslandCreationCooldownDto dto = new IslandCreationCooldownDto();
         dto.playerUuid = player.getUniqueId().toString();
-        dto.expiresIn = 60 * 60 * 4; // 4 hours
+        dto.expiresIn = 60 * 60 * 24;
         dao.add(dto);
     }
 }
