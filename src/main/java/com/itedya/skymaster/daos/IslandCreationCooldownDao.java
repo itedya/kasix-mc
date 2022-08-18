@@ -4,6 +4,7 @@ import com.itedya.skymaster.dtos.IslandCreationCooldownDto;
 import com.itedya.skymaster.utils.ThreadUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class IslandCreationCooldownDao {
@@ -21,15 +22,15 @@ public class IslandCreationCooldownDao {
     }
 
     private void removeOneSecond() {
-        for (int i = 0; i < data.size(); i++) {
-            IslandCreationCooldownDto dto = data.get(i);
+        Iterator<IslandCreationCooldownDto> iterator = data.iterator();
+
+        while (iterator.hasNext()) {
+            IslandCreationCooldownDto dto = iterator.next();
 
             dto.expiresIn -= 1;
 
-            data.set(i, dto);
+            if (dto.expiresIn <= 0) iterator.remove();
         }
-
-        data = data.stream().filter(ele -> ele.expiresIn >= 1).toList();
     }
 
     public void add(IslandCreationCooldownDto dto) {
@@ -38,5 +39,9 @@ public class IslandCreationCooldownDao {
 
     public IslandCreationCooldownDto getByPlayerUuid(String playerUuid) {
         return data.stream().filter(ele -> ele.playerUuid.equals(playerUuid)).findFirst().orElse(null);
+    }
+
+    public void remove(String playerUuid) {
+        data.removeIf((dto) -> dto.playerUuid.equals(playerUuid));
     }
 }
