@@ -18,7 +18,8 @@ public class AdminSubCommand extends SubCommand {
             "dodajczlonka", new AddIslandMemberAdminSubCommand(),
             "wyrzucczlonka", new KickIslandMemberAdminSubCommand(),
             "powieksz", new ExpandIslandAdminSubCommand(),
-            "lista", new ListIslandsAdminSubCommand()
+            "lista", new ListIslandsAdminSubCommand(),
+            "usuncooldown", new RemoveIslandCreationCooldownAdminSubCommand()
     ));
 
     public AdminSubCommand() {
