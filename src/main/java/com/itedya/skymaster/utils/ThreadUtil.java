@@ -28,4 +28,10 @@ public class ThreadUtil {
 
         return Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, runnable, delay);
     }
+
+    public static int syncRepeat(Runnable runnable, int repeatDelay, int startDelay) {
+        SkyMaster plugin = SkyMaster.getInstance();
+
+        return Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, runnable, repeatDelay, startDelay);
+    }
 }

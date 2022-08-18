@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IslandCreationCooldownDao {
-    private List<IslandCreationCooldownDto> data = new ArrayList<>();
+    private List<IslandCreationCooldownDto> data;
     private static IslandCreationCooldownDao instance;
 
     public static IslandCreationCooldownDao getInstance() {
@@ -16,7 +16,8 @@ public class IslandCreationCooldownDao {
     }
 
     private IslandCreationCooldownDao() {
-        ThreadUtil.syncDelay(this::removeOneSecond, 20);
+        this.data = new ArrayList<>();
+        ThreadUtil.syncRepeat(this::removeOneSecond, 20, 20);
     }
 
     private void removeOneSecond() {
@@ -32,7 +33,7 @@ public class IslandCreationCooldownDao {
     }
 
     public void add(IslandCreationCooldownDto dto) {
-        data.add(dto);
+        this.data.add(dto);
     }
 
     public IslandCreationCooldownDto getByPlayerUuid(String playerUuid) {
