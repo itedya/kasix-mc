@@ -6,4 +6,5 @@ public class IslandInviteDto {
     public IslandDto islandDto;
     public Player fromPlayer;
     public Player toPlayer;
+    public int ttl;
 }
