@@ -2,13 +2,14 @@ package com.itedya.skymaster.command.subcommands;
 
 import com.itedya.skymaster.command.SubCommand;
 import com.itedya.skymaster.daos.IslandInviteDao;
+import com.itedya.skymaster.dtos.database.IslandInviteDto;
 import com.itedya.skymaster.runnables.invite.ShowIslandsForInvitesGuiRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -30,20 +31,25 @@ public class InviteIslandMemberSubCommand extends SubCommand {
                 return true;
             }
 
-            if (args.length == 0) {
-                player.sendMessage(ChatColor.YELLOW + "Nie wprowadziłeś nicku gracza, którego chcesz zaprosić.");
-                return true;
-            }
-
-            // check permissions
             if (!player.hasPermission(permission)) {
                 player.sendMessage(ChatUtil.NO_PERMISSION);
                 return true;
             }
 
+            if (args.length == 0) {
+                player.sendMessage(new ComponentBuilder()
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Nie wprowadziłeś nicku gracza, którego chcesz zaprosić.").color(ChatColor.YELLOW)
+                        .create());
+                return true;
+            }
+
             // check if player wants to invite himself
             if (args[0].equals(player.getName())) {
-                player.sendMessage(ChatColor.YELLOW + "Nie możesz zaprosić sam siebie!");
+                player.sendMessage(new ComponentBuilder()
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Nie możesz zaprosić sam siebie :)").color(ChatColor.YELLOW)
+                        .create());
                 return true;
             }
 
@@ -52,14 +58,20 @@ public class InviteIslandMemberSubCommand extends SubCommand {
 
             // check if player to invite is online
             if (invitedPlayer == null) {
-                player.sendMessage(ChatColor.YELLOW + "Gracz z takim nickiem nie istnieje albo nie jest online.");
+                player.sendMessage(new ComponentBuilder()
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Gracz z takim nickiem nie istnieje albo nie jest online.").color(ChatColor.YELLOW)
+                        .create());
                 return true;
             }
 
-            // check if player already has invitation
-            IslandInviteDao islandInviteDao = IslandInviteDao.getInstance();
-            if (islandInviteDao.doesPlayerHaveInvite(invitedPlayer.getUniqueId().toString())) {
-                player.sendMessage(ChatColor.YELLOW + "Gracz " + invitedPlayer.getName() + " ma już zaproszenie na wyspę, poczekaj do 60 sekund aż wygaśnie.");
+            IslandInviteDao dao = IslandInviteDao.getInstance();
+            IslandInviteDto dto = dao.get(invitedPlayer.getUniqueId().toString(), player.getUniqueId().toString());
+            if (dto != null) {
+                player.sendMessage(new ComponentBuilder()
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Już zaprosiłeś tego gracza! Odczekaj %d sekund aż tamto zaproszenie wygaśnie.".formatted(dto.ttl)).color(ChatColor.YELLOW)
+                        .create());
                 return true;
             }
 
