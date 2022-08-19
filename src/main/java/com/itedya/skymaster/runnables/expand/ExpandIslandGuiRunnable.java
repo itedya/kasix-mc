@@ -6,22 +6,23 @@ import com.itedya.skymaster.daos.IslandDao;
 import com.itedya.skymaster.dtos.database.IslandDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
 import com.itedya.skymaster.runnables.island.ResetWorldGuardPermissionsRunnable;
+import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.IslandUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
 import java.util.Objects;
 import java.util.UUID;
 
 public class ExpandIslandGuiRunnable extends SkymasterRunnable {
-    private Player executor;
-    private int islandId;
-    private int newIslandRadius;
-    private boolean admin;
+    private final Player executor;
+    private final int islandId;
+    private final int newIslandRadius;
+    private final boolean admin;
     private IslandDto islandDto;
     private OfflinePlayer owner;
 
@@ -34,8 +35,6 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
         this.admin = admin;
     }
 
-    private Connection connection;
-
     @Override
     public void run() {
         try {
@@ -45,17 +44,16 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
 
             islandDto = islandDao.getById(islandId);
             if (islandDto == null) {
-                executor.sendRawMessage(ChatColor.RED + "Hmm... serwer mówi że stoisz na wyspie, która jest usunięta. To błąd, zgłoś do administracji.");
+                ChatUtil.sendWarning(executor, "Hmm... serwer mówi że stoisz na wyspie, która jest usunięta. To błąd, zgłoś do administracji.");
                 return;
             }
 
             if (!admin && !Objects.equals(islandDto.ownerUuid, executor.getUniqueId().toString())) {
-                executor.sendMessage(ChatColor.YELLOW + "Ta wyspa nie jest twoja!");
+                ChatUtil.sendWarning(executor, "Ta wyspa nie jest twoja!");
                 return;
             }
 
             islandDto.radius = newIslandRadius;
-
 
             if (!admin) {
                 ThreadUtil.sync(this::checkBalance);
@@ -77,7 +75,11 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
             var cost = IslandUtil.getExpandCost(newIslandRadius);
 
             if (bal < cost) {
-                executor.sendRawMessage(ChatColor.YELLOW + "Potrzebujesz " + cost + ", żeby powiększyć wyspę.");
+                ChatUtil.sendWarning(executor, new ComponentBuilder()
+                        .append("Potrzebujesz ")
+                        .append(cost + "$")
+                        .append(", żeby powiększyć wyspę.")
+                        .create());
                 super.closeDatabase();
                 return;
             }
@@ -112,16 +114,25 @@ public class ExpandIslandGuiRunnable extends SkymasterRunnable {
             if (admin) {
                 owner = Bukkit.getOfflinePlayer(UUID.fromString(islandDto.ownerUuid));
 
-                executor.sendRawMessage("%sPowiększyłeś wyspę %s\"%s\"%s gracza %s do %s kratek!".formatted(
-                        ChatColor.GREEN, ChatColor.BOLD, islandDto.name, ChatColor.RESET + "" + ChatColor.GREEN,
-                        ChatColor.BOLD + owner.getName() + ChatColor.RESET + "" + ChatColor.GREEN,
-                        ChatColor.BOLD + "" + (islandDto.radius * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
-                ));
+                executor.sendMessage(new ComponentBuilder()
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Powiększyłeś wyspę ").color(ChatColor.GREEN)
+                        .append("\"%s\"".formatted(islandDto.name)).bold(true)
+                        .append(" gracza ").bold(false)
+                        .append(owner.getName()).bold(true)
+                        .append(" do ").bold(false)
+                        .append(islandDto.radius + "").bold(true)
+                        .append(" kratek!").bold(false)
+                        .create());
             } else {
-                executor.sendRawMessage("%sPowiększyłeś wyspę %s\"%s\"%s do %s kratek!".formatted(
-                        ChatColor.GREEN, ChatColor.BOLD, islandDto.name, ChatColor.RESET + "" + ChatColor.GREEN,
-                        ChatColor.BOLD + "" + (islandDto.radius * 2) + "" + ChatColor.RESET + "" + ChatColor.GREEN
-                ));
+                executor.sendMessage(new ComponentBuilder()
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Powiększyłeś wyspę ").color(ChatColor.GREEN)
+                        .append("\"%s\"".formatted(islandDto.name)).bold(true)
+                        .append(" do ").bold(false)
+                        .append(islandDto.radius + "").bold(true)
+                        .append(" kratek!").bold(false)
+                        .create());
             }
         } catch (Exception e) {
             super.errorHandling(e);
