@@ -5,9 +5,11 @@ import com.itedya.skymaster.daos.IslandInviteDao;
 import com.itedya.skymaster.runnables.invite.AcceptInviteToIslandRunnable;
 import com.itedya.skymaster.utils.ChatUtil;
 import com.itedya.skymaster.utils.ThreadUtil;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,14 +36,28 @@ public class AcceptInviteToIslandSubCommand extends SubCommand {
         }
 
         var dao = IslandInviteDao.getInstance();
-        var invite = dao.getByToPlayerUuid(player.getUniqueId().toString());
 
-        if (invite == null) {
-            player.sendMessage(ChatColor.YELLOW + "Nie masz zaproszenia do żadnej wyspy lub zaproszenie wygasło!");
+        if (args.length == 0) {
+            player.sendMessage(new ComponentBuilder()
+                    .append(ChatUtil.PREFIX + " ")
+                    .append("Musisz podać nick gracza od którego dostałeś zaproszenie!").color(ChatColor.YELLOW)
+                    .create());
             return true;
         }
 
-        dao.remove(player.getUniqueId().toString());
+        OfflinePlayer invitingPlayer = Bukkit.getOfflinePlayer(args[0]);
+
+        var invite = dao.get(player.getUniqueId().toString(), invitingPlayer.getUniqueId().toString());
+
+        if (invite == null) {
+            player.sendMessage(new ComponentBuilder()
+                    .append(ChatUtil.PREFIX + " ")
+                    .append("Zaproszenie wygasło!").color(ChatColor.YELLOW)
+                    .create());
+            return true;
+        }
+
+        dao.remove(player.getUniqueId().toString(), invitingPlayer.getUniqueId().toString());
 
         ThreadUtil.async(new AcceptInviteToIslandRunnable(player, invite));
 

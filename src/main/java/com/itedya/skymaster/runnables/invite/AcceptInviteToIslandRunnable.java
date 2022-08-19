@@ -5,10 +5,7 @@ import com.itedya.skymaster.daos.IslandMemberDao;
 import com.itedya.skymaster.dtos.database.IslandInviteDto;
 import com.itedya.skymaster.dtos.database.IslandMemberDto;
 import com.itedya.skymaster.runnables.SkymasterRunnable;
-import com.itedya.skymaster.utils.IslandUtil;
-import com.itedya.skymaster.utils.PlayerUtil;
-import com.itedya.skymaster.utils.ThreadUtil;
-import com.itedya.skymaster.utils.WorldGuardUtil;
+import com.itedya.skymaster.utils.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
@@ -42,9 +39,19 @@ public class AcceptInviteToIslandRunnable extends SkymasterRunnable {
 
             if (IslandUtil.getIslandAmount(connection, dto.toPlayer.getUniqueId().toString()) >= this.maxAllowedIslands) {
                 if (player.getUniqueId().toString().equals(dto.toPlayer.getUniqueId().toString())) {
-                    player.sendMessage(ChatColor.YELLOW + "Nie możesz stworzyć lub dołączyć do tylu wysp! Max: " + maxAllowedIslands);
+                    player.sendMessage(new ComponentBuilder()
+                            .append(ChatUtil.PREFIX + " ")
+                            .append("Nie możesz stworzyć lub dołączyć do tylu wysp! ").color(ChatColor.YELLOW)
+                            .append("Max: " + maxAllowedIslands).bold(true)
+                            .append("!").bold(false)
+                            .create());
                 } else {
-                    player.sendMessage(ChatColor.YELLOW + "Ten użytkownik nie może stworzyć lub dołączyć do tylu wysp! Max: " + maxAllowedIslands);
+                    player.sendMessage(new ComponentBuilder()
+                            .append(ChatUtil.PREFIX + " ")
+                            .append("Ten użytkownik nie może stworzyć lub dołączyć do tylu wysp! ").color(ChatColor.YELLOW)
+                            .append("Max: " + maxAllowedIslands).bold(true)
+                            .append("!").bold(false)
+                            .create());
                 }
 
                 return;
@@ -72,13 +79,17 @@ public class AcceptInviteToIslandRunnable extends SkymasterRunnable {
     }
 
     private void commitWorldGuard() {
-        var region = WorldGuardUtil.getRegionForId(dto.islandDto.id);
+        try {
+            var region = WorldGuardUtil.getRegionForId(dto.islandDto.id);
 
-        var members = region.getMembers();
-        members.addPlayer(dto.toPlayer.getUniqueId());
-        region.setMembers(members);
+            var members = region.getMembers();
+            members.addPlayer(dto.toPlayer.getUniqueId());
+            region.setMembers(members);
 
-        ThreadUtil.async(this::commitData);
+            ThreadUtil.async(this::commitData);
+        } catch (Exception e) {
+            super.errorHandling(e);
+        }
     }
 
     private void commitData() {
@@ -92,8 +103,8 @@ public class AcceptInviteToIslandRunnable extends SkymasterRunnable {
 
             if (!Objects.equals(toPlayer.getUniqueId().toString(), player.getUniqueId().toString())) {
                 player.sendMessage(new ComponentBuilder()
-                        .color(ChatColor.GREEN)
-                        .append("Gracz ")
+                        .append(ChatUtil.PREFIX + " ")
+                        .append("Gracz ").color(ChatColor.GREEN)
                         .append(toPlayer.getName()).bold(true)
                         .append(" został dodany do wyspy ").bold(false)
                         .append("\"" + island.name + "\"").bold(true)
@@ -105,15 +116,15 @@ public class AcceptInviteToIslandRunnable extends SkymasterRunnable {
             }
 
             fromPlayer.sendMessage(new ComponentBuilder()
-                    .color(ChatColor.GREEN)
-                    .append("Gracz ")
+                    .append(ChatUtil.PREFIX + " ")
+                    .append("Gracz ").color(ChatColor.GREEN)
                     .append(toPlayer.getName()).bold(true)
                     .append(" został dodany do wyspy").bold(false)
                     .create());
 
             toPlayer.sendMessage(new ComponentBuilder()
-                    .color(ChatColor.GREEN)
-                    .append("Zostałeś dodany do wyspy ")
+                    .append(ChatUtil.PREFIX + " ")
+                    .append("Zostałeś dodany do wyspy ").color(ChatColor.GREEN)
                     .append("\"" + island.name + "\"").bold(true)
                     .append(" gracza ").bold(false)
                     .append(toPlayer.getName()).bold(true)
