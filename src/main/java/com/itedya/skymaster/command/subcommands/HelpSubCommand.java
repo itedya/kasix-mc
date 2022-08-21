@@ -17,13 +17,12 @@ public class HelpSubCommand extends SubCommand {
 
     public HelpSubCommand() {
         super("skymaster.islands.help");
-        lines.add(ChatUtil.p("&6/wyspa &3akceptuj &7- &eAkceptuj zaproszenie do wyspy"));
         lines.add(ChatUtil.p("&6/wyspa &3blokuj &a<nick> &7- &eZablokuj użytkownika o danym nicku, tak by nie mógł odwiedzać twoich wysp"));
         lines.add(ChatUtil.p("&6/wyspa &3stworz &7- &eStwórz wyspę"));
         lines.add(ChatUtil.p("&6/wyspa &3powieksz &7- &ePowieksz wyspe na której stoisz"));
         lines.add(ChatUtil.p("&6/wyspa &3zapros &a<nick> &7- &eZapros gracza do wyspy którą posiadasz"));
-        lines.add(ChatUtil.p("&6/wyspa &3zapros &7- &eZapros czlonka do wyspy"));
         lines.add(ChatUtil.p("&6/wyspa &3wyrzuc &7- &eWyrzuc czlonka z wyspy"));
+        lines.add(ChatUtil.p("&6/wyspa &3wyjdz &7- &eWyjdź z wyspy (jako członek)"));
         lines.add(ChatUtil.p("&6/wyspa &3lista &7- &eWylistuj wyspy"));
         lines.add(ChatUtil.p("&6/wyspa &3ocen &7- &eOcen wyspe na ktorej jestes"));
         lines.add(ChatUtil.p("&6/wyspa &3ustawdom &7- &eUstaw dom wyspy"));
