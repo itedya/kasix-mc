@@ -26,22 +26,24 @@ public class PlayerUtil {
     }
 
     public static Integer getStartIslandRadius(Player player) {
+        int radius = 50;
+
         for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
             String permissionId = permission.getPermission();
             if (permissionId.startsWith("skymaster.islands.start-radius.")) {
                 String[] splittedPermissionId = permissionId.split("\\.");
 
                 try {
-                    return Integer.parseInt(splittedPermissionId[splittedPermissionId.length - 1]);
+                    int temp = Integer.parseInt(splittedPermissionId[splittedPermissionId.length - 1]);
+                    radius = temp;
                 } catch (Exception e) {
                     SkyMaster.getPluginLogger().severe("Wrong format in island start radius permission.");
                     e.printStackTrace();
-                    return 50;
                 }
             }
         }
 
-        return 50;
+        return radius;
     }
 
     /**
@@ -51,21 +53,23 @@ public class PlayerUtil {
      * @return max allowed island members in Integer object
      */
     public static @NotNull Integer getMaxAllowedIslandMembers(Player player) {
+        int maxMembers = 2;
+
         for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
             String permissionId = permission.getPermission();
             if (permissionId.startsWith("skymaster.islands.max-members.")) {
                 String[] splittedPermissionId = permissionId.split("\\.");
 
                 try {
-                    return Integer.parseInt(splittedPermissionId[splittedPermissionId.length - 1]);
+                    int temp = Integer.parseInt(splittedPermissionId[splittedPermissionId.length - 1]);
+                    maxMembers = temp;
                 } catch (Exception e) {
                     SkyMaster.getPluginLogger().severe("Wrong format in max island members permission.");
                     e.printStackTrace();
-                    return 2;
                 }
             }
         }
 
-        return 2;
+        return maxMembers;
     }
 }
