@@ -24,34 +24,33 @@ import java.util.List;
  * Run asynchronously
  */
 public class ShowVisitIslandGUIRunnable extends SkymasterRunnable {
+    private final Player executor;
+    private final OfflinePlayer owner;
     public ShowVisitIslandGUIRunnable(Player executor, OfflinePlayer owner) {
         super(executor, true);
-
-        data.put("executor", executor);
-        data.put("owner", owner);
+        this.executor = executor;
+        this.owner = owner;
     }
+
+    private List<IslandDto> islands;
 
     @Override
     public void run() {
         try {
             this.connection = Database.getInstance().getConnection();
 
-            Player executor = (Player) data.get("executor");
-            OfflinePlayer owner = (OfflinePlayer) data.get("owner");
-
             IslandDao islandDao = new IslandDao(connection);
-            var islands = islandDao.getByOwnerUuidWithAllRelations(owner.getUniqueId().toString());
-            var filteredIslands = new ArrayList<>();
+            List<IslandDto> islandsToFilter = islandDao.getByOwnerUuidWithAllRelations(owner.getUniqueId().toString());
+            islandsToFilter.addAll(islandDao.getByMemberUuidWithAllRelations(owner.getUniqueId().toString()));
+            islands = new ArrayList<>();
 
             VisitBlockDao blockDao = new VisitBlockDao(connection);
 
-            for (IslandDto island : islands) {
-                if (blockDao.get(owner.getUniqueId().toString(), executor.getUniqueId().toString()) == null) {
-                    filteredIslands.add(island);
+            for (IslandDto island : islandsToFilter) {
+                if (blockDao.get(island.ownerUuid, executor.getUniqueId().toString()) == null) {
+                    islands.add(island);
                 }
             }
-
-            data.put("islands", filteredIslands);
 
             ThreadUtil.sync(this::createInventory);
         } catch (Exception e) {
@@ -61,8 +60,6 @@ public class ShowVisitIslandGUIRunnable extends SkymasterRunnable {
 
     public void createInventory() {
         try {
-            List<IslandDto> islands = (List<IslandDto>) data.get("islands");
-
             int invSize = InventoryUtil.calculateInvSize(islands.size());
 
             Inventory inventory = Bukkit.createInventory(null, invSize, "Wybierz wyspę do odwiedzenia");
@@ -74,8 +71,6 @@ public class ShowVisitIslandGUIRunnable extends SkymasterRunnable {
                 itemStack.setItemMeta(itemMeta);
                 inventory.addItem(itemStack);
             }
-
-            Player executor = (Player) data.get("executor");
 
             executor.openInventory(inventory);
 
