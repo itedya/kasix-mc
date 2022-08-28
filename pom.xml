@@ -6,7 +6,7 @@
 
     <groupId>com.itedya</groupId>
     <artifactId>skymaster</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>SkyMaster</name>
