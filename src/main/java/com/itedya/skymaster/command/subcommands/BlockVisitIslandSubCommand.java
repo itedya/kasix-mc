@@ -11,16 +11,21 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BlockVisitIslandSubCommand extends SubCommand {
 
-    public BlockVisitIslandSubCommand(){ super("skymaster.islands.blockvisit");}
+    public BlockVisitIslandSubCommand() {
+        super("skymaster.islands.blockvisit");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         try {
@@ -58,6 +63,19 @@ public class BlockVisitIslandSubCommand extends SubCommand {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if (strings.length == 1) {
+            var names = Bukkit.getOnlinePlayers()
+                    .stream()
+                    .map(HumanEntity::getName);
+
+            if (commandSender instanceof Player player) {
+                return names.filter(ele -> !ele.equals(player.getName()))
+                        .toList();
+            }
+
+            return names.toList();
+        }
+
         return new ArrayList<>();
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +61,19 @@ public class UnblockVisitIslandSubCommand extends SubCommand {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if (strings.length == 1) {
+            var names = Bukkit.getOnlinePlayers()
+                    .stream()
+                    .map(HumanEntity::getName);
+
+            if (commandSender instanceof Player player) {
+                return names.filter(ele -> !ele.equals(player.getName()))
+                        .toList();
+            }
+
+            return names.toList();
+        }
+
         return new ArrayList<>();
     }
 }
